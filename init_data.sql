@@ -179,6 +179,9 @@ INSERT INTO t_menus (id, created_time, creator_id, modified_time, modifier_id, i
 INSERT INTO t_menus (id, created_time, creator_id, modified_time, modifier_id, is_deleted, path, component, is_frame, hidden, status, order_num, name, title, icon, no_cache, parent_id) VALUES (7, '2022-07-14 03:56:19', 0, '2022-07-20 10:25:24', 0, 0, '/permission', '', 0, 0, 0, 1, '', '权限管理', 'monitor', 0, 0);
 INSERT INTO t_menus (id, created_time, creator_id, modified_time, modifier_id, is_deleted, path, component, is_frame, hidden, status, order_num, name, title, icon, no_cache, parent_id) VALUES (8, '2022-07-14 03:56:19', 0, '2022-07-14 03:56:19', 0, 0, 'dict/detail/:id(\\d+)', '/system/dict/detail/index', 0, 1, 0, 1, 'SystemDictDetail', '字典参数', 'dashboard', 0, 2);
 INSERT INTO t_menus (id, created_time, creator_id, modified_time, modifier_id, is_deleted, path, component, is_frame, hidden, status, order_num, name, title, icon, no_cache, parent_id) VALUES (9, '2022-10-29 23:57:16', 0, '2022-10-29 23:57:16', 0, 0, 'label', '/permission/label/index', 0, 0, 0, 4, 'PermissionLabel', '权限标签', 'icon', 1, 7);
+INSERT INTO t_menus (id, created_time, creator_id, modified_time, modifier_id, is_deleted, path, component, is_frame, hidden, status, order_num, name, title, icon, no_cache, parent_id) VALUES (10, '2023-12-02 18:05:43',0, '2023-12-02 18:05:43', 0, 0, '/hiker', '', 0, 0, 0, 3, '', '海阔视界', 'international', 1, 0);
+INSERT INTO t_menus (id, created_time, creator_id, modified_time, modifier_id, is_deleted, path, component, is_frame, hidden, status, order_num, name, title, icon, no_cache, parent_id) VALUES (11, '2023-12-02 18:06:51',0, '2023-12-02 18:09:28', 0, 0, 'developer', '/hiker/developer/index', 0, 0, 0, 1, 'HikerDeveloper', '开发者', 'peoples', 1, 10);
+
 
 
 
