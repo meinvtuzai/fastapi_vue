@@ -63,7 +63,7 @@ async def setRecord(*,
     return respSuccessJson()
 
 
-@router.delete("/hiker_rule_type/{_id}", summary="删除开发者")
+@router.delete("/hiker_rule_type/{_id}", summary="删除规则类型")
 async def delRecord(*,
                        db: Session = Depends(deps.get_db),
                        u: Users = Depends(deps.user_perm([f"{access_name}:delete"])),
@@ -73,7 +73,7 @@ async def delRecord(*,
     return respSuccessJson()
 
 
-@router.put("/hiker_rule_type/{_id}/active", summary="修改开发者是否启用")
+@router.put("/hiker_rule_type/{_id}/active", summary="修改规则类型是否启用")
 async def setActive(*,
                       db: Session = Depends(deps.get_db),
                       u: Users = Depends(deps.user_perm([f"{access_name}:put"])),
