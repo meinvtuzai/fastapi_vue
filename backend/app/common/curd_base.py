@@ -11,7 +11,6 @@ ModelType = TypeVar("ModelType", bound=Base)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
 UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
 
-
 # START
 """ 
     jsonable_encoder (类转字典) 的 custom_encoder 方法。有些数据类型通过jsonable_encoder后会转换成不符合需求的类型或报错。 (目前遇到这3个 后续遇到其他再添加)
@@ -19,9 +18,11 @@ eg:
     # 遇到dict类型数据使用custom_encoder_dict_fn解析,即直接输出字典类型不然会报错。 遇到datetime类型使用custom_encoder_datetime2str_fn解析成符合mysql的字符串,不然会转成其他格式的字符串
     data = jsonable_encoder(obj_in, custom_encoder={dict: custom_encoder_dict_fn, datetime: custom_encoder_datetime2str_fn})   
 """
-custom_encoder_dict_fn = lambda x : x
-custom_encoder_datetime_fn = lambda x : x
-custom_encoder_datetime2str_fn = lambda x : x.strftime("%Y-%m-%d %H:%M:%S")
+custom_encoder_dict_fn = lambda x: x
+custom_encoder_datetime_fn = lambda x: x
+custom_encoder_datetime2str_fn = lambda x: x.strftime("%Y-%m-%d %H:%M:%S")
+
+
 # END
 
 
@@ -29,7 +30,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     def __init__(self, model: Type[ModelType]):
         self.model = model
-        self.query_columns = self.model.listColumns() # 取model中的有Column
+        self.query_columns = self.model.listColumns()  # 取model中的有Column
         self.exclude_columns = [self.model.created_time, self.model.modified_time, self.model.is_deleted]
         self.query_columns.extend((self.model.dt2ts(self.model.created_time, "created_ts"),
                                    self.model.dt2ts(self.model.modified_time, "modified_ts")))
@@ -46,7 +47,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     def get(self, db: Session, _id: int, to_dict: bool = True) -> Optional[ModelType]:
         """ 通过id获取 """
-        row = db.query(*self.query_columns).filter(self.model.id ==_id, self.model.is_deleted == 0).first()
+        row = db.query(*self.query_columns).filter(self.model.id == _id, self.model.is_deleted == 0).first()
         return dict(row or {}) if to_dict else row
 
     def query(self, db: Session, *, queries: Optional[list] = None, filters: Optional[list] = None,
@@ -73,7 +74,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             obj = obj.order_by(*order_bys)
         temp_page = ((page if page > 0 else 1) - 1) * page_size
         total = db.query(func.count(self.model.id)).filter(*filters).scalar()
-        if temp_page + page_size > total:   # 页数超出后显示最后一页， 不需要可以注释掉
+        if temp_page + page_size > total:  # 页数超出后显示最后一页， 不需要可以注释掉
             temp_page = total - (total % page_size)
         obj = obj.offset(temp_page).limit(page_size)
         return [dict(i) for i in obj.all()] if to_dict else obj.all(), total, temp_page, page_size
@@ -94,7 +95,16 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         update_data = jsonable_encoder(obj_in, custom_encoder={dict: custom_encoder_dict_fn})
         update_data['modifier_id'] = modifier_id
         update_data = {getattr(self.model, k): v for k, v in update_data.items() if hasattr(self.model, k)}
-        obj = db.query(self.model).filter(self.model.id ==_id, self.model.is_deleted != 1).update(update_data)
+        obj = db.query(self.model).filter(self.model.id == _id, self.model.is_deleted != 1).update(update_data)
+        db.commit()
+        return obj
+
+    def setActive(self, db: Session, *, _id: int, active: bool, modifier_id: int = 0):
+        """
+        设置是否启用
+        """
+        update_data = {'active': active, 'modifier_id': modifier_id}
+        obj = db.query(self.model).filter(self.model.id == _id).update(update_data)
         db.commit()
         return obj
 
@@ -136,4 +146,3 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         data = db.query(func.max(self.model.order_num).label('max_order_num')).filter(
             self.model.is_deleted == 0).first()
         return data['max_order_num'] or 0
-

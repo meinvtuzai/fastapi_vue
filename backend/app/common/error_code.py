@@ -31,3 +31,6 @@ ERROR_USER_CAPTCHA_CODE_ERROR = ErrorBase(code=5021, msg="验证码错误")
 ERROR_USER_CAPTCHA_CODE_INVALID = ErrorBase(code=5022, msg="验证码已失效，请重试。")
 ERROR_USER_PREM_ADD_ERROR = ErrorBase(code=5031, msg="权限标识添加失败")
 ERROR_USER_PREM_ERROR = ErrorBase(code=5403, msg="权限不足")
+
+ERROR_HIKER_RULE_TYPE_ADD_ERROR = ErrorBase(code=5101, msg="规则类型添加失败，可能是名称重复")
+ERROR_HIKER_DEVELOPER_ADD_ERROR = ErrorBase(code=5102, msg="开发者添加失败，可能是qq重复")

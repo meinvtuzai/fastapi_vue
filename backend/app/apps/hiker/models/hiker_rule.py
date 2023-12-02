@@ -15,3 +15,4 @@ class HikerRuleType(Base):
     """ 海阔规则类型 """
     name = fields.Char(string='分类名称', required=True)
     count_num = fields.Integer(string='数目')
+    active = fields.Boolean(string='是否启用', default=True)

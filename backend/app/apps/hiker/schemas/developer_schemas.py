@@ -24,6 +24,3 @@ class DeveloperSchema(BaseModel):
 
 class IsManagerSchema(BaseModel):
     is_manager: bool
-
-class ActiveSchema(BaseModel):
-    active: bool
