@@ -70,7 +70,8 @@ class Settings(BaseSettings):
     SMTP_PASSWORD: Optional[str] = ""   # SMTP密码
     EMAIL_FROM_EMAIL: Optional[str] = ""     # 发件人邮箱
     EMAIL_TEMPLATES_DIR: str = "./email-templates/"  # 模板路径
-    
+    WEB_TEMPLATES_DIR: str = "./templates/"  # 网页模板路径
+
     class Config:
         env_file = ".env"
 

@@ -7,7 +7,7 @@
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from apps import api_router
+from apps import api_router, web_router
 from starlette.middleware.cors import CORSMiddleware
 from common.exceptions import customExceptions
 from core.config import settings
@@ -25,6 +25,8 @@ class InitializeApp(object):
         app = FastAPI(title=settings.PROJECT_NAME)
         # set static files
         app.mount("/media", StaticFiles(directory="media"), name="media")  # 媒体文件
+        app.mount("/static", StaticFiles(directory="static"), name="static")  # 静态文件
+        app.mount("/web", StaticFiles(directory="templates"), name="templates")  # 模板静态文件
         # allow cross domain
         app.add_middleware(CORSMiddleware, allow_origins=settings.BACKEND_CORS_ORIGINS,
                            allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
@@ -58,6 +60,8 @@ class InitializeApp(object):
         """
         # 项目API
         app.include_router(api_router, prefix="/api/v1")
+        # 网页API
+        app.include_router(web_router, prefix="")
 
     @staticmethod
     def event_init(app: FastAPI) -> None:
