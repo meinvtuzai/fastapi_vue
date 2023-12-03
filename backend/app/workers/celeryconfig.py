@@ -18,10 +18,15 @@ imports = [
 
 # 需要执行任务的配置
 beat_schedule = {
-    'test1': {
-        'task': 'workers.celery_tasks.taskPrintDatetime',
-        # 设置定时的时间
-        'schedule': CELERY_PRINT_DATETIME,
-        'args': ()
-    }
+    # 'test1': {
+    #     'task': 'workers.celery_tasks.taskPrintDatetime',
+    #     # 设置定时的时间
+    #     'schedule': CELERY_PRINT_DATETIME,
+    #     'args': ()
+    # },
+    'add-every-2-seconds': {
+        'task': 'workers.celery_tasks.print_hello',
+        'schedule': 2,
+        'args': (16, 16)  # 这个任务的参数
+    },
 }
