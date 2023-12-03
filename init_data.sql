@@ -182,6 +182,7 @@ INSERT INTO t_menus (id, created_time, creator_id, modified_time, modifier_id, i
 INSERT INTO t_menus (id, created_time, creator_id, modified_time, modifier_id, is_deleted, path, component, is_frame, hidden, status, order_num, name, title, icon, no_cache, parent_id) VALUES (10, '2023-12-02 18:05:43',0, '2023-12-02 18:05:43', 0, 0, '/hiker', '', 0, 0, 0, 3, '', '海阔视界', 'international', 1, 0);
 INSERT INTO t_menus (id, created_time, creator_id, modified_time, modifier_id, is_deleted, path, component, is_frame, hidden, status, order_num, name, title, icon, no_cache, parent_id) VALUES (11, '2023-12-02 18:06:51',0, '2023-12-02 18:09:28', 0, 0, 'developer', '/hiker/developer/index', 0, 0, 0, 1, 'HikerDeveloper', '开发者', 'peoples', 1, 10);
 INSERT INTO t_menus (id, created_time, creator_id, modified_time, modifier_id, is_deleted, path, component, is_frame, hidden, status, order_num, name, title, icon, no_cache, parent_id) VALUES (12, '2023-12-02 23:23:55', 1, '2023-12-03 16:45:42', 1, 0, 'rule_type', '/hiker/rule_type/index', 0, 0, 0, 2, 'HikerRuleType', '规则类型', 'component', 1, 10);
+INSERT INTO t_menus (id, created_time, creator_id, modified_time, modifier_id, is_deleted, path, component, is_frame, hidden, status, order_num, name, title, icon, no_cache, parent_id) VALUES (13, '2023-12-03 19:03:50', 1, '2023-12-03 19:04:15', 1, 0, 'rule', '/hiker/rule/index', 0, 0, 0, 3, 'HikerRule', '规则', 'list', 1, 10);
 
 
 

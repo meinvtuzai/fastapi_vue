@@ -10,7 +10,7 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from sqlalchemy import asc, desc, func, distinct
 from common.curd_base import CRUDBase
-from ..models.hiker_rule import HikerRuleType,HikerRule
+from ..models.hiker_rule import HikerRuleType, HikerRule
 
 
 class CURDHikerRuleType(CRUDBase):
@@ -28,7 +28,7 @@ class CURDHikerRuleType(CRUDBase):
     def create(self, db: Session, *, obj_in, creator_id: int = 0):
         obj_in_data = obj_in if isinstance(obj_in, dict) else jsonable_encoder(obj_in)
         if db.query(self.model).filter(self.model.name == obj_in_data['name'],
-                                       self.model.is_deleted == 0).first():  # 如果已经有这个开发者qq返回None
+                                       self.model.is_deleted == 0).first():  # 如果已经有规则类型返回None
             return None
         obj_in_data['creator_id'] = creator_id
         db_obj = self.model(**obj_in_data)
@@ -51,6 +51,7 @@ class CURDHikerRuleType(CRUDBase):
             filters.append(self.model.name.like(f"%{name}%"))
         records, total, _, _ = self.get_multi(db, page=page, page_size=page_size, filters=filters)
         return {'results': records, 'total': total}
+
 
 class CURDHikerRule(CRUDBase):
 
@@ -93,7 +94,7 @@ class CURDHikerRule(CRUDBase):
     def create(self, db: Session, *, obj_in, creator_id: int = 0):
         obj_in_data = obj_in if isinstance(obj_in, dict) else jsonable_encoder(obj_in)
         if db.query(self.model).filter(self.model.name == obj_in_data['name'],
-                                       self.model.is_deleted == 0).first():  # 如果已经有这个开发者qq返回None
+                                       self.model.is_deleted == 0).first():  # 如果已经有这个规则名称返回None
             return None
         obj_in_data['creator_id'] = creator_id
         db_obj = self.model(**obj_in_data)

@@ -10,9 +10,9 @@ from core.logger import logger
 
 
 def demo():
-    logger.info("30秒执行一次定时任务......")
+    logger.info("300秒执行一次定时任务......")
 
 
 scheduler = AsyncIOScheduler()
-scheduler.add_job(func=demo, trigger='interval', seconds=30)
+scheduler.add_job(func=demo, trigger='interval', seconds=300)
 
