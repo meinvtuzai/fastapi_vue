@@ -72,6 +72,9 @@ class Settings(BaseSettings):
     EMAIL_TEMPLATES_DIR: str = "./email-templates/"  # 模板路径
     WEB_TEMPLATES_DIR: str = "./templates/"  # 网页模板路径
 
+    # 代理
+    IP_AGENTS = [""]
+
     class Config:
         env_file = ".env"
 

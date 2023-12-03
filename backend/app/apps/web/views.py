@@ -9,6 +9,7 @@ from fastapi import APIRouter
 from starlette.responses import HTMLResponse, RedirectResponse
 from core.config import settings
 from utils.web import HtmlSender
+from network.request import Request
 
 router = APIRouter()
 htmler = HtmlSender()
@@ -24,3 +25,13 @@ async def web_home():
 @router.get('/favicon.ico', summary="网站默认图标")  # 设置icon
 async def favicon():
     return RedirectResponse('/static/img/favicon.svg')
+
+
+@router.get('/baidu', summary="访问百度")
+async def baidu():
+    # url = "https://www.iesdouyin.com/web/api/v2/user/info?sec_uid=MS4wLjABAAAAc4BIGF22ZcPBMtc73GAKSf-vEiPWKTLC3RJA423NK_E"
+    url = "https://www.baidu.com"
+    request = Request(method="GET", url=url, agent=False, follow_redirects=True)
+    r = await request.fetch()
+    # print(r.text)
+    return HTMLResponse(r.text)
