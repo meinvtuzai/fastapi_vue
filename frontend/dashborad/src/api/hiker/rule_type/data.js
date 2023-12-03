@@ -50,6 +50,6 @@ export function changeActive(id, active) {
   return request({
     url: api_url + '/' + id + '/active',
     method: 'put',
-    data: { 'active': active }
+    data: {'active': active}
   })
 }

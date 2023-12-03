@@ -95,7 +95,7 @@
           <el-switch v-model="scope.row.is_manager" @change="handleChangIsManager(scope.row)"></el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="是否启用" align="center" prop="is_manager" width="100">
+      <el-table-column label="是否启用" align="center" prop="active" width="100">
         <template slot-scope="scope">
           <el-switch v-model="scope.row.active" @change="handleChangActive(scope.row)"></el-switch>
         </template>

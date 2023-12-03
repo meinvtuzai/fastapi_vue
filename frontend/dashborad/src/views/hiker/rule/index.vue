@@ -107,6 +107,47 @@
       <el-table-column label="ID" align="center" prop="id" width="55"/>
       <el-table-column label="名称" align="center" prop="name" :show-overflow-tooltip="true"/>
       <el-table-column label="作者" align="center" prop="author" :show-overflow-tooltip="true"/>
+      <el-table-column label="类型" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <router-link :to="'/hiker/rule_type/detail/' + scope.row.id" class="link-type">
+            <span>{{ scope.row.type_id }}</span>
+          </router-link>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="开发者" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <router-link :to="'/hiker/developer/detail/' + scope.row.id" class="link-type">
+            <span>{{ scope.row.dev_id }}</span>
+          </router-link>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="代码" align="center" prop="value" :show-overflow-tooltip="true"/>
+      <el-table-column label="链接" align="center" prop="url" :show-overflow-tooltip="true"/>
+      <el-table-column label="状态" align="center" prop="state" :show-overflow-tooltip="true"/>
+      <el-table-column label="验证" align="center" prop="auth" :show-overflow-tooltip="true"/>
+      <el-table-column label="验证过期时间" align="center" prop="auth_date_time" :show-overflow-tooltip="true"/>
+      <el-table-column label="过期" align="center" prop="time_over" :show-overflow-tooltip="true"/>
+      <el-table-column label="base值" align="center" prop="b64_value" :show-overflow-tooltip="true"/>
+      <el-table-column label="主页链接" align="center" prop="home_url" :show-overflow-tooltip="true"/>
+      <el-table-column label="图片链接" align="center" prop="pic_url" :show-overflow-tooltip="true"/>
+      <el-table-column label="是json" align="center" prop="is_json" :show-overflow-tooltip="true"/>
+      <el-table-column label="是重定向" align="center" prop="is_redirect" :show-overflow-tooltip="true"/>
+      <el-table-column label="是否为仓库跳转规则" align="center" prop="is_tap" :show-overflow-tooltip="true"/>
+      <el-table-column label="是否可以互动" align="center" prop="can_discuss" :show-overflow-tooltip="true"/>
+      <el-table-column label="是否json列表" align="center" prop="is_json_list" :show-overflow-tooltip="true"/>
+      <el-table-column label="数据类型" align="center" prop="data_type" :show-overflow-tooltip="true"/>
+      <el-table-column label="版本号" align="center" prop="version" :show-overflow-tooltip="true"/>
+      <el-table-column label="说明" align="center" prop="note" :show-overflow-tooltip="true"/>
+      <el-table-column label="点赞数" align="center" prop="good_num" :show-overflow-tooltip="true"/>
+      <el-table-column label="踩数" align="center" prop="bad_num" :show-overflow-tooltip="true"/>
+      <el-table-column label="回复数" align="center" prop="reply_num" :show-overflow-tooltip="true"/>
+      <el-table-column label="是否安全" align="center" prop="is_safe" :show-overflow-tooltip="true"/>
+      <el-table-column label="是否优质" align="center" prop="is_good" :show-overflow-tooltip="true"/>
+      <el-table-column label="是否白名单" align="center" prop="is_white" :show-overflow-tooltip="true"/>
+      <el-table-column label="风险描述" align="center" prop="not_safe_note" :show-overflow-tooltip="true"/>
+      <el-table-column label="开发者上次提交时间" align="center" prop="last_active" :show-overflow-tooltip="true"/>
 
 
       <el-table-column label="创建时间" align="center" prop="created_ts" :show-overflow-tooltip="true">
@@ -148,7 +189,7 @@
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="100%" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
@@ -162,7 +203,153 @@
               <el-input v-model="form.author" placeholder="请输入规则作者"/>
             </el-form-item>
           </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="类型" prop="type_id">
+              <el-input-number v-model="form.type_id" controls-position="right" :min="0" style="width: 100%"/>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="开发者" prop="dev_id">
+              <el-input-number v-model="form.dev_id" controls-position="right" :min="0" style="width: 100%"/>
+            </el-form-item>
+          </el-col>
+
+
+          <el-col :span="12">
+            <el-form-item label="状态" prop="state">
+              <el-input v-model="form.state" placeholder="请输入..."/>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="数据类型" prop="data_type">
+              <el-input v-model="form.data_type" placeholder="请输入..."/>
+            </el-form-item>
+          </el-col>
+
+
+          <el-col :span="12">
+            <el-form-item label="是json" prop="is_json">
+              <el-switch v-model="form.is_json"></el-switch>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="是否json列表" prop="is_json_list" label-width="150px">
+              <el-switch v-model="form.is_json_list"></el-switch>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="是重定向" prop="is_redirect">
+              <el-switch v-model="form.is_redirect"></el-switch>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="是否为仓库跳转规则" prop="is_tap" label-width="150px">
+              <el-switch v-model="form.is_tap"></el-switch>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="过期" prop="time_over">
+              <el-switch v-model="form.time_over"></el-switch>
+            </el-form-item>
+          </el-col>
+
+
+          <el-col :span="12">
+            <el-form-item label="版本号" prop="version">
+              <el-input v-model="form.version" placeholder="请输入..."/>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="点赞数" prop="good_num">
+              <el-input-number v-model="form.good_num" controls-position="right" :min="0" style="width: 100%"/>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="踩数" prop="bad_num">
+              <el-input-number v-model="form.bad_num" controls-position="right" :min="0" style="width: 100%"/>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="回复数" prop="reply_num">
+              <el-input-number v-model="form.reply_num" controls-position="right" :min="0" style="width: 100%"/>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="是否安全" prop="is_safe">
+              <el-switch v-model="form.is_safe"></el-switch>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="是否优质" prop="is_good">
+              <el-switch v-model="form.is_good"></el-switch>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="是否白名单" prop="is_white" label-width="150px">
+              <el-switch v-model="form.is_white"></el-switch>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="是否可以互动" prop="can_discuss" label-width="150px">
+              <el-switch v-model="form.can_discuss"></el-switch>
+            </el-form-item>
+          </el-col>
+
         </el-row>
+
+
+        <el-form-item label="base值" prop="b64_value">
+          <el-input v-model="form.b64_value" placeholder="请输入..."/>
+        </el-form-item>
+
+        <el-form-item label="主页链接" prop="home_url">
+          <el-input v-model="form.home_url" placeholder="请输入..."/>
+        </el-form-item>
+
+        <el-form-item label="图片链接" prop="pic_url">
+          <el-input v-model="form.pic_url" placeholder="请输入..."/>
+        </el-form-item>
+
+        <el-form-item label="说明" prop="note">
+          <el-input v-model="form.note" placeholder="请输入..."/>
+        </el-form-item>
+
+        <el-form-item label="代码" prop="value">
+          <el-input v-model="form.value" placeholder="请输入..."/>
+        </el-form-item>
+        <el-form-item label="链接" prop="url">
+          <el-input v-model="form.url" placeholder="请输入..."/>
+        </el-form-item>
+
+        <el-form-item label="验证" prop="auth">
+          <el-input v-model="form.auth" placeholder="请输入..."/>
+        </el-form-item>
+
+        <el-form-item label="验证过期时间" prop="auth_date_time" label-width="150px">
+          <el-input v-model="form.auth_date_time" placeholder="请输入..."/>
+        </el-form-item>
+
+        <el-form-item label="风险描述" prop="not_safe_note">
+          <el-input v-model="form.not_safe_note" placeholder="请输入..."/>
+        </el-form-item>
+
+        <el-form-item label="开发者上次提交时间" prop="last_active" label-width="150px">
+          <el-input v-model="form.last_active" placeholder="请输入..."/>
+        </el-form-item>
 
 
       </el-form>
