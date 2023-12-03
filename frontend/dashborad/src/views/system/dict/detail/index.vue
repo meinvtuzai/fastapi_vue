@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form ref="queryForm" :model="queryParams" :inline="true">
       <el-form-item label="字典名称" prop="dictType">
-        <el-select v-model="queryParams.dict_data_id" size="small" >
+        <el-select v-model="queryParams.dict_data_id" size="small">
           <el-option
             v-for="item in typeOptions"
             :key="item.id"
@@ -74,7 +74,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="编号" align="center" prop="id" width="55"/>
       <el-table-column label="标签" align="center" prop="dict_label" :show-overflow-tooltip="true"/>
       <el-table-column label="值" align="center" prop="dict_value" :show-overflow-tooltip="true"/>
@@ -83,24 +83,30 @@
           <el-switch v-model="scope.row.is_default" disabled></el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
+      <el-table-column label="禁用" align="center" prop="dict_disabled">
+        <template slot-scope="scope">
+          <el-switch v-model="scope.row.dict_disabled" disabled></el-switch>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat"/>
       <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true"/>
-<!--      <el-table-column v-if="defaultDictType != ''" label="字典名称" align="center" :show-overflow-tooltip="true">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ defaultDictType }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+      <!--      <el-table-column v-if="defaultDictType != ''" label="字典名称" align="center" :show-overflow-tooltip="true">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          <span>{{ defaultDictType }}</span>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
       <el-table-column label="排序" align="center" prop="order_num" width="55"/>
       <el-table-column label="创建时间" align="center" prop="created_ts">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.created_ts) }}</span>
         </template>
       </el-table-column>
-<!--      <el-table-column label="更新时间" align="center" prop="modified_ts">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.modified_ts) }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+      <!--      <el-table-column label="更新时间" align="center" prop="modified_ts">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          <span>{{ parseTime(scope.row.modified_ts) }}</span>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)">修改</el-button>
@@ -123,19 +129,24 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="数据标签" prop="dict_label">
-              <el-input v-model="form.dict_label" placeholder="请输入数据标签" />
+              <el-input v-model="form.dict_label" placeholder="请输入数据标签"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="17">
+          <el-col :span="12">
             <el-form-item label="数据值" prop="dict_value">
-              <el-input v-model="form.dict_value" placeholder="请输入数据标签" />
+              <el-input v-model="form.dict_value" placeholder="请输入数据标签"/>
             </el-form-item>
           </el-col>
-          <el-col :span="7">
+          <el-col :span="6">
             <el-form-item label="默认" prop="is_default">
               <el-switch v-model="form.is_default"></el-switch>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="禁用" prop="dict_disabled">
+              <el-switch v-model="form.dict_disabled"></el-switch>
             </el-form-item>
           </el-col>
         </el-row>
@@ -152,7 +163,8 @@
                   v-for="dict in statusOptions"
                   :key="dict.value"
                   :label="dict.value"
-                >{{ dict.label }}</el-radio>
+                >{{ dict.label }}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -160,7 +172,7 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="备注" prop="remark">
-              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -175,7 +187,7 @@
 
 <script>
 
-import { listDetail, addDetail, getDetail, setDetail, delDetail, getDetailMaxOrderNum} from '@/api/system/dict/detail'
+import {listDetail, addDetail, getDetail, setDetail, delDetail, getDetailMaxOrderNum} from '@/api/system/dict/detail'
 import {getDictData, getDicts} from "@/api/system/dict/data";
 
 
@@ -216,13 +228,13 @@ export default {
       // 表单校验
       rules: {
         dict_label: [
-          { required: true, message: '数据标签不能为空', trigger: 'blur' }
+          {required: true, message: '数据标签不能为空', trigger: 'blur'}
         ],
         dict_value: [
-          { required: true, message: '数据值不能为空', trigger: 'blur' }
+          {required: true, message: '数据值不能为空', trigger: 'blur'}
         ],
         order_num: [
-          { required: true, message: '数据顺序不能为空', trigger: 'blur' }
+          {required: true, message: '数据顺序不能为空', trigger: 'blur'}
         ]
       }
     }
@@ -297,7 +309,9 @@ export default {
       getDetailMaxOrderNum(this.defaultDictDataId).then(response => {
         this.form.order_num = response.data.max_order_num + 1
       })
-      this.statusOptions.forEach(item => { if (item.is_default) this.form.status = item.value })
+      this.statusOptions.forEach(item => {
+        if (item.is_default) this.form.status = item.value
+      })
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -316,7 +330,7 @@ export default {
       })
     },
     /** 提交按钮 */
-    submitForm: function() {
+    submitForm: function () {
       this.$refs['form'].validate(valid => {
         if (valid) {
           this.form.dict_data_id = this.defaultDictDataId
@@ -347,12 +361,12 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(function() {
+      }).then(function () {
         return delDetail(ids)
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
-      }).catch(function() {
+      }).catch(function () {
       })
     }
   }

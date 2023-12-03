@@ -21,6 +21,7 @@ class DictDataSchema(BaseModel):
     
 class DictDetailSchema(BaseModel):
     dict_label: str
+    dict_disabled: bool = False
     dict_value: str
     dict_data_id: int
     remark: str = ""

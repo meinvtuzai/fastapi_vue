@@ -7,6 +7,7 @@ from db.base_class import Base
 class DictDetails(Base):
     """ 字典值表 """
     dict_label = Column(String(128), nullable=False, comment="字典标签")
+    dict_disabled = Column(Boolean, nullable=False,default=False, server_default="0", comment="是否禁用")
     dict_value = Column(String(128), nullable=False, comment="字典键值")
     remark = Column(String(256), default="", server_default="", comment="备注")
     is_default = Column(Boolean, nullable=False, default=False, server_default="0", comment="是否默认值")

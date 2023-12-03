@@ -109,7 +109,7 @@
       <el-table-column label="作者" align="center" prop="author" :show-overflow-tooltip="true"/>
       <el-table-column label="类型" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <router-link :to="'/hiker/rule_type/detail/' + scope.row.id" class="link-type">
+          <router-link :to="'/hiker/rule_type/' + scope.row.type_id" class="link-type">
             <span>{{ scope.row.type_id }}</span>
           </router-link>
         </template>
@@ -117,7 +117,7 @@
 
       <el-table-column label="开发者" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <router-link :to="'/hiker/developer/detail/' + scope.row.id" class="link-type">
+          <router-link :to="'/hiker/developer/' + scope.row.dev_id" class="link-type">
             <span>{{ scope.row.dev_id }}</span>
           </router-link>
         </template>
@@ -397,6 +397,7 @@
 </template>
 
 <script>
+import {getDicts} from '@/api/system/dict/data'
 import {searchRecords, getRecord, addRecord, setRecord, delRecord} from '@/api/hiker/rule/data'
 import JsonEditor from '@/components/JsonEditor'
 import MarkdownEditor from '@/components/MarkdownEditor'
@@ -465,28 +466,15 @@ export default {
           }
         }]
       },
-      dataTypeOptions: [{
-        value: 'home_rule_url',
-        label: '首页云规则'
-      }, {
-        value: 'publish',
-        label: '提交云仓库',
-        disabled: false
-      }, {
-        value: 'js_url',
-        label: '网页插件'
-      }, {
-        value: 'html',
-        label: '静态页面'
-      }, {
-        value: 'config',
-        label: '主页配置'
-      }],
+      dataTypeOptions: [],
 
     }
   },
   created() {
     this.getList();
+    getDicts("hiker_rule_data_type").then(response => {
+      this.dataTypeOptions = response.data.details;
+    })
   },
   methods: {
     /** 查询字典类型列表 */

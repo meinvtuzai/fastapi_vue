@@ -252,6 +252,10 @@ export default {
     }
   },
   created() {
+    const devId = this.$route.params && this.$route.params.id
+    if (devId) {
+      console.log('devId:', devId);
+    }
     this.getList();
     getDicts("com_default_status").then(response => {
       this.statusOptions = response.data.details;

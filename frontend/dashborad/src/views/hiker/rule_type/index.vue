@@ -195,6 +195,10 @@ export default {
     }
   },
   created() {
+    const ruleTypeId = this.$route.params && this.$route.params.id
+    if (ruleTypeId) {
+      console.log('ruleTypeId:', ruleTypeId);
+    }
     this.getList();
   },
   methods: {
