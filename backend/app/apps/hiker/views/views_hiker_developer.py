@@ -19,8 +19,10 @@ from common.resp import respSuccessJson, respErrorJson
 router = APIRouter()
 
 access_name = 'hiker:developer'
+api_url = '/hiker_developer'
 
-@router.get("/hiker_developer", summary="搜索开发者")
+
+@router.get(api_url, summary="搜索开发者")
 async def searchRecords(*,
                         db: Session = Depends(deps.get_db),
                         status: int = Query(None),
@@ -33,62 +35,64 @@ async def searchRecords(*,
     return respSuccessJson(res)
 
 
-@router.get("/hiker_developer/{_id}", summary="通过ID获取开发者信息")
+@router.get(api_url + "/{_id}", summary="通过ID获取开发者信息")
 async def getRecord(*,
-                       db: Session = Depends(deps.get_db),
-                       _id: int,
-                       ):
+                    db: Session = Depends(deps.get_db),
+                    _id: int,
+                    ):
     return respSuccessJson(curd.get(db, _id=_id))
 
 
-@router.post("/hiker_developer", summary="添加开发者")
+@router.post(api_url, summary="添加开发者")
 async def addRecord(*,
-                       db: Session = Depends(deps.get_db),
-                       u: Users = Depends(deps.user_perm([f"{access_name}:post"])),
-                       obj: developer_schemas.DeveloperSchema,
-                       ):
+                    db: Session = Depends(deps.get_db),
+                    u: Users = Depends(deps.user_perm([f"{access_name}:post"])),
+                    obj: developer_schemas.DeveloperSchema,
+                    ):
     res = curd.create(db, obj_in=obj, creator_id=u['id'])
     if res:
         return respSuccessJson()
     return respErrorJson(error=error_code.ERROR_HIKER_DEVELOPER_ADD_ERROR)
 
 
-@router.put("/hiker_developer/{_id}", summary="修改开发者")
+@router.put(api_url + "/{_id}", summary="修改开发者")
 async def setRecord(*,
-                       db: Session = Depends(deps.get_db),
-                       u: Users = Depends(deps.user_perm([f"{access_name}:put"])),
-                       _id: int,
-                       obj: developer_schemas.DeveloperSchema,
-                       ):
+                    db: Session = Depends(deps.get_db),
+                    u: Users = Depends(deps.user_perm([f"{access_name}:put"])),
+                    _id: int,
+                    obj: developer_schemas.DeveloperSchema,
+                    ):
     curd.update(db, _id=_id, obj_in=obj, updater_id=u['id'])
     return respSuccessJson()
 
 
-@router.delete("/hiker_developer/{_id}", summary="删除开发者")
+@router.delete(api_url + "/{_id}", summary="删除开发者")
 async def delRecord(*,
-                       db: Session = Depends(deps.get_db),
-                       u: Users = Depends(deps.user_perm([f"{access_name}:delete"])),
-                       _id: int,
-                       ):
+                    db: Session = Depends(deps.get_db),
+                    u: Users = Depends(deps.user_perm([f"{access_name}:delete"])),
+                    _id: int,
+                    ):
     curd.delete(db, _id=_id, deleter_id=u['id'])
     return respSuccessJson()
 
-@router.put("/hiker_developer/{_id}/is_manager", summary="修改开发者是否为超管")
+
+@router.put(api_url + "/{_id}/is_manager", summary="修改开发者是否为超管")
 async def setIsManager(*,
-                      db: Session = Depends(deps.get_db),
-                      u: Users = Depends(deps.user_perm([f"{access_name}:put"])),
-                     _id: int,
-                    obj: developer_schemas.IsManagerSchema
-                      ):
+                       db: Session = Depends(deps.get_db),
+                       u: Users = Depends(deps.user_perm([f"{access_name}:put"])),
+                       _id: int,
+                       obj: developer_schemas.IsManagerSchema
+                       ):
     curd.setIsManager(db, _id=_id, is_manager=obj.is_manager, modifier_id=u['id'])
     return respSuccessJson()
 
-@router.put("/hiker_developer/{_id}/active", summary="修改开发者是否启用")
+
+@router.put(api_url + "/{_id}/active", summary="修改开发者是否启用")
 async def setActive(*,
-                      db: Session = Depends(deps.get_db),
-                      u: Users = Depends(deps.user_perm([f"{access_name}:put"])),
-                     _id: int,
+                    db: Session = Depends(deps.get_db),
+                    u: Users = Depends(deps.user_perm([f"{access_name}:put"])),
+                    _id: int,
                     obj: ActiveSchema
-                      ):
-    curd.setActive(db,_id=_id, active=obj.active, modifier_id=u['id'])
+                    ):
+    curd.setActive(db, _id=_id, active=obj.active, modifier_id=u['id'])
     return respSuccessJson()

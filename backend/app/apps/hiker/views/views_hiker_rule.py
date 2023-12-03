@@ -9,8 +9,7 @@ from fastapi import APIRouter, Depends, Query, File, UploadFile
 from sqlalchemy.orm import Session
 from ...permission.models import Users
 from ..schemas import rule_schemas
-from ..schemas.common import ActiveSchema
-from ..curd.curd_hiker_rule import curd_hiker_rule_type as curd
+from ..curd.curd_hiker_rule import curd_hiker_rule as curd
 
 from common import deps, error_code
 
@@ -18,11 +17,11 @@ from common.resp import respSuccessJson, respErrorJson
 
 router = APIRouter()
 
-access_name = 'hiker:rule_type'
-api_url = '/hiker_rule_type'
+access_name = 'hiker:rule'
+api_url = '/hiker_rule'
 
 
-@router.get(api_url, summary="搜索规则类型")
+@router.get(api_url, summary="搜索规则")
 async def searchRecords(*,
                         db: Session = Depends(deps.get_db),
                         name: str = Query(None),
@@ -34,7 +33,7 @@ async def searchRecords(*,
     return respSuccessJson(res)
 
 
-@router.get(api_url + "/{_id}", summary="通过ID获取规则类型")
+@router.get(api_url + "/{_id}", summary="通过ID获取规则")
 async def getRecord(*,
                     db: Session = Depends(deps.get_db),
                     _id: int,
@@ -42,11 +41,11 @@ async def getRecord(*,
     return respSuccessJson(curd.get(db, _id=_id))
 
 
-@router.post(api_url, summary="添加规则类型")
+@router.post(api_url, summary="添加规则")
 async def addRecord(*,
                     db: Session = Depends(deps.get_db),
                     u: Users = Depends(deps.user_perm([f"{access_name}:post"])),
-                    obj: rule_schemas.RuleTypeSchema,
+                    obj: rule_schemas.RuleSchema,
                     ):
     res = curd.create(db, obj_in=obj, creator_id=u['id'])
     if res:
@@ -54,33 +53,22 @@ async def addRecord(*,
     return respErrorJson(error=error_code.ERROR_HIKER_RULE_TYPE_ADD_ERROR)
 
 
-@router.put(api_url + "/{_id}", summary="修改规则类型")
+@router.put(api_url + "/{_id}", summary="修改规则")
 async def setRecord(*,
                     db: Session = Depends(deps.get_db),
                     u: Users = Depends(deps.user_perm([f"{access_name}:put"])),
                     _id: int,
-                    obj: rule_schemas.RuleTypeSchema,
+                    obj: rule_schemas.RuleSchema,
                     ):
     curd.update(db, _id=_id, obj_in=obj, updater_id=u['id'])
     return respSuccessJson()
 
 
-@router.delete(api_url + "/{_id}", summary="删除规则类型")
+@router.delete(api_url + "/{_id}", summary="删除规则")
 async def delRecord(*,
                     db: Session = Depends(deps.get_db),
                     u: Users = Depends(deps.user_perm([f"{access_name}:delete"])),
                     _id: int,
                     ):
     curd.delete(db, _id=_id, deleter_id=u['id'])
-    return respSuccessJson()
-
-
-@router.put(api_url + "/{_id}/active", summary="修改规则类型是否启用")
-async def setActive(*,
-                    db: Session = Depends(deps.get_db),
-                    u: Users = Depends(deps.user_perm([f"{access_name}:put"])),
-                    _id: int,
-                    obj: ActiveSchema
-                    ):
-    curd.setActive(db, _id=_id, active=obj.active, modifier_id=u['id'])
     return respSuccessJson()

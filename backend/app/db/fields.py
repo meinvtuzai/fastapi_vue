@@ -32,48 +32,68 @@ def text(any):
     return sql.text(any_str)
 
 
-def Char(string: str, default=NONE, required=False, length=256):
+def Char(string: str, default=NONE, required=False, length=256, index=False):
+    primary_key = index
     if required and default == NONE:
-        return Column(sql.String(length), nullable=False, comment=string)
+        return Column(sql.String(length), nullable=False, comment=string, primary_key=primary_key)
     return Column(sql.String(length), default=default, server_default=text(default), nullable=not required,
-                  comment=string)
+                  comment=string, primary_key=primary_key)
 
 
-def Boolean(string: str, default=False, required=False):
+def Boolean(string: str, default=False, required=False, index=False):
+    primary_key = index
     if required and default == NONE:
-        return Column(sql.Boolean, nullable=False, comment=string)
-    return Column(sql.Boolean, default=default, server_default=text(default), nullable=not required, comment=string)
+        return Column(sql.Boolean, nullable=False, comment=string, primary_key=primary_key)
+    return Column(sql.Boolean, default=default, server_default=text(default), nullable=not required, comment=string,
+                  primary_key=primary_key)
 
 
-def Float(string: str, default=0.00, required=False):
+def Float(string: str, default=0.00, required=False, index=False):
+    primary_key = index
     if required and default == NONE:
-        return Column(sql.Float, nullable=False, comment=string)
-    return Column(sql.Float, default=default, server_default=text(default), nullable=not required, comment=string)
+        return Column(sql.Float, nullable=False, comment=string, primary_key=primary_key)
+    return Column(sql.Float, default=default, server_default=text(default), nullable=not required, comment=string,
+                  primary_key=primary_key)
 
 
-def Integer(string: str, default=0, required=False):
+def Integer(string: str, default=0, required=False, index=False):
+    primary_key = index
     if required and default == NONE:
-        return Column(sql.Integer, nullable=False, comment=string)
-    return Column(sql.Integer, default=default, server_default=text(default), nullable=not required, comment=string)
+        return Column(sql.Integer, nullable=False, comment=string, primary_key=primary_key)
+    return Column(sql.Integer, default=default, server_default=text(default), nullable=not required, comment=string,
+                  primary_key=primary_key)
 
 
-def Date(string: str, default=NONE, required=False):
+def Date(string: str, default=NONE, required=False, index=False):
+    primary_key = index
     if required and default == NONE:
-        return Column(sql.Date, nullable=False, comment=string)
-    return Column(sql.Date, default=default, server_default=text(default), nullable=not required, comment=string)
+        return Column(sql.Date, nullable=False, comment=string, primary_key=primary_key)
+    return Column(sql.Date, default=default, server_default=text(default), nullable=not required, comment=string,
+                  primary_key=primary_key)
 
 
-def Datetime(string: str, default=NONE, required=False):
+def Datetime(string: str, default=NONE, required=False, index=False):
+    primary_key = index
     if required and default == NONE:
-        return Column(sql.Date, nullable=False, comment=string)
-    return Column(sql.DateTime, default=default, server_default=text(default), nullable=not required, comment=string)
+        return Column(sql.Date, nullable=False, comment=string, primary_key=primary_key)
+    return Column(sql.DateTime, default=default, server_default=text(default), nullable=not required, comment=string,
+                  primary_key=primary_key)
 
 
-def Many2one(comodel_name, string='', default=NONE, required=False, ondelete='set null'):
+def Many2one(comodel_name, string='', default=NONE, required=False, ondelete='set null', index=False):
+    primary_key = index
     if required and default == NONE:
         return Column(sql.Integer,
-                      ForeignKey(f"{settings.SQL_TABLE_PREFIX}{comodel_name}.id", nullable=False, comment=string,
-                                 ondelete=ondelete))
+                      ForeignKey(f"{settings.SQL_TABLE_PREFIX}{comodel_name}.id", ondelete=ondelete), nullable=False,
+                      comment=string, primary_key=primary_key)
     return Column(sql.Integer,
-                  ForeignKey(f"{settings.SQL_TABLE_PREFIX}{comodel_name}.id", default=default,
-                             server_default=text(default), nullable=not required, comment=string, ondelete=ondelete))
+                  ForeignKey(f"{settings.SQL_TABLE_PREFIX}{comodel_name}.id", ondelete=ondelete), default=default,
+                  server_default=text(default), nullable=not required, comment=string, primary_key=primary_key)
+
+
+def Text(string: str, default=NONE, required=False, index=False):
+    primary_key = index
+    if required and default == NONE:
+        return Column(sql.Text, nullable=False, comment=string, primary_key=primary_key)
+    return Column(sql.Text, default=default, server_default=text(default), nullable=not required,
+                  comment=string, primary_key=primary_key)
