@@ -12,7 +12,6 @@ from sqlalchemy.orm import Session
 from utils.captcha_code import create_base64_code
 from utils.email import EmailSender
 from utils.encrypt import get_uuid
-from core import constants
 from apps.permission.models.user import Users
 from common import error_code, deps, security
 

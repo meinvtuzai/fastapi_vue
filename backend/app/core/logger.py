@@ -1,4 +1,4 @@
-from core.config import settings
+from .config import settings
 from utils.loggers import Logging
 
 

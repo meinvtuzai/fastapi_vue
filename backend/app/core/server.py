@@ -10,8 +10,8 @@ from fastapi.staticfiles import StaticFiles
 from apps import api_router, web_router
 from starlette.middleware.cors import CORSMiddleware
 from common.exceptions import customExceptions
-from core.config import settings
-from core.middleware import middleware
+from .config import settings
+from .middleware import middleware
 from db.cache import registerRedis
 from timer import scheduler
 from workers import app as celery_app

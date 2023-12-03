@@ -3,7 +3,7 @@ import secrets
 import argparse
 import click
 from typing import Any, Dict, List, Optional, Union
-from core import constants
+from . import constants
 from pydantic import AnyHttpUrl, BaseSettings, IPvAnyAddress, BaseModel, FilePath
 from pydantic.env_settings import env_file_sentinel
 

@@ -1,6 +1,5 @@
 import json
 from typing import Optional, Dict, Any
-from core.logger import logger
 from fastapi import FastAPI, status, HTTPException
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi.exceptions import RequestValidationError
