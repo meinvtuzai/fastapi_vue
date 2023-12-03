@@ -67,7 +67,7 @@ class CURDHikerRule(CRUDBase):
             'url': record.url,
             'state': record.state,
             'auth': record.auth,
-            'auth_date_time': record.auth_date_time,
+            'auth_date_time': str(record.auth_date_time),
             'time_over': record.time_over,
             'b64_value': record.b64_value,
             'home_url': record.home_url,
@@ -88,7 +88,7 @@ class CURDHikerRule(CRUDBase):
             'is_good': record.is_good,
             'is_white': record.is_white,
             'not_safe_note': record.not_safe_note,
-            'last_active': record.last_active,
+            'last_active': str(record.last_active),
         }
 
     def create(self, db: Session, *, obj_in, creator_id: int = 0):
@@ -108,14 +108,28 @@ class CURDHikerRule(CRUDBase):
         res = super().update(db, _id=_id, obj_in=obj_in_data, modifier_id=updater_id)
         return res
 
-    def search(self, db: Session, *, name: str = "", count_num: int = None,
+    def search(self, db: Session, *, name: str = "", author: str = None, value: str = None, url: str = None,
+               dev_id: int = None,
                page: int = 1, page_size: int = 25) -> dict:
         filters = []
-        if count_num is not None:
-            filters.append(self.model.count_num == count_num)
+        if author is not None:
+            filters.append(self.model.author == author)
+        if value is not None:
+            filters.append(self.model.value == value)
+        if url is not None:
+            filters.append(self.model.url == url)
+        if dev_id is not None:
+            filters.append(self.model.dev_id == dev_id)
         if name:
             filters.append(self.model.name.like(f"%{name}%"))
         records, total, _, _ = self.get_multi(db, page=page, page_size=page_size, filters=filters)
+        for record in records:
+            if record.get('auth_date_time'):
+                record['auth_date_time'] = str(record['auth_date_time'])
+
+            if record.get('last_active'):
+                record['last_active'] = str(record['last_active'])
+
         return {'results': records, 'total': total}
 
 

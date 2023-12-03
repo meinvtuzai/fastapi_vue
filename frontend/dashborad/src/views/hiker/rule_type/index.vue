@@ -71,13 +71,13 @@
     </el-row>
 
     <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">i
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="ID" align="center" prop="id" width="55"/>
       <el-table-column label="类型名称" align="center" prop="name" :show-overflow-tooltip="true"/>
       <el-table-column label="规则数量" align="center" prop="count_num" :show-overflow-tooltip="true"/>
       <el-table-column label="是否启用" align="center" prop="active" width="100">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.active" @change="handleChangActive(scope.row)"></el-switch>
+          <el-switch v-model="scope.row.active" @change="handleChangActive(scope.row)"/>
         </template>
       </el-table-column>
 
@@ -125,7 +125,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入规则类型名称" />
+              <el-input v-model="form.name" placeholder="请输入规则类型名称"/>
             </el-form-item>
           </el-col>
 
@@ -136,15 +136,13 @@
           </el-col>
         </el-row>
 
-
         <el-row>
           <el-col :span="12">
             <el-form-item label="是否启用" prop="active">
-              <el-switch v-model="form.active"></el-switch>
+              <el-switch v-model="form.active"/>
             </el-form-item>
           </el-col>
         </el-row>
-
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -156,7 +154,7 @@
 </template>
 
 <script>
-import { searchRecords, getRecord, addRecord, setRecord, delRecord,changeActive } from '@/api/hiker/rule_type/data'
+import {searchRecords, getRecord, addRecord, setRecord, delRecord, changeActive} from '@/api/hiker/rule_type/data'
 
 export default {
   name: 'DictType',
@@ -191,7 +189,7 @@ export default {
       // 表单校验
       rules: {
         name: [
-          { required: true, message: '规则类型不能为空', trigger: 'blur' }
+          {required: true, message: '规则类型不能为空', trigger: 'blur'}
         ],
       }
     }
@@ -239,7 +237,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset()
-      this.form.active=true;
+      this.form.active = true;
       this.open = true
       this.title = '添加规则类型'
     },
@@ -262,22 +260,22 @@ export default {
     /** 改变是否超管 */
     handleChangIsManager(row) {
       changeIsManager(row.id, row.is_manager).then(response => {
-        if(response.code === 0) {
+        if (response.code === 0) {
           this.msgSuccess("修改成功")
         }
         this.getList();
       })
     },
-    handleChangActive(row){
+    handleChangActive(row) {
       changeActive(row.id, row.active).then(response => {
-        if(response.code === 0) {
+        if (response.code === 0) {
           this.msgSuccess("修改成功")
         }
         this.getList();
       })
     },
     /** 提交按钮 */
-    submitForm: function() {
+    submitForm: function () {
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== undefined) {
@@ -311,12 +309,12 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(function() {
+      }).then(function () {
         return delRecord(ids)
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
-      }).catch(function() {
+      }).catch(function () {
       })
     },
 
@@ -327,11 +325,12 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
-      }).then(function() {
+      }).then(function () {
         return exportConfig(queryParams);
       }).then(response => {
         this.download(response.msg);
-      }).catch(function() {});
+      }).catch(function () {
+      });
     }
   }
 }

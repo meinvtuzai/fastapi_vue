@@ -25,11 +25,14 @@ api_url = '/hiker_rule'
 async def searchRecords(*,
                         db: Session = Depends(deps.get_db),
                         name: str = Query(None),
-                        count_num: int = Query(None),
+                        author: str = Query(None),
+                        value: str = Query(None),
+                        url: str = Query(None),
+                        dev_id: int = Query(None),
                         page: int = Query(1, gt=0),
                         page_size: int = Query(20, gt=0),
                         ):
-    res = curd.search(db, name=name, count_num=count_num, page=page, page_size=page_size)
+    res = curd.search(db, name=name, author=author,value=value, url=url,dev_id=dev_id,page=page, page_size=page_size)
     return respSuccessJson(res)
 
 

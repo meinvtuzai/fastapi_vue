@@ -17,10 +17,10 @@ class SearchDeveloperSchema(BaseModel):
 class DeveloperSchema(BaseModel):
     name: str
     qq: str
-    password:str
+    password:str = '123456'
     is_manager:bool = False
     status: int = 0
     active: bool = True
 
 class IsManagerSchema(BaseModel):
-    is_manager: bool
+    is_manager: bool = False

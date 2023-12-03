@@ -85,7 +85,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">i
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="ID" align="center" prop="id" width="55"/>
       <el-table-column label="开发者账号" align="center" prop="name" :show-overflow-tooltip="true"/>
       <el-table-column label="QQ号" align="center" prop="qq" :show-overflow-tooltip="true"/>
@@ -101,7 +101,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
+      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat"/>
       <el-table-column label="创建时间" align="center" prop="created_ts" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.created_ts) }}</span>
@@ -146,19 +146,19 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="账号" prop="name">
-              <el-input v-model="form.name" placeholder="请输入开发者账号" />
+              <el-input v-model="form.name" placeholder="请输入开发者账号"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="密码" prop="password">
-              <el-input v-model="form.password" placeholder="请输入开发者密码" />
+              <el-input v-model="form.password" placeholder="请输入开发者密码"/>
             </el-form-item>
           </el-col>
         </el-row>
 
 
         <el-form-item label="QQ" prop="qq">
-          <el-input v-model="form.qq" placeholder="请输入开发者qq" />
+          <el-input v-model="form.qq" placeholder="请输入开发者qq"/>
         </el-form-item>
 
         <el-form-item label="状态" prop="status">
@@ -197,7 +197,15 @@
 
 <script>
 import {getDicts} from '@/api/system/dict/data'
-import { searchRecords, getRecord, addRecord, setRecord, delRecord, changeIsManager,changeActive } from '@/api/hiker/developer/data'
+import {
+  searchRecords,
+  getRecord,
+  addRecord,
+  setRecord,
+  delRecord,
+  changeIsManager,
+  changeActive
+} from '@/api/hiker/developer/data'
 
 export default {
   name: 'DictType',
@@ -232,13 +240,13 @@ export default {
       // 表单校验
       rules: {
         name: [
-          { required: true, message: '开发者账号不能为空', trigger: 'blur' }
+          {required: true, message: '开发者账号不能为空', trigger: 'blur'}
         ],
         password: [
-          { required: true, message: '开发者密码不能为空', trigger: 'blur' }
+          {required: true, message: '开发者密码不能为空', trigger: 'blur'}
         ],
         qq: [
-          { required: true, message: '开发者QQ不能为空', trigger: 'blur' }
+          {required: true, message: '开发者QQ不能为空', trigger: 'blur'}
         ]
       }
     }
@@ -300,7 +308,9 @@ export default {
       // getDictDataMaxOrderNum().then(response => {
       //   this.form.order_num = response.data.max_order_num + 1
       // })
-      this.statusOptions.forEach(item => { if (item.is_default) this.form.status = item.value })
+      this.statusOptions.forEach(item => {
+        if (item.is_default) this.form.status = item.value
+      })
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -321,22 +331,22 @@ export default {
     /** 改变是否超管 */
     handleChangIsManager(row) {
       changeIsManager(row.id, row.is_manager).then(response => {
-        if(response.code === 0) {
+        if (response.code === 0) {
           this.msgSuccess("修改成功")
         }
         this.getList();
       })
     },
-    handleChangActive(row){
+    handleChangActive(row) {
       changeActive(row.id, row.active).then(response => {
-        if(response.code === 0) {
+        if (response.code === 0) {
           this.msgSuccess("修改成功")
         }
         this.getList();
       })
     },
     /** 提交按钮 */
-    submitForm: function() {
+    submitForm: function () {
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== undefined) {
@@ -370,12 +380,12 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(function() {
+      }).then(function () {
         return delRecord(ids)
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
-      }).catch(function() {
+      }).catch(function () {
       })
     },
 
@@ -386,11 +396,12 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
-      }).then(function() {
+      }).then(function () {
         return exportConfig(queryParams);
       }).then(response => {
         this.download(response.msg);
-      }).catch(function() {});
+      }).catch(function () {
+      });
     }
   }
 }
