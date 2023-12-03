@@ -33,7 +33,7 @@ class RuleSchema(BaseModel):
     is_tap: bool = False
     can_discuss: bool = True
     is_json_list: bool = False
-    data_type: int = 0
+    data_type: str = 'home_rule_url'
     version: str = ''
     author: str = ''
     note: str = ''

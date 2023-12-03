@@ -225,7 +225,17 @@
 
           <el-col :span="12">
             <el-form-item label="数据类型" prop="data_type">
-              <el-input v-model="form.data_type" placeholder="请输入..."/>
+              <el-select v-model="form.data_type" filterable placeholder="请选择">
+                <el-option
+                  v-for="item in dataTypeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                  :disabled="item.disabled">
+                </el-option>
+              </el-select>
+
+              <!--              <drag-select :value="['规则','主题','静态文件']"></drag-select>-->
             </el-form-item>
           </el-col>
 
@@ -325,12 +335,20 @@
         </el-form-item>
 
         <el-form-item label="说明" prop="note">
-          <el-input v-model="form.note" placeholder="请输入..."/>
+          <el-input
+            type="textarea"
+            :rows="4"
+            placeholder="请输入内容"
+            v-model="form.note">
+          </el-input>
+
+          <!--          <markdown-editor v-model="form.note" :value="form.note"></markdown-editor>-->
         </el-form-item>
 
         <el-form-item label="代码" prop="value">
-          <el-input v-model="form.value" placeholder="请输入..."/>
+          <json-editor v-model="form.value"></json-editor>
         </el-form-item>
+
         <el-form-item label="链接" prop="url">
           <el-input v-model="form.url" placeholder="请输入..."/>
         </el-form-item>
@@ -339,16 +357,33 @@
           <el-input v-model="form.auth" placeholder="请输入..."/>
         </el-form-item>
 
+        <el-form-item label="开发者上次提交时间" prop="last_active" label-width="150px">
+          <div class="block">
+            <el-date-picker
+              v-model="form.last_active"
+              type="datetime"
+              placeholder="选择日期时间"
+              align="right"
+              :picker-options="pickerOptions">
+            </el-date-picker>
+          </div>
+        </el-form-item>
+
         <el-form-item label="验证过期时间" prop="auth_date_time" label-width="150px">
-          <el-input v-model="form.auth_date_time" placeholder="请输入..."/>
+          <div class="block">
+            <el-date-picker
+              v-model="form.auth_date_time"
+              type="datetime"
+              placeholder="选择日期时间"
+              align="right"
+              :picker-options="pickerOptions">
+            </el-date-picker>
+          </div>
+
         </el-form-item>
 
         <el-form-item label="风险描述" prop="not_safe_note">
-          <el-input v-model="form.not_safe_note" placeholder="请输入..."/>
-        </el-form-item>
-
-        <el-form-item label="开发者上次提交时间" prop="last_active" label-width="150px">
-          <el-input v-model="form.last_active" placeholder="请输入..."/>
+          <el-input v-model="form.not_safe_note" placeholder="请输入..." type="textarea" :rows="4"/>
         </el-form-item>
 
 
@@ -363,9 +398,14 @@
 
 <script>
 import {searchRecords, getRecord, addRecord, setRecord, delRecord} from '@/api/hiker/rule/data'
+import JsonEditor from '@/components/JsonEditor'
+import MarkdownEditor from '@/components/MarkdownEditor'
+import MDinput from '@/components/MDinput'
+import DragSelect from '@/components/DragSelect'
 
 export default {
-  name: 'DictType',
+  name: 'HikerRule',
+  components: {JsonEditor, MarkdownEditor, MDinput, DragSelect},
   data() {
     return {
       // 遮罩层
@@ -402,7 +442,47 @@ export default {
         name: [
           {required: true, message: '规则名称不能为空', trigger: 'blur'}
         ],
-      }
+      },
+      pickerOptions: {
+        shortcuts: [{
+          text: '今天',
+          onClick(picker) {
+            picker.$emit('pick', new Date());
+          }
+        }, {
+          text: '昨天',
+          onClick(picker) {
+            const date = new Date();
+            date.setTime(date.getTime() - 3600 * 1000 * 24);
+            picker.$emit('pick', date);
+          }
+        }, {
+          text: '一周前',
+          onClick(picker) {
+            const date = new Date();
+            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', date);
+          }
+        }]
+      },
+      dataTypeOptions: [{
+        value: 'home_rule_url',
+        label: '首页云规则'
+      }, {
+        value: 'publish',
+        label: '提交云仓库',
+        disabled: false
+      }, {
+        value: 'js_url',
+        label: '网页插件'
+      }, {
+        value: 'html',
+        label: '静态页面'
+      }, {
+        value: 'config',
+        label: '主页配置'
+      }],
+
     }
   },
   created() {

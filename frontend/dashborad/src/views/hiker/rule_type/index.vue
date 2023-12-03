@@ -157,7 +157,7 @@
 import {searchRecords, getRecord, addRecord, setRecord, delRecord, changeActive} from '@/api/hiker/rule_type/data'
 
 export default {
-  name: 'DictType',
+  name: 'HikerRuleType',
   data() {
     return {
       // 遮罩层

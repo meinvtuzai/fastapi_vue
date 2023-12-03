@@ -37,7 +37,7 @@ class HikerRule(Base):
     can_discuss = fields.Boolean(string='是否可以互动', default=True)
     is_json_list = fields.Boolean(string='是否json列表', default=False)
 
-    data_type = fields.Integer(string='数据类型', default=0)
+    data_type = fields.Char(string='数据类型', default='home_rule_url')
     version = fields.Char(string='版本号', default='0')
     author = fields.Char(string='作者')
     note = fields.Text('说明')

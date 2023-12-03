@@ -208,7 +208,7 @@ import {
 } from '@/api/hiker/developer/data'
 
 export default {
-  name: 'DictType',
+  name: 'HikerDeveloper',
   data() {
     return {
       // 遮罩层
