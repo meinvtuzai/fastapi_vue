@@ -11,6 +11,7 @@ from apps import api_router, web_router
 from starlette.middleware.cors import CORSMiddleware
 from common.exceptions import customExceptions
 from core.config import settings
+from core.middleware import middleware
 from db.cache import registerRedis
 from timer import scheduler
 from workers import app as celery_app
@@ -22,14 +23,15 @@ class InitializeApp(object):
     """
 
     def __new__(cls, *args, **kwargs):
-        app = FastAPI(title=settings.PROJECT_NAME)
+        # app = FastAPI(title=settings.PROJECT_NAME)
+        app = FastAPI(title=settings.PROJECT_NAME, middleware=middleware)
         # set static files
         app.mount("/media", StaticFiles(directory="media"), name="media")  # 媒体文件
         app.mount("/static", StaticFiles(directory="static"), name="static")  # 静态文件
         app.mount("/web", StaticFiles(directory="templates"), name="templates")  # 模板静态文件
         # allow cross domain
-        app.add_middleware(CORSMiddleware, allow_origins=settings.BACKEND_CORS_ORIGINS,
-                           allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+        # app.add_middleware(CORSMiddleware, allow_origins=settings.BACKEND_CORS_ORIGINS,
+        #                    allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
         # set redis
         registerRedis(app)
