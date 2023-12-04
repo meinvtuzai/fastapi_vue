@@ -1,6 +1,18 @@
 # <center> FastAPI-Vue </center>
 [压测工具](https://runnergo.apipost.cn/)  
 [组件文档](https://element.eleme.io/#/zh-CN/component/input)
+
+```shell
+alembic init alembic
+
+sqlalchemy.url = mysql+pymysql://root:root@localhost:3306/fastapi_vue
+
+from db.base_class import Base
+target_metadata = Base.metadata
+
+alembic revision --autogenerate -m "init"
+alembic upgrade head
+```
 ## 简介
 
 > 在gitee平台好像看不到图片，可以去[CSDN(https://blog.csdn.net/sinat_34149445/article/details/127975155)](https://blog.csdn.net/sinat_34149445/article/details/127975155)查看图片 

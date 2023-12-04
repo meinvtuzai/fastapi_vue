@@ -27,3 +27,4 @@ class HikerDeveloper(Base):
     status = fields.Integer(string='状态', default='0')
     is_manager = fields.Boolean(string='是否超管', default=False)
     active = fields.Boolean(string='是否启用', default=True)
+    test = fields.Char(string='测试字段', length=10)
