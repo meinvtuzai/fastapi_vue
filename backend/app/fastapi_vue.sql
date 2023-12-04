@@ -11,7 +11,7 @@
  Target Server Version : 100318
  File Encoding         : 65001
 
- Date: 04/12/2023 22:40:24
+ Date: 04/12/2023 23:24:20
 */
 
 SET NAMES utf8mb4;
@@ -29,7 +29,7 @@ CREATE TABLE `alembic_version`  (
 -- ----------------------------
 -- Records of alembic_version
 -- ----------------------------
-INSERT INTO `alembic_version` VALUES ('687978660353');
+INSERT INTO `alembic_version` VALUES ('a377d1a4d666');
 
 -- ----------------------------
 -- Table structure for t_config_settings
@@ -51,13 +51,14 @@ CREATE TABLE `t_config_settings`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `ix_t_config_settings_name`(`name`) USING BTREE,
   INDEX `ix_t_config_settings_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_config_settings
 -- ----------------------------
 INSERT INTO `t_config_settings` VALUES (1, '2022-11-13 02:47:53', 0, '2022-11-13 02:47:53', 0, 0, '用户初始角色', 'user_init_roles', 'general', '0', 0, 1);
 INSERT INTO `t_config_settings` VALUES (2, '2023-12-04 22:13:09', 1, '2023-12-04 22:13:09', 0, 0, '数据库升级密码', 'database_update_auth', 'hjdhnx', '', 0, 2);
+INSERT INTO `t_config_settings` VALUES (3, '2023-12-04 23:04:31', 1, '2023-12-04 23:19:46', 1, 0, '登录需要验证码', 'login_with_captcha', 'no', 'yes 开启 no 关闭', 0, 3);
 
 -- ----------------------------
 -- Table structure for t_dict_data
