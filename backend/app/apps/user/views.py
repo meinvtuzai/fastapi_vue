@@ -2,6 +2,7 @@ import os
 from datetime import timedelta
 import json
 from typing import Any, Optional
+
 try:
     from redis.asyncio import Redis
 except ImportError:
@@ -13,6 +14,7 @@ from utils.captcha_code import create_base64_code
 from utils.email import EmailSender
 from utils.encrypt import get_uuid
 from apps.permission.models.user import Users
+from apps.system.models import ConfigSettings
 from common import error_code, deps, security
 
 from common.resp import respSuccessJson, respErrorJson
@@ -31,11 +33,15 @@ async def login(*,
                 redis: Redis = Depends(deps.get_redis),
                 user_info: user_info_schemas.LoginUserInfoSchema
                 ):
-    code = await redis.get(f"{constants.REDIS_KEY_USER_CAPTCHA_CODE_KEY_PREFIX}_{user_info.key}")  # type: bytes
-    if not code:
-        return respErrorJson(error=error_code.ERROR_USER_CAPTCHA_CODE_INVALID)  # 验证码失效
-    elif code.decode('utf-8').lower() != user_info.code.lower():
-        return respErrorJson(error=error_code.ERROR_USER_CAPTCHA_CODE_ERROR)  # 验证码错误
+    configs = db.query(ConfigSettings.value).filter(
+        ConfigSettings.key == 'login_with_captcha', ConfigSettings.is_deleted == 0, ConfigSettings.status == 0
+    ).first()
+    if configs and configs.value == 'yes':
+        code = await redis.get(f"{constants.REDIS_KEY_USER_CAPTCHA_CODE_KEY_PREFIX}_{user_info.key}")  # type: bytes
+        if not code:
+            return respErrorJson(error=error_code.ERROR_USER_CAPTCHA_CODE_INVALID)  # 验证码失效
+        elif code.decode('utf-8').lower() != user_info.code.lower():
+            return respErrorJson(error=error_code.ERROR_USER_CAPTCHA_CODE_ERROR)  # 验证码错误
     user = curd_user.authenticate(db, user=user_info.user, password=user_info.password)
     if not user:
         return respErrorJson(error=error_code.ERROR_USER_PASSWORD_ERROR)

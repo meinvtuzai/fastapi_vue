@@ -18,7 +18,7 @@
           <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon"/>
         </el-input>
       </el-form-item>
-      <el-form-item prop="code">
+      <el-form-item prop="code" v-if="login_with_captcha">
         <el-input
           v-model="loginForm.code"
           auto-complete="off"
@@ -58,7 +58,7 @@
 import Cookies from "js-cookie";
 import { decrypt, encrypt } from "@/utils/jsencrypt";
 import UserLayout from '../layout'
-
+import {getParameter} from '@/api/system/parameter'
 import { getCaptchaCode } from '@/api/user'
 
 export default {
@@ -94,7 +94,8 @@ export default {
       redirect: undefined,
       codeImg: "",
       allQuery: {},
-      otherQuery: {}
+      otherQuery: {},
+      login_with_captcha:false,
     }
   },
   watch: {
@@ -116,12 +117,21 @@ export default {
   },
   methods: {
     getCode() {
-      getCaptchaCode().then( res => {
-        if (res.code === 0) {
-          this.codeImg = res.data.img;
-          this.loginForm.key = res.data.key;
+      getParameter('login_with_captcha').then(response => {
+        let data = response.data;
+        console.log(data);
+        if (data.value==='yes') {
+          this.login_with_captcha = true;
+          getCaptchaCode().then( res => {
+            if (res.code === 0) {
+              this.codeImg = res.data.img;
+              this.loginForm.key = res.data.key;
+            }
+          })
+
         }
-      })
+      });
+
     },
     getCookie() {
       const username = Cookies.get("username");
