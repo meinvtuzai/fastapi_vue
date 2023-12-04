@@ -74,7 +74,7 @@ class Settings(BaseSettings):
     WEB_TEMPLATES_DIR: str = "./templates/"  # 网页模板路径
 
     # 数据库升级执行码
-    DATA_BASE_UPDATE_AUTH: str = 'hjdhnx'
+    DATABASE_UPDATE_AUTH: str = 'hjdhnx'
 
     # 代理
     IP_AGENTS = [""]

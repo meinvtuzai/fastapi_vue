@@ -32,8 +32,5 @@ def update_db():
     cmd = 'alembic revision --autogenerate -m "auto_update" && alembic upgrade head'
     logger.info(f'开始执行cmd:{cmd}')
     result = os.system(cmd)
-    logger.info(f'cmd执行结果:{result}{type(result)}')
-    if result == 0:
-        return True
-    else:
-        return False
+    logger.info(f'cmd执行结果:{result} 类型:{type(result)}')
+    return result == 0

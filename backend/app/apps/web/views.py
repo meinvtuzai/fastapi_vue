@@ -44,7 +44,7 @@ async def baidu():
 
 @router.put('/database_update', summary="数据库升级")
 async def database_update(obj: database_schemas.updateSchema):
-    if obj.auth_code == settings.DATA_BASE_UPDATE_AUTH:
+    if obj.auth_code == settings.DATABASE_UPDATE_AUTH:
         if update_db():
             return respSuccessJson()
         return respErrorJson(error=error_code.ERROR_DATABASE_CMD_ERROR)
