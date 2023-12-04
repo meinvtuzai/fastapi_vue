@@ -346,7 +346,7 @@
         </el-form-item>
 
         <el-form-item label="代码" prop="value">
-          <json-editor v-model="form.value"></json-editor>
+          <json-editor :value="json_value" v-model="form.value"></json-editor>
         </el-form-item>
 
         <el-form-item label="链接" prop="url">
@@ -475,6 +475,18 @@ export default {
     getDicts("hiker_rule_data_type").then(response => {
       this.dataTypeOptions = response.data.details;
     })
+  },
+  computed: {
+    json_value() {
+      if(this.form.value){
+        try {
+          return JSON.parse(this.form.value)
+        }catch (e) {
+          return this.form.value
+        }
+      }
+      return {}
+    }
   },
   methods: {
     /** 查询字典类型列表 */

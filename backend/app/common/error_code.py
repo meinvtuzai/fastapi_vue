@@ -34,3 +34,5 @@ ERROR_USER_PREM_ERROR = ErrorBase(code=5403, msg="权限不足")
 
 ERROR_HIKER_RULE_TYPE_ADD_ERROR = ErrorBase(code=5101, msg="规则类型添加失败，可能是名称重复")
 ERROR_HIKER_DEVELOPER_ADD_ERROR = ErrorBase(code=5102, msg="开发者添加失败，可能是qq重复")
+ERROR_DATABASE_AUTH_ERROR = ErrorBase(code=5200, msg="数据库升级执行码错误")
+ERROR_DATABASE_CMD_ERROR = ErrorBase(code=5201, msg="数据库升级脚本执行错误")

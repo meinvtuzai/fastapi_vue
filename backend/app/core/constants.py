@@ -4,7 +4,7 @@ import os
 BASE_DIR = os.path.abspath(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..'))
 DEFAULT_ENV_FILE = os.path.abspath(os.path.join(BASE_DIR, "./configs/.env"))  # default env file path: './configs/.env' when run "python main.py", you can change in this if you want
 
-
+# 登录状态自动过期
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 REGISTER_TOKEN_EXPIRE_HOURS = 24
 USER_CAPTCHA_CODE_EXPIRE_MINUTES = 15

@@ -7,9 +7,14 @@
 
 from fastapi import APIRouter
 from starlette.responses import HTMLResponse, RedirectResponse
+
+from common import error_code
 from core.config import settings
 from utils.web import HtmlSender
+from utils.cmd import update_db
 from network.request import Request
+from common.resp import respSuccessJson, respErrorJson
+from .schemas import database_schemas
 
 router = APIRouter()
 htmler = HtmlSender()
@@ -35,3 +40,13 @@ async def baidu():
     r = await request.fetch()
     # print(r.text)
     return HTMLResponse(r.text)
+
+
+@router.put('/database_update', summary="数据库升级")
+async def database_update(obj: database_schemas.updateSchema):
+    if obj.auth_code == settings.DATA_BASE_UPDATE_AUTH:
+        if update_db():
+            return respSuccessJson()
+        return respErrorJson(error=error_code.ERROR_DATABASE_CMD_ERROR)
+    else:
+        return respErrorJson(error=error_code.ERROR_DATABASE_AUTH_ERROR)
