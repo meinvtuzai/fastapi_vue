@@ -15,6 +15,7 @@ from .middleware import middleware
 from db.cache import registerRedis
 from timer import scheduler
 from workers import app as celery_app
+from utils.notes import set_start_time
 
 
 class InitializeApp(object):
@@ -76,7 +77,7 @@ class InitializeApp(object):
         @app.on_event("startup")
         async def startup():
             scheduler.start()  # 定时任务
-            pass
+            set_start_time()  # 写入程序启动时间
 
         @app.on_event('shutdown')
         async def shutdown():

@@ -94,6 +94,12 @@
                   <td class="el-table__cell is-leaf"><div class="cell">系统架构</div></td>
                   <td class="el-table__cell is-leaf"><div class="cell" v-if="server.sys">{{ server.sys.osArch }}</div></td>
                 </tr>
+                <tr>
+                  <td class="el-table__cell is-leaf"><div class="cell">开机时间</div></td>
+                  <td class="el-table__cell is-leaf"><div class="cell" v-if="server.sys">{{ server.sys.bootTime }}</div></td>
+                  <td class="el-table__cell is-leaf"><div class="cell">系统版本</div></td>
+                  <td class="el-table__cell is-leaf"><div class="cell" v-if="server.sys">{{ server.sys.osVersion }}</div></td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -103,15 +109,15 @@
       <el-col :span="24" class="card-box">
         <el-card>
           <div slot="header">
-            <span><i class="el-icon-coffee-cup"></i> Java虚拟机信息</span>
+            <span><i class="el-icon-coffee-cup"></i> Python虚拟机信息</span>
           </div>
           <div class="el-table el-table--enable-row-hover el-table--medium">
             <table cellspacing="0" style="width: 100%;table-layout:fixed;">
               <tbody>
                 <tr>
-                  <td class="el-table__cell is-leaf"><div class="cell">Java名称</div></td>
+                  <td class="el-table__cell is-leaf"><div class="cell">Python名称</div></td>
                   <td class="el-table__cell is-leaf"><div class="cell" v-if="server.jvm">{{ server.jvm.name }}</div></td>
-                  <td class="el-table__cell is-leaf"><div class="cell">Java版本</div></td>
+                  <td class="el-table__cell is-leaf"><div class="cell">Python版本</div></td>
                   <td class="el-table__cell is-leaf"><div class="cell" v-if="server.jvm">{{ server.jvm.version }}</div></td>
                 </tr>
                 <tr>

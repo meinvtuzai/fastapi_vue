@@ -76,6 +76,9 @@ class Settings(BaseSettings):
     # 数据库升级执行码
     DATABASE_UPDATE_AUTH: str = 'hjdhnx'
 
+    # 一些记录数据的路径
+    NOTES_PATH: str = './log/notes.json'
+
     # 代理
     IP_AGENTS = [""]
 
