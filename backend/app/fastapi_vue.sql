@@ -11,7 +11,7 @@
  Target Server Version : 100318
  File Encoding         : 65001
 
- Date: 05/12/2023 09:12:21
+ Date: 05/12/2023 22:02:34
 */
 
 SET NAMES utf8mb4;
@@ -296,7 +296,7 @@ CREATE TABLE `t_perm_label`  (
   `status` int(11) NULL DEFAULT 0 COMMENT '状态',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `ix_t_perm_label_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 25 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 27 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_perm_label
@@ -325,6 +325,8 @@ INSERT INTO `t_perm_label` VALUES (21, '2023-12-04 19:55:50', 0, '2023-12-04 19:
 INSERT INTO `t_perm_label` VALUES (22, '2023-12-04 20:00:34', 0, '2023-12-04 20:00:34', 0, 0, 'hiker:rule:post', '', 0);
 INSERT INTO `t_perm_label` VALUES (23, '2023-12-04 20:00:59', 0, '2023-12-04 20:00:59', 0, 0, 'hiker:rule:put', '', 0);
 INSERT INTO `t_perm_label` VALUES (24, '2023-12-04 22:13:09', 0, '2023-12-04 22:13:09', 0, 0, 'system:config-setting:post', '', 0);
+INSERT INTO `t_perm_label` VALUES (25, '2023-12-05 19:44:23', 0, '2023-12-05 19:44:23', 0, 0, 'monitor:server:post', '', 0);
+INSERT INTO `t_perm_label` VALUES (26, '2023-12-05 20:08:50', 0, '2023-12-05 20:08:50', 0, 0, 'monitor:server:get', '', 0);
 
 -- ----------------------------
 -- Table structure for t_perm_label_role
