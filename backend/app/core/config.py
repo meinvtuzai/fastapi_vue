@@ -79,6 +79,9 @@ class Settings(BaseSettings):
     # 一些记录数据的路径
     NOTES_PATH: str = './log/notes.json'
 
+    # cachetools缓存生命周期(秒)
+    CACHE_TTL:int = 3600
+
     # 代理
     IP_AGENTS = [""]
 

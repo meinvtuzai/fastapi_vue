@@ -3,6 +3,7 @@
 [组件文档](https://element.eleme.io/#/zh-CN/component/input)
 [系统资源监控](https://zhuanlan.zhihu.com/p/664812265)  
 [ws,jinja](https://www.jianshu.com/p/ca9b257a1a44)  
+[cachetools文档](https://cachetools.readthedocs.io/en/stable/#cachetools.Cache)  
 
 ```shell
 alembic init alembic
