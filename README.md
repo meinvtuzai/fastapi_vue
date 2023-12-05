@@ -1,6 +1,8 @@
 # <center> FastAPI-Vue </center>
 [压测工具](https://runnergo.apipost.cn/)  
 [组件文档](https://element.eleme.io/#/zh-CN/component/input)
+[系统资源监控](https://zhuanlan.zhihu.com/p/664812265)  
+[ws,jinja](https://www.jianshu.com/p/ca9b257a1a44)  
 
 ```shell
 alembic init alembic

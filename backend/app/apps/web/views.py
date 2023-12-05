@@ -5,7 +5,7 @@
 # Author's Blog: https://blog.csdn.net/qq_32394351
 # Date  : 2023/12/3
 
-from fastapi import APIRouter
+from fastapi import APIRouter, WebSocket, Request as Req
 from starlette.responses import HTMLResponse, RedirectResponse
 
 from common import error_code
@@ -15,10 +15,21 @@ from utils.cmd import update_db
 from network.request import Request
 from common.resp import respSuccessJson, respErrorJson
 from .schemas import database_schemas
+from fastapi.templating import Jinja2Templates
 
 router = APIRouter()
 htmler = HtmlSender()
+# htmler2 = Jinja2Templates(directory="templates")
+htmler2 = Jinja2Templates(directory=settings.WEB_TEMPLATES_DIR)
 htmler.template_path = settings.WEB_TEMPLATES_DIR
+
+# 存储所有连接到 WebSocket 的客户端
+client_websockets = []
+
+
+@router.get("/doc", response_class=HTMLResponse, summary="文档首页")
+async def read_root(request: Req):
+    return htmler2.TemplateResponse("index.html", {"request": request})
 
 
 @router.get("/", summary="网站首页")
@@ -50,3 +61,59 @@ async def database_update(obj: database_schemas.updateSchema):
         return respErrorJson(error=error_code.ERROR_DATABASE_CMD_ERROR)
     else:
         return respErrorJson(error=error_code.ERROR_DATABASE_AUTH_ERROR)
+
+
+@router.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    # 添加客户端到存储列表中
+    client_websockets.append(websocket)
+
+    # 发送欢迎信息给客户端
+    await websocket.send_text("Welcome to the WebSocket server!")
+
+    # 循环读取客户端发送的消息，并广播给所有客户端
+    while True:
+        data = await websocket.receive_text()
+        for client in client_websockets:
+            await client.send_text(f"User {id(websocket)} says: {data}")
+
+
+# 静态页面，用于测试 WebSocket
+html = """
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WebSocket Test</title>
+        <script>
+            var ws = new WebSocket("ws://" + window.location);
+            ws.onopen = function(event) {
+                console.log("WebSocket opened.");
+            };
+
+        ws.onmessage = function(event) {
+            console.log(event.data);
+        };
+
+        function sendMessage() {
+            var input = document.getElementById("message");
+            var message = input.value;
+            ws.send(message);
+            input.value = "";
+        }
+    </script>
+</head>
+<body>
+    <h1>WebSocket Test</h1>
+    <div>
+        <input type="text" id="message">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+  </body>
+</html>
+"""
+
+
+# 返回静态页面
+@router.get("/ws")
+async def websocket_html():
+    return HTMLResponse(html)

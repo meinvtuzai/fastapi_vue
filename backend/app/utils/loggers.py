@@ -28,7 +28,7 @@ class Logging:
                     value1 = config.get('handler_error', 'kwargs')
                     value = eval(value1)
                     filename = value['filename']
-                    os.makedirs(os.path.dirname(filename))
+                    os.makedirs(os.path.dirname(filename),exist_ok=True)
                 except Exception as e:
                     print(f'发生错误:{e}')
 
@@ -36,7 +36,7 @@ class Logging:
                     value2 = config.get('handler_info', 'kwargs')
                     value = eval(value2)
                     filename = value['filename']
-                    os.makedirs(os.path.dirname(filename))
+                    os.makedirs(os.path.dirname(filename),exist_ok=True)
                 except Exception as e:
                     print(f'发生错误:{e}')
 
