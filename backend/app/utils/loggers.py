@@ -7,7 +7,7 @@ import logging
 import logging.config
 from logging import Logger
 import sys
-
+import configparser
 
 LOG_FMT = '%(asctime)s [%(levelname)s] %(message)s', '%Y-%m-%d %H:%M:%S'
 
@@ -22,10 +22,28 @@ class Logging:
                     config = json.load(f)
                     logging.config.dictConfig(config)
             else:
+                config = configparser.ConfigParser()
+                config.read(config_path)
+                try:
+                    value1 = config.get('handler_error', 'kwargs')
+                    value = eval(value1)
+                    filename = value['filename']
+                    os.makedirs(os.path.dirname(filename))
+                except Exception as e:
+                    print(f'发生错误:{e}')
+
+                try:
+                    value2 = config.get('handler_info', 'kwargs')
+                    value = eval(value2)
+                    filename = value['filename']
+                    os.makedirs(os.path.dirname(filename))
+                except Exception as e:
+                    print(f'发生错误:{e}')
+
                 logging.config.fileConfig(config_path, disable_existing_loggers=True)
         else:
             logging.basicConfig(level=logging.DEBUG)
-            
+
     @staticmethod
     def getConsoleHandler() -> Optional[logging.StreamHandler]:
         fh = logging.StreamHandler(sys.stderr)
@@ -33,23 +51,23 @@ class Logging:
         formatter = logging.Formatter(*LOG_FMT)
         fh.setFormatter(formatter)
         return fh
-            
+
     @staticmethod
     def getAccessHandler(log_path: str) -> Optional[logging.FileHandler]:
-        fh = RotatingFileHandler(log_path, maxBytes=5*1024*1024, backupCount=10, delay=False)
+        fh = RotatingFileHandler(log_path, maxBytes=5 * 1024 * 1024, backupCount=10, delay=False)
         fh.setLevel(logging.INFO)
         formatter = logging.Formatter(*LOG_FMT)
         fh.setFormatter(formatter)
         return fh
-    
+
     @staticmethod
     def getErrorHandler(log_path: str) -> Optional[logging.FileHandler]:
-        fh = RotatingFileHandler(log_path, maxBytes=5*1024*1024, backupCount=5, delay=False)
+        fh = RotatingFileHandler(log_path, maxBytes=5 * 1024 * 1024, backupCount=5, delay=False)
         fh.setLevel(logging.ERROR)
         formatter = logging.Formatter(*LOG_FMT)
         fh.setFormatter(formatter)
         return fh
-          
+
     @classmethod
     def use(cls, log_name: str = None, log_dir: str = "./log/", propagate: bool = False) -> Logger:
         """
@@ -61,9 +79,9 @@ class Logging:
         :return logging.Logger: logger
         """
         logger = Logger.manager.loggerDict.get(log_name)
-        if logger: return logger # logger 已存在
+        if logger: return logger  # logger 已存在
         logger = logging.getLogger(log_name)
-        if logger == logging.root: return logger # logger是root
+        if logger == logging.root: return logger  # logger是root
         logger.setLevel(logging.INFO)
         logger.propagate = propagate
         log_path = os.path.join(log_dir, log_name)
@@ -77,5 +95,3 @@ class Logging:
         err_fh = cls.getErrorHandler(f"{log_path}.err.log")
         if err_fh: logger.addHandler(err_fh)
         return logger
-    
-
