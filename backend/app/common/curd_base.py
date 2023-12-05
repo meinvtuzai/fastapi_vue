@@ -49,6 +49,14 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         """ 通过id获取 """
         row = db.query(*self.query_columns).filter(self.model.id == _id, self.model.is_deleted == 0).first()
         return dict(row or {}) if to_dict else row
+        # if to_dict:
+        #     dict_data = dict(row or {})
+        #     for key, value in dict_data.items():
+        #         if isinstance(value, datetime):
+        #             dict_data[key] = str(value)
+        # else:
+        #     dict_data = row
+        # return dict_data
 
     def query(self, db: Session, *, queries: Optional[list] = None, filters: Optional[list] = None,
               order_bys: Optional[list] = None, to_dict: bool = True) -> List[ModelType]:

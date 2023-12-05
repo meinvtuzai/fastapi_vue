@@ -17,18 +17,18 @@ from ..models.hiker_developer import HikerDeveloper
 
 class CURDHikerDeveloper(CRUDBase):
 
-    def get(self, db: Session, _id: int, to_dict: bool = True):
-        """ 通过id获取 """
-        record = db.query(self.model).filter(self.model.id == _id, self.model.is_deleted == 0).first()
-        return record if not to_dict else {
-            'id': record.id,
-            'name': record.name,
-            'password': record.password,
-            'qq': record.qq,
-            'status': record.status,
-            'is_manager': record.is_manager,
-            'active': record.active,
-        }
+    # def get(self, db: Session, _id: int, to_dict: bool = True):
+    #     """ 通过id获取 """
+    #     record = db.query(self.model).filter(self.model.id == _id, self.model.is_deleted == 0).first()
+    #     return record if not to_dict else {
+    #         'id': record.id,
+    #         'name': record.name,
+    #         'password': record.password,
+    #         'qq': record.qq,
+    #         'status': record.status,
+    #         'is_manager': record.is_manager,
+    #         'active': record.active,
+    #     }
 
     def create(self, db: Session, *, obj_in, creator_id: int = 0):
         obj_in_data = obj_in if isinstance(obj_in, dict) else jsonable_encoder(obj_in)
@@ -42,10 +42,10 @@ class CURDHikerDeveloper(CRUDBase):
         db.refresh(db_obj)
         return db_obj
 
-    def update(self, db: Session, *, _id: int, obj_in, updater_id: int = 0):
-        obj_in_data = obj_in if isinstance(obj_in, dict) else jsonable_encoder(obj_in)
-        res = super().update(db, _id=_id, obj_in=obj_in_data, modifier_id=updater_id)
-        return res
+    # def update(self, db: Session, *, _id: int, obj_in, modifier_id: int = 0):
+    #     obj_in_data = obj_in if isinstance(obj_in, dict) else jsonable_encoder(obj_in)
+    #     res = super().update(db, _id=_id, obj_in=obj_in_data, modifier_id=modifier_id)
+    #     return res
 
     def search(self, db: Session, *, name: str = "", qq: str = "", status: int = None,
                page: int = 1, page_size: int = 25) -> dict:

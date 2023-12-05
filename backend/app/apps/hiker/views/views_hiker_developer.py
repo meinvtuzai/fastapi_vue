@@ -59,10 +59,10 @@ async def addRecord(*,
 async def setRecord(*,
                     db: Session = Depends(deps.get_db),
                     u: Users = Depends(deps.user_perm([f"{access_name}:put"])),
-                    _id: int,
                     obj: developer_schemas.DeveloperSchema,
+                    _id: int,
                     ):
-    curd.update(db, _id=_id, obj_in=obj, updater_id=u['id'])
+    curd.update(db, _id=_id, obj_in=obj, modifier_id=u['id'])
     return respSuccessJson()
 
 

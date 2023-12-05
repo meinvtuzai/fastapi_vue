@@ -61,7 +61,7 @@ async def setRecord(*,
                     _id: int,
                     obj: rule_schemas.RuleTypeSchema,
                     ):
-    curd.update(db, _id=_id, obj_in=obj, updater_id=u['id'])
+    curd.update(db, _id=_id, obj_in=obj, modifier_id=u['id'])
     return respSuccessJson()
 
 

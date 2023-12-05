@@ -15,15 +15,15 @@ from ..models.hiker_rule import HikerRuleType, HikerRule
 
 class CURDHikerRuleType(CRUDBase):
 
-    def get(self, db: Session, _id: int, to_dict: bool = True):
-        """ 通过id获取 """
-        record = db.query(self.model).filter(self.model.id == _id, self.model.is_deleted == 0).first()
-        return record if not to_dict else {
-            'id': record.id,
-            'name': record.name,
-            'count_num': record.count_num,
-            'active': record.active,
-        }
+    # def get(self, db: Session, _id: int, to_dict: bool = True):
+    #     """ 通过id获取 """
+    #     record = db.query(self.model).filter(self.model.id == _id, self.model.is_deleted == 0).first()
+    #     return record if not to_dict else {
+    #         'id': record.id,
+    #         'name': record.name,
+    #         'count_num': record.count_num,
+    #         'active': record.active,
+    #     }
 
     def create(self, db: Session, *, obj_in, creator_id: int = 0):
         obj_in_data = obj_in if isinstance(obj_in, dict) else jsonable_encoder(obj_in)
@@ -37,10 +37,10 @@ class CURDHikerRuleType(CRUDBase):
         db.refresh(db_obj)
         return db_obj
 
-    def update(self, db: Session, *, _id: int, obj_in, updater_id: int = 0):
-        obj_in_data = obj_in if isinstance(obj_in, dict) else jsonable_encoder(obj_in)
-        res = super().update(db, _id=_id, obj_in=obj_in_data, modifier_id=updater_id)
-        return res
+    # def update(self, db: Session, *, _id: int, obj_in, modifier_id: int = 0):
+    #     obj_in_data = obj_in if isinstance(obj_in, dict) else jsonable_encoder(obj_in)
+    #     res = super().update(db, _id=_id, obj_in=obj_in_data, modifier_id=modifier_id)
+    #     return res
 
     def search(self, db: Session, *, name: str = "", count_num: int = None,
                page: int = 1, page_size: int = 25) -> dict:
@@ -55,41 +55,54 @@ class CURDHikerRuleType(CRUDBase):
 
 class CURDHikerRule(CRUDBase):
 
+    def init(self):
+        self.query_columns.extend((self.model.dt2ts(self.model.auth_date_time, "auth_date_time_ts"),
+                                   self.model.dt2ts(self.model.last_active, "last_active_ts")))
+        # self.exclude_columns.extend((self.model.auth_date_time,self.model.last_active))  # 排除时间字段
+
     def get(self, db: Session, _id: int, to_dict: bool = True):
         """ 通过id获取 """
-        record = db.query(self.model).filter(self.model.id == _id, self.model.is_deleted == 0).first()
-        return record if not to_dict else {
-            'id': record.id,
-            'name': record.name,
-            'type_id': record.type_id,
-            'dev_id': record.dev_id,
-            'value': record.value,
-            'url': record.url,
-            'state': record.state,
-            'auth': record.auth,
-            'auth_date_time': str(record.auth_date_time),
-            'time_over': record.time_over,
-            'b64_value': record.b64_value,
-            'home_url': record.home_url,
-            'pic_url': record.pic_url,
-            'is_json': record.is_json,
-            'is_redirect': record.is_redirect,
-            'is_tap': record.is_tap,
-            'can_discuss': record.can_discuss,
-            'is_json_list': record.is_json_list,
-            'data_type': record.data_type,
-            'version': record.version,
-            'author': record.author,
-            'note': record.note,
-            'good_num': record.good_num,
-            'bad_num': record.bad_num,
-            'reply_num': record.reply_num,
-            'is_safe': record.is_safe,
-            'is_good': record.is_good,
-            'is_white': record.is_white,
-            'not_safe_note': record.not_safe_note,
-            'last_active': str(record.last_active),
-        }
+        # record = db.query(self.model).filter(self.model.id == _id, self.model.is_deleted == 0).first()
+        # return record if not to_dict else {
+        #     'id': record.id,
+        #     'name': record.name,
+        #     'type_id': record.type_id,
+        #     'dev_id': record.dev_id,
+        #     'value': record.value,
+        #     'url': record.url,
+        #     'state': record.state,
+        #     'auth': record.auth,
+        #     'auth_date_time': str(record.auth_date_time),
+        #     'time_over': record.time_over,
+        #     'b64_value': record.b64_value,
+        #     'home_url': record.home_url,
+        #     'pic_url': record.pic_url,
+        #     'is_json': record.is_json,
+        #     'is_redirect': record.is_redirect,
+        #     'is_tap': record.is_tap,
+        #     'can_discuss': record.can_discuss,
+        #     'is_json_list': record.is_json_list,
+        #     'data_type': record.data_type,
+        #     'version': record.version,
+        #     'author': record.author,
+        #     'note': record.note,
+        #     'good_num': record.good_num,
+        #     'bad_num': record.bad_num,
+        #     'reply_num': record.reply_num,
+        #     'is_safe': record.is_safe,
+        #     'is_good': record.is_good,
+        #     'is_white': record.is_white,
+        #     'not_safe_note': record.not_safe_note,
+        #     'last_active': str(record.last_active),
+        # }
+        record = super().get(db,_id,to_dict)
+        # if record.get('auth_date_time'):
+        #     record['auth_date_time'] = str(record['auth_date_time'])
+        #
+        # if record.get('last_active'):
+        #     record['last_active'] = str(record['last_active'])
+        return record
+
 
     def create(self, db: Session, *, obj_in, creator_id: int = 0):
         obj_in_data = obj_in if isinstance(obj_in, dict) else jsonable_encoder(obj_in)
@@ -103,10 +116,10 @@ class CURDHikerRule(CRUDBase):
         db.refresh(db_obj)
         return db_obj
 
-    def update(self, db: Session, *, _id: int, obj_in, updater_id: int = 0):
-        obj_in_data = obj_in if isinstance(obj_in, dict) else jsonable_encoder(obj_in)
-        res = super().update(db, _id=_id, obj_in=obj_in_data, modifier_id=updater_id)
-        return res
+    # def update(self, db: Session, *, _id: int, obj_in, modifier_id: int = 0):
+    #     obj_in_data = obj_in if isinstance(obj_in, dict) else jsonable_encoder(obj_in)
+    #     res = super().update(db, _id=_id, obj_in=obj_in_data, modifier_id=modifier_id)
+    #     return res
 
     def search(self, db: Session, *, name: str = "", author: str = None, value: str = None, url: str = None,
                dev_id: int = None,
@@ -123,12 +136,12 @@ class CURDHikerRule(CRUDBase):
         if name:
             filters.append(self.model.name.like(f"%{name}%"))
         records, total, _, _ = self.get_multi(db, page=page, page_size=page_size, filters=filters)
-        for record in records:
-            if record.get('auth_date_time'):
-                record['auth_date_time'] = str(record['auth_date_time'])
-
-            if record.get('last_active'):
-                record['last_active'] = str(record['last_active'])
+        # for record in records:
+        #     if record.get('auth_date_time'):
+        #         record['auth_date_time'] = str(record['auth_date_time'])
+        #
+        #     if record.get('last_active'):
+        #         record['last_active'] = str(record['last_active'])
 
         return {'results': records, 'total': total}
 

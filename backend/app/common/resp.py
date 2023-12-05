@@ -2,8 +2,36 @@ from fastapi import status
 from fastapi.responses import JSONResponse  # , ORJSONResponse
 from pydantic import BaseModel
 from typing import Union, Optional
+import datetime
+import json
+import typing
 
 from common.error_code import ErrorBase
+
+
+class DateEncoder(json.JSONEncoder):
+    """
+    解决dict 转json 时 datetime 转换失败
+    使用方法：json.dumps(data, cls=DateEncoder)
+    """
+
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return obj.strftime("%Y-%m-%d %H:%M:%S")
+        else:
+            return json.JSONEncoder.default(self, obj)
+
+
+class MyJSONResponse(JSONResponse):
+    def render(self, content: typing.Any) -> bytes:
+        return json.dumps(
+            content,
+            ensure_ascii=False,
+            allow_nan=False,
+            indent=None,
+            separators=(",", ":"),
+            cls=DateEncoder,
+        ).encode("utf-8")
 
 
 class respJsonBase(BaseModel):
@@ -14,20 +42,21 @@ class respJsonBase(BaseModel):
 
 def respSuccessJson(data: Union[list, dict, str] = None, msg: str = "Success"):
     """ 接口成功返回 """
-    return JSONResponse(
+    return MyJSONResponse(
         status_code=status.HTTP_200_OK,
         content={
             'code': 0,
             'msg': msg,
             'data': data or {}
+            # 'data': json.dumps(data or {}, cls=DateEncoder)
         }
     )
 
 
-def respErrorJson(error: ErrorBase, *, msg: Optional[str] = None, msg_append: str = "", 
+def respErrorJson(error: ErrorBase, *, msg: Optional[str] = None, msg_append: str = "",
                   data: Union[list, dict, str] = None, status_code: int = status.HTTP_200_OK):
     """ 错误接口返回 """
-    return JSONResponse(
+    return MyJSONResponse(
         status_code=status_code,
         content={
             'code': error.code,
