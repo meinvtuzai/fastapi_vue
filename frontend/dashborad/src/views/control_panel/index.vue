@@ -25,7 +25,7 @@
 
 <script>
 import {getParameter} from '@/api/system/parameter'
-import {setRecord} from '@/api/control_panel/database/data'
+import {setRecord} from '@/api/control_panel/database'
 
 export default {
   name: 'ControlPanel',

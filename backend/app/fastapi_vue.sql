@@ -11,7 +11,7 @@
  Target Server Version : 100318
  File Encoding         : 65001
 
- Date: 04/12/2023 23:24:20
+ Date: 05/12/2023 09:12:21
 */
 
 SET NAMES utf8mb4;
@@ -199,8 +199,8 @@ CREATE TABLE `t_hiker_rule`  (
   `last_active` datetime(0) NULL DEFAULT current_timestamp(0) COMMENT '开发者上次提交时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `ix_t_hiker_rule_id`(`id`) USING BTREE,
-  INDEX `dev_id`(`dev_id`) USING BTREE,
-  INDEX `type_id`(`type_id`) USING BTREE
+  INDEX `type_id`(`type_id`) USING BTREE,
+  INDEX `dev_id`(`dev_id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -255,7 +255,7 @@ CREATE TABLE `t_menus`  (
   `parent_id` int(11) NULL DEFAULT 0 COMMENT '上级菜单',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `ix_t_menus_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 20 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_menus
@@ -274,6 +274,11 @@ INSERT INTO `t_menus` VALUES (10, '2023-12-02 18:05:43', 0, '2023-12-02 18:05:43
 INSERT INTO `t_menus` VALUES (12, '2023-12-02 23:23:55', 1, '2023-12-03 16:45:42', 1, 0, 'rule_type', '/hiker/rule_type/index', 0, 0, 0, 2, 'HikerRuleType', '规则类型', 'component', 1, 10);
 INSERT INTO `t_menus` VALUES (13, '2023-12-03 19:03:50', 1, '2023-12-03 19:04:15', 1, 0, 'rule', '/hiker/rule/index', 0, 0, 0, 3, 'HikerRule', '规则', 'list', 1, 10);
 INSERT INTO `t_menus` VALUES (14, '2023-12-04 21:49:25', 1, '2023-12-04 21:49:25', 0, 0, 'control_panel', '/control_panel/index', 0, 0, 0, 4, 'ControlPanel', '控制面板', 'swagger', 1, 2);
+INSERT INTO `t_menus` VALUES (15, '2023-12-05 08:49:37', 1, '2023-12-05 08:50:03', 1, 0, '/tool', '', 0, 0, 0, 4, '', '工具', 'bug', 1, 0);
+INSERT INTO `t_menus` VALUES (16, '2023-12-05 08:51:06', 1, '2023-12-05 08:52:00', 1, 0, 'swagger', '/tool/swagger/index', 0, 0, 0, 1, 'Swagger', 'swagger', 'swagger', 1, 15);
+INSERT INTO `t_menus` VALUES (17, '2023-12-05 09:08:13', 1, '2023-12-05 09:08:13', 0, 0, '/monitor', '', 0, 0, 0, 4, '', '资源管理', 'server', 1, 0);
+INSERT INTO `t_menus` VALUES (18, '2023-12-05 09:09:57', 1, '2023-12-05 09:09:57', 0, 0, 'job', '/monitor/job/index', 0, 0, 0, 1, 'Job', '定时任务', 'time-range', 1, 17);
+INSERT INTO `t_menus` VALUES (19, '2023-12-05 09:11:12', 1, '2023-12-05 09:11:12', 0, 0, 'server', '/monitor/server/index', 0, 0, 0, 2, 'Server', '服务器监控', 'server', 1, 17);
 
 -- ----------------------------
 -- Table structure for t_perm_label

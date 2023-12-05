@@ -154,7 +154,7 @@
 </template>
 
 <script>
-import {searchRecords, getRecord, addRecord, setRecord, delRecord, changeActive} from '@/api/hiker/rule_type/data'
+import {searchRecords, getRecord, addRecord, setRecord, delRecord, changeActive} from '@/api/hiker/rule_type'
 
 export default {
   name: 'HikerRuleType',

@@ -205,7 +205,7 @@ import {
   delRecord,
   changeIsManager,
   changeActive
-} from '@/api/hiker/developer/data'
+} from '@/api/hiker/developer'
 
 export default {
   name: 'HikerDeveloper',

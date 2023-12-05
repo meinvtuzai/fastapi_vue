@@ -398,7 +398,7 @@
 
 <script>
 import {getDicts} from '@/api/system/dict/data'
-import {searchRecords, getRecord, addRecord, setRecord, delRecord} from '@/api/hiker/rule/data'
+import {searchRecords, getRecord, addRecord, setRecord, delRecord} from '@/api/hiker/rule'
 import JsonEditor from '@/components/JsonEditor'
 import MarkdownEditor from '@/components/MarkdownEditor'
 import MDinput from '@/components/MDinput'
