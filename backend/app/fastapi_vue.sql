@@ -11,7 +11,7 @@
  Target Server Version : 100318
  File Encoding         : 65001
 
- Date: 05/12/2023 22:02:34
+ Date: 06/12/2023 19:26:13
 */
 
 SET NAMES utf8mb4;
@@ -58,7 +58,7 @@ CREATE TABLE `t_config_settings`  (
 -- ----------------------------
 INSERT INTO `t_config_settings` VALUES (1, '2022-11-13 02:47:53', 0, '2022-11-13 02:47:53', 0, 0, '用户初始角色', 'user_init_roles', 'general', '0', 0, 1);
 INSERT INTO `t_config_settings` VALUES (2, '2023-12-04 22:13:09', 1, '2023-12-04 22:13:09', 0, 0, '数据库升级密码', 'database_update_auth', 'hjdhnx', '', 0, 2);
-INSERT INTO `t_config_settings` VALUES (3, '2023-12-04 23:04:31', 1, '2023-12-04 23:19:46', 1, 0, '登录需要验证码', 'login_with_captcha', 'no', 'yes 开启 no 关闭', 0, 3);
+INSERT INTO `t_config_settings` VALUES (3, '2023-12-04 23:04:31', 1, '2023-12-06 00:42:54', 1, 0, '登录需要验证码', 'login_with_captcha', 'no', 'yes 开启 no 关闭', 0, 3);
 
 -- ----------------------------
 -- Table structure for t_dict_data
@@ -155,7 +155,7 @@ CREATE TABLE `t_hiker_developer`  (
 -- ----------------------------
 -- Records of t_hiker_developer
 -- ----------------------------
-INSERT INTO `t_hiker_developer` VALUES (1, '2023-12-02 18:00:37', 1, '2023-12-02 19:53:38', 1, 0, '道长', '434857005', '1234567', 1, 0, 1, NULL);
+INSERT INTO `t_hiker_developer` VALUES (1, '2023-12-02 18:00:37', 1, '2023-12-05 23:48:58', 1, 0, '道长', '434857005', '123456789', 0, 0, 1, NULL);
 
 -- ----------------------------
 -- Table structure for t_hiker_rule
@@ -206,7 +206,7 @@ CREATE TABLE `t_hiker_rule`  (
 -- ----------------------------
 -- Records of t_hiker_rule
 -- ----------------------------
-INSERT INTO `t_hiker_rule` VALUES (1, '2023-12-04 20:00:34', 1, '2023-12-04 20:22:14', 1, 0, '道德经', 1, 1, '{\"name\":\"道德经\"}', 'hiker://empty#', 1, '', '2023-12-04 20:00:34', 0, '', '', '', 1, 0, 0, 1, 0, 'home_rule_url', '1', '道长', '', 1, 1, 1, 1, 1, 1, '', '2023-12-04 20:00:34');
+INSERT INTO `t_hiker_rule` VALUES (1, '2023-12-04 20:00:34', 1, '2023-12-05 23:48:47', 1, 0, '道德经', 1, 2, '\"{\\\"name\\\":\\\"道德经\\\"}\"', 'hiker://empty#', 1, '', '2023-12-04 20:00:34', 0, '', '', '', 1, 0, 0, 1, 0, 'home_rule_url', '1', '道长', '', 1, 1, 1, 1, 1, 1, '', '2023-12-04 20:00:34');
 
 -- ----------------------------
 -- Table structure for t_hiker_rule_type
@@ -224,12 +224,13 @@ CREATE TABLE `t_hiker_rule_type`  (
   `active` tinyint(1) NULL DEFAULT 1 COMMENT '是否启用',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `ix_t_hiker_rule_type_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_hiker_rule_type
 -- ----------------------------
-INSERT INTO `t_hiker_rule_type` VALUES (1, '2023-12-04 19:55:50', 1, '2023-12-04 19:55:50', 0, 0, '影视', 1, 1);
+INSERT INTO `t_hiker_rule_type` VALUES (1, '2023-12-04 19:55:50', 1, '2023-12-05 23:48:53', 1, 0, '影视', 2, 1);
+INSERT INTO `t_hiker_rule_type` VALUES (2, '2023-12-05 22:52:36', 1, '2023-12-05 22:52:46', 1, 1, '电影2', 3, 1);
 
 -- ----------------------------
 -- Table structure for t_menus
@@ -296,7 +297,7 @@ CREATE TABLE `t_perm_label`  (
   `status` int(11) NULL DEFAULT 0 COMMENT '状态',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `ix_t_perm_label_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 27 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_perm_label
@@ -327,6 +328,8 @@ INSERT INTO `t_perm_label` VALUES (23, '2023-12-04 20:00:59', 0, '2023-12-04 20:
 INSERT INTO `t_perm_label` VALUES (24, '2023-12-04 22:13:09', 0, '2023-12-04 22:13:09', 0, 0, 'system:config-setting:post', '', 0);
 INSERT INTO `t_perm_label` VALUES (25, '2023-12-05 19:44:23', 0, '2023-12-05 19:44:23', 0, 0, 'monitor:server:post', '', 0);
 INSERT INTO `t_perm_label` VALUES (26, '2023-12-05 20:08:50', 0, '2023-12-05 20:08:50', 0, 0, 'monitor:server:get', '', 0);
+INSERT INTO `t_perm_label` VALUES (27, '2023-12-05 22:52:40', 0, '2023-12-05 22:52:40', 0, 0, 'hiker:rule_type:put', '', 0);
+INSERT INTO `t_perm_label` VALUES (28, '2023-12-05 22:52:46', 0, '2023-12-05 22:52:46', 0, 0, 'hiker:rule_type:delete', '', 0);
 
 -- ----------------------------
 -- Table structure for t_perm_label_role
@@ -422,7 +425,7 @@ CREATE TABLE `t_user_role`  (
   INDEX `ix_t_user_role_id`(`id`) USING BTREE,
   INDEX `role_id`(`role_id`) USING BTREE,
   INDEX `user_id`(`user_id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Fixed;
+) ENGINE = MyISAM AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Fixed;
 
 -- ----------------------------
 -- Records of t_user_role
@@ -431,6 +434,7 @@ INSERT INTO `t_user_role` VALUES (1, '2022-11-13 02:58:19', 0, '2022-11-13 02:58
 INSERT INTO `t_user_role` VALUES (3, '2022-11-22 00:50:26', 0, '2022-11-22 00:50:26', 0, 0, 3, 2);
 INSERT INTO `t_user_role` VALUES (4, '2022-11-22 00:55:57', 1, '2022-11-22 00:55:57', 0, 0, 2, 3);
 INSERT INTO `t_user_role` VALUES (5, '2023-12-02 15:36:42', 0, '2023-12-02 15:36:42', 0, 0, 4, 2);
+INSERT INTO `t_user_role` VALUES (6, '2023-12-06 13:18:51', 0, '2023-12-06 13:18:51', 0, 0, 5, 2);
 
 -- ----------------------------
 -- Table structure for t_users
@@ -456,7 +460,7 @@ CREATE TABLE `t_users`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `ix_t_users_username`(`username`) USING BTREE,
   INDEX `ix_t_users_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_users
@@ -465,5 +469,6 @@ INSERT INTO `t_users` VALUES (1, '2022-11-13 02:58:19', 0, '2022-11-13 02:58:19'
 INSERT INTO `t_users` VALUES (2, '2022-11-22 00:48:34', 0, '2022-11-22 00:55:57', 1, 0, 'opt', 'opt', 0, '12345678911', 'opt@beginner2020.top', '$2b$12$EbJD0X5U0LwAvf5EVvYxZO20Jyv2xLKU1quekOyX3SwhdVepz1RFu', '', 0, 1, 0);
 INSERT INTO `t_users` VALUES (3, '2022-11-22 00:50:26', 0, '2022-11-22 00:50:26', 0, 0, 'user', '', 0, '12345678912', 'user@beginner2020.top', '$2b$12$Wov4niPCoLOeBcRNgGDNhekSZBgB/GAhYs25CLHfJG.me1KbFP0am', '', 0, 1, 0);
 INSERT INTO `t_users` VALUES (4, '2023-12-02 15:36:42', 1, '2023-12-02 15:36:42', 0, 0, 'hjdhnx', '道长', 1, '13183893293', '434857005@qq.com', '', 'images/avatar/f84e9577-9047-470e-bcde-16173ca1811c.jpg', 0, 1, 0);
+INSERT INTO `t_users` VALUES (5, '2023-12-06 13:18:51', 0, '2023-12-06 13:18:51', 0, 0, 'hjdhnx2', '', 0, '1', '1', '$2b$12$WS9fL1i8VzEvqj1UhnYlN.iihTwgpjEhZqKFhfrRzlQJtC8/3ZlM6', '', 0, 1, 0);
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -18,6 +18,10 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
+# import sys, os
+# sys.path.append(os.path.join(os.path.dirname(__file__), "./"))
+# from db.base_class import Base
+# target_metadata = Base.metadata
 from apps.system.models.config_settings import ConfigSettings
 target_metadata = ConfigSettings.metadata
 

@@ -2,6 +2,18 @@ from typing import Union, List
 from pydantic import BaseModel, AnyHttpUrl, conint
 
 
+class UserCreateSchema(BaseModel):
+    username: str
+    nickname: str = ""
+    sex: int = 0
+    phone: str = ""
+    email: str
+    avatar: str = ""
+    is_superuser: bool
+    is_active: bool = True
+    password: str
+
+
 class LoginUserInfoSchema(BaseModel):
     user: str
     password: str

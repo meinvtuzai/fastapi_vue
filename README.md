@@ -10,8 +10,12 @@ alembic init alembic
 
 sqlalchemy.url = mysql+pymysql://root:root@localhost:3306/fastapi_vue
 
-from db.base_class import Base
-target_metadata = Base.metadata
+# import sys, os
+# sys.path.append(os.path.join(os.path.dirname(__file__), "./"))
+# from db.base_class import Base
+# target_metadata = Base.metadata
+from apps.system.models.config_settings import ConfigSettings
+target_metadata = ConfigSettings.metadata
 
 alembic revision --autogenerate -m "init"
 alembic upgrade head

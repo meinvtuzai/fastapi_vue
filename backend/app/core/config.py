@@ -80,15 +80,24 @@ class Settings(BaseSettings):
     NOTES_PATH: str = './log/notes.json'
 
     # cachetools缓存生命周期(秒)
-    CACHE_TTL:int = 3600
+    CACHE_TTL: int = 3600
 
     # 博客首页
-    BLOG_URL:str = 'https://blog.csdn.net/qq_32394351'
+    BLOG_URL: str = 'https://blog.csdn.net/qq_32394351'
 
     # 超级用户名称
-    FIRST_SUPERUSER:str = 'hjdhnx2'
+    FIRST_SUPERUSER: str = "admin"
     # 超级用户密码
-    FIRST_SUPERUSER_PASSWORD:str = 'hjdhnx2'
+    FIRST_SUPERUSER_EMAIL: str = "admin@qq.com"
+    FIRST_SUPERUSER_PASSWORD: str = "123456"
+
+    # 超级用户名称
+    SECOND_SUPERUSER: str = "hjdhnx"
+    # 超级用户密码
+    SECOND_SUPERUSER_EMAIL: str = "434857005@qq.com"
+    SECOND_SUPERUSER_PASSWORD: str = "hjdhnx"
+
+    USERS_OPEN_REGISTRATION: bool = False
 
     # 代理
     IP_AGENTS = [""]

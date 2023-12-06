@@ -10,7 +10,7 @@ from starlette.responses import HTMLResponse, RedirectResponse
 
 from common import error_code
 from core.config import settings
-from utils.web import HtmlSender
+from utils.web import htmler
 from utils.cmd import update_db
 from network.request import Request
 from common.resp import respSuccessJson, respErrorJson
@@ -19,10 +19,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import FileResponse
 
 router = APIRouter()
-htmler = HtmlSender()
 # htmler2 = Jinja2Templates(directory="templates")
 htmler2 = Jinja2Templates(directory=settings.WEB_TEMPLATES_DIR)
-htmler.template_path = settings.WEB_TEMPLATES_DIR
 
 # 存储所有连接到 WebSocket 的客户端
 client_websockets = []

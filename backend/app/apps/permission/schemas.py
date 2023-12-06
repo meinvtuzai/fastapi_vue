@@ -9,21 +9,9 @@ class UserSchema(BaseModel):
     phone: str
     email: str
     avatar: str = ""
-    password: str = ""
     is_active: bool = True
     status: int = 0
     roles: List[int] = []
-
-class UserInitSchema(BaseModel):
-    username: str
-    nickname: str = ""
-    sex: int = 0
-    phone: str
-    email: str
-    avatar: str = ""
-    password: str = ""
-    is_active: bool = True
-    status: int = 0
 
 
 class UserIsActiveSchema(BaseModel):

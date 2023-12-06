@@ -5,7 +5,7 @@
 # Author's Blog: https://blog.csdn.net/qq_32394351
 # Date  : 2023/12/3
 import os
-
+from core.config import settings
 from jinja2 import Environment, FileSystemLoader
 
 
@@ -33,3 +33,9 @@ class HtmlSender:
         data = data or {}
         temp = self.ENV.get_template(f"{template_name}.html")
         return temp.render(**data)
+
+
+htmler = HtmlSender()
+htmler.template_path = settings.WEB_TEMPLATES_DIR
+
+# print('===template_path===:', settings.WEB_TEMPLATES_DIR)

@@ -36,7 +36,8 @@ def Char(string: str, default=NONE, required=False, length=256, index=False):
     primary_key = index
     if required and default == NONE:
         return Column(sql.String(length), nullable=False, comment=string, primary_key=primary_key)
-    return Column(sql.String(length), default=None if default == NONE else str(default), server_default=text(default),
+    return Column(sql.String(length), default=None if default == NONE else str(default),
+                  server_default=None if default == NONE else str(text(default)),
                   nullable=not required,
                   comment=string, primary_key=primary_key)
 
@@ -96,6 +97,7 @@ def Text(string: str, default=NONE, required=False, index=False):
     primary_key = index
     if required and default == NONE:
         return Column(sql.Text, nullable=False, comment=string, primary_key=primary_key)
-    return Column(sql.Text, default=None if default == NONE else str(default), server_default=text(default),
+    return Column(sql.Text, default=None if default == NONE else str(default),
+                  server_default=None if default == NONE else str(text(default)),
                   nullable=not required,
                   comment=string, primary_key=primary_key)

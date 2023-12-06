@@ -27,3 +27,4 @@ httpx~=0.23.3
 alembic
 psutil
 cachetools==5.3.2
+pycryptodome==3.19.0
