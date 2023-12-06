@@ -16,8 +16,10 @@ import '@/styles/ruoyi.scss' // ruoyi css
 import App from './App'
 import store from './store'
 import router from './router'
+import plugins from './plugins' // plugins
 
-import './icons' // icon
+// import './icons' // icon
+import './assets/icons' // icon
 import './permission' // permission control
 import './utils/error-log' // error log
 import { getDicts } from '@/api/system/dict/data'
@@ -55,6 +57,7 @@ Vue.component('Pagination', Pagination)
 // 按钮级别权限配置
 // import button_permission from './directive/button_permission'
 // Vue.use(button_permission)
+Vue.use(plugins)
 
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size

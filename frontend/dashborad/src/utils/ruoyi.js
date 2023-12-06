@@ -164,3 +164,8 @@ export function handleTree(data, id, parent_id, children, rootId) {
   })
   return treeData !== '' ? treeData : data
 }
+
+// 验证是否为blob格式
+export function blobValidate(data) {
+  return data.type !== 'application/json'
+}

@@ -27,3 +27,4 @@ id,created_time,creator_id,modified_time,modifier_id,is_deleted,label,remark,sta
 26,2023-12-05 20:08:50,0,2023-12-05 20:08:50,0,0,monitor:server:get,,0
 27,2023-12-05 22:52:40,0,2023-12-05 22:52:40,0,0,hiker:rule_type:put,,0
 28,2023-12-05 22:52:46,0,2023-12-05 22:52:46,0,0,hiker:rule_type:delete,,0
+29,2023-12-07 00:00:33,0,2023-12-07 00:00:33,0,0,perm:user:delete,,0
