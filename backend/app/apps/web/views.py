@@ -16,6 +16,7 @@ from network.request import Request
 from common.resp import respSuccessJson, respErrorJson
 from .schemas import database_schemas
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import FileResponse
 
 router = APIRouter()
 htmler = HtmlSender()
@@ -40,7 +41,13 @@ async def web_home():
 
 @router.get('/favicon.ico', summary="网站默认图标")  # 设置icon
 async def favicon():
-    return RedirectResponse('/static/img/favicon.svg')
+    # return RedirectResponse('/static/img/favicon.svg')
+    return FileResponse('static/img/favicon.svg')
+
+
+@router.get('/blog', summary="博客首页")
+async def blog():
+    return RedirectResponse(settings.BLOG_URL)
 
 
 @router.get('/baidu', summary="访问百度")

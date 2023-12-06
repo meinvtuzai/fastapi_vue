@@ -22,16 +22,34 @@ class DateEncoder(json.JSONEncoder):
             return json.JSONEncoder.default(self, obj)
 
 
+def _render(self, content: typing.Any) -> bytes:
+    return json.dumps(
+        content,
+        ensure_ascii=False,
+        allow_nan=False,
+        indent=None,
+        separators=(",", ":"),
+        cls=DateEncoder,
+    ).encode("utf-8")
+
+
+# 覆写JSONResponse类的render方法让其支持格式化datatime类型数据
+# setattr(JSONResponse,'render',_render)
+
 class MyJSONResponse(JSONResponse):
-    def render(self, content: typing.Any) -> bytes:
-        return json.dumps(
-            content,
-            ensure_ascii=False,
-            allow_nan=False,
-            indent=None,
-            separators=(",", ":"),
-            cls=DateEncoder,
-        ).encode("utf-8")
+    pass
+    # def render(self, content: typing.Any) -> bytes:
+    #     return json.dumps(
+    #         content,
+    #         ensure_ascii=False,
+    #         allow_nan=False,
+    #         indent=None,
+    #         separators=(",", ":"),
+    #         cls=DateEncoder,
+    #     ).encode("utf-8")
+
+
+setattr(MyJSONResponse, 'render', _render)
 
 
 class respJsonBase(BaseModel):

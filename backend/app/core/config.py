@@ -82,6 +82,14 @@ class Settings(BaseSettings):
     # cachetools缓存生命周期(秒)
     CACHE_TTL:int = 3600
 
+    # 博客首页
+    BLOG_URL:str = 'https://blog.csdn.net/qq_32394351'
+
+    # 超级用户名称
+    FIRST_SUPERUSER:str = 'hjdhnx2'
+    # 超级用户密码
+    FIRST_SUPERUSER_PASSWORD:str = 'hjdhnx2'
+
     # 代理
     IP_AGENTS = [""]
 
