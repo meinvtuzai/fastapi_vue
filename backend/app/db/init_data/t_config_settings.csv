@@ -1,0 +1,4 @@
+id,created_time,creator_id,modified_time,modifier_id,is_deleted,name,key,value,remark,status,order_num
+1,2022-11-13 02:47:53,0,2022-11-13 02:47:53,0,0,用户初始角色,user_init_roles,general,0,0,1
+2,2023-12-04 22:13:09,1,2023-12-04 22:13:09,0,0,数据库升级密码,database_update_auth,hjdhnx,,0,2
+3,2023-12-04 23:04:31,1,2023-12-06 00:42:54,1,0,登录需要验证码,login_with_captcha,no,yes 开启 no 关闭,0,3

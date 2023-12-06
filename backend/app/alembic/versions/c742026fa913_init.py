@@ -1,8 +1,8 @@
-"""auto_update
+"""init
 
-Revision ID: 1e46fc4b3837
-Revises: cc97b6e2dbfa
-Create Date: 2023-12-04 22:36:36.336618
+Revision ID: c742026fa913
+Revises: d873d72a9d79
+Create Date: 2023-12-06 22:26:41.510816
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '1e46fc4b3837'
-down_revision: Union[str, None] = 'cc97b6e2dbfa'
+revision: str = 'c742026fa913'
+down_revision: Union[str, None] = 'd873d72a9d79'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -23,12 +23,12 @@ def upgrade() -> None:
     op.create_foreign_key(None, 't_dict_details', 't_dict_data', ['dict_data_id'], ['id'], ondelete='CASCADE')
     op.create_foreign_key(None, 't_hiker_rule', 't_hiker_rule_type', ['type_id'], ['id'], ondelete='cascade')
     op.create_foreign_key(None, 't_hiker_rule', 't_hiker_developer', ['dev_id'], ['id'], ondelete='set null')
-    op.create_foreign_key(None, 't_perm_label_role', 't_roles', ['role_id'], ['id'])
     op.create_foreign_key(None, 't_perm_label_role', 't_perm_label', ['label_id'], ['id'], ondelete='CASCADE')
+    op.create_foreign_key(None, 't_perm_label_role', 't_roles', ['role_id'], ['id'])
     op.create_foreign_key(None, 't_role_menu', 't_menus', ['menu_id'], ['id'])
     op.create_foreign_key(None, 't_role_menu', 't_roles', ['role_id'], ['id'], ondelete='CASCADE')
-    op.create_foreign_key(None, 't_user_role', 't_users', ['user_id'], ['id'], ondelete='CASCADE')
     op.create_foreign_key(None, 't_user_role', 't_roles', ['role_id'], ['id'])
+    op.create_foreign_key(None, 't_user_role', 't_users', ['user_id'], ['id'], ondelete='CASCADE')
     # ### end Alembic commands ###
 
 

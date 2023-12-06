@@ -99,10 +99,15 @@ git clone -b main https://github.com/JohnDoe1996/fastAPI-vue.git
 ```sql
 CREATE DATABASE fastapi_vue;  -- 仅供参考根据自己项目名和所用的数据库类型 修改SQL， 
 ```
-导入初始化sql数据到数据库
+运行脚本初始化数据库数据
+```shell
+python initial_data.py
+```
+
+或者直接导入初始化sql数据到数据库
 ```sql
 USE fastapi_vue;
-SOURCE init_data.sql;   -- 仅供参考
+SOURCE fastapi_vue.sql;   -- 仅供参考
 ```
 
 ### APP

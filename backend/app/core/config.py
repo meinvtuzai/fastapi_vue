@@ -71,7 +71,9 @@ class Settings(BaseSettings):
     SMTP_PASSWORD: Optional[str] = ""  # SMTP密码
     EMAIL_FROM_EMAIL: Optional[str] = ""  # 发件人邮箱
     EMAIL_TEMPLATES_DIR: str = "./email-templates/"  # 模板路径
-    WEB_TEMPLATES_DIR: str = "./templates/"  # 网页模板路径
+
+    # os.path.join(constants.BASE_DIR, './templates/')
+    WEB_TEMPLATES_DIR: str = os.path.abspath(os.path.join(constants.BASE_DIR, "./templates/"))  # 网页模板路径
 
     # 数据库升级执行码
     DATABASE_UPDATE_AUTH: str = 'hjdhnx'
