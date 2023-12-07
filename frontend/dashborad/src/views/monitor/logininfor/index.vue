@@ -27,7 +27,7 @@
           style="width: 240px"
         >
           <el-option
-            v-for="dict in dict.type.sys_common_status"
+            v-for="dict in statusOptions"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -61,7 +61,6 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['monitor:logininfor:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -71,7 +70,6 @@
           icon="el-icon-delete"
           size="mini"
           @click="handleClean"
-          v-hasPermi="['monitor:logininfor:remove']"
         >清空</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -82,7 +80,6 @@
           size="mini"
           :disabled="single"
           @click="handleUnlock"
-          v-hasPermi="['monitor:logininfor:unlock']"
         >解锁</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -92,7 +89,6 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['monitor:logininfor:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -108,7 +104,7 @@
       <el-table-column label="操作系统" align="center" prop="os" />
       <el-table-column label="登录状态" align="center" prop="status">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_common_status" :value="scope.row.status"/>
+          <dict-tag :options="statusOptions" :value="scope.row.status"/>
         </template>
       </el-table-column>
       <el-table-column label="操作信息" align="center" prop="msg" :show-overflow-tooltip="true" />
@@ -131,6 +127,7 @@
 
 <script>
 import { list, delLogininfor, cleanLogininfor, unlockLogininfor } from "@/api/monitor/logininfor";
+import {getDicts} from "@/api/system/dict/data";
 
 export default {
   name: "Logininfor",
@@ -157,6 +154,7 @@ export default {
       dateRange: [],
       // 默认排序
       defaultSort: {prop: 'loginTime', order: 'descending'},
+      statusOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -180,6 +178,9 @@ export default {
           this.loading = false;
         }
       );
+      getDicts("com_default_status").then(response => {
+        this.statusOptions = response.data.details;
+      })
     },
     /** 搜索按钮操作 */
     handleQuery() {

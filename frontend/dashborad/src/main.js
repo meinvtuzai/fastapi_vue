@@ -23,8 +23,20 @@ import './assets/icons' // icon
 import './permission' // permission control
 import './utils/error-log' // error log
 import { getDicts } from '@/api/system/dict/data'
-import { resetForm, selectDictLabel, download, handleTree, parseTime } from '@/utils/ruoyi'
-import Pagination from '@/components/Pagination'
+import { resetForm, selectDictLabel, download, handleTree, parseTime,addDateRange } from '@/utils/ruoyi'
+// 分页组件
+import Pagination from "@/components/Pagination";
+// 自定义表格工具组件
+import RightToolbar from "@/components/RightToolbar"
+// 富文本组件
+import Editor from "@/components/Editor"
+// 文件上传组件
+import FileUpload from "@/components/FileUpload"
+// 图片上传组件
+import ImageUpload from "@/components/ImageUpload"
+// 图片预览组件
+import ImagePreview from "@/components/ImagePreview"
+
 import * as filters from './filters'
 import {getParameter} from "@/api/system/parameter"; // global filters
 
@@ -33,6 +45,7 @@ import {getParameter} from "@/api/system/parameter"; // global filters
 Vue.prototype.getDicts = getDicts
 Vue.prototype.getParameter = getParameter
 Vue.prototype.resetForm = resetForm
+Vue.prototype.addDateRange = addDateRange
 Vue.prototype.selectDictLabel = selectDictLabel
 Vue.prototype.parseTime = parseTime
 Vue.prototype.download = download
@@ -54,6 +67,12 @@ Vue.prototype.$md5 = md5
 
 // 全局组件挂载
 Vue.component('Pagination', Pagination)
+Vue.component('RightToolbar', RightToolbar)
+Vue.component('Editor', Editor)
+Vue.component('FileUpload', FileUpload)
+Vue.component('ImageUpload', ImageUpload)
+Vue.component('ImagePreview', ImagePreview)
+
 // 按钮级别权限配置
 // import button_permission from './directive/button_permission'
 // Vue.use(button_permission)

@@ -57,7 +57,8 @@ class CURDHikerRule(CRUDBase):
 
     def init(self):
         self.query_columns.extend((self.model.dt2ts(self.model.auth_date_time, "auth_date_time_ts"),
-                                   self.model.dt2ts(self.model.last_active, "last_active_ts")))
+                                   self.model.dt2ts(self.model.last_active, "last_active_ts"),
+                                   ))
         # self.exclude_columns.extend((self.model.auth_date_time,self.model.last_active))  # 排除时间字段
 
     def get(self, db: Session, _id: int, to_dict: bool = True):
