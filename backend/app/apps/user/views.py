@@ -15,6 +15,7 @@ from utils.email import EmailSender
 from utils.encrypt import get_uuid
 from apps.permission.models.user import Users
 from apps.system.models import ConfigSettings
+from apps.monitor.curd.curd_logininfor import curd_logininfor
 from common import error_code, deps, security
 
 from common.resp import respSuccessJson, respErrorJson
@@ -23,7 +24,6 @@ from core.config import settings
 from .schemas import user_info_schemas
 from .curd.curd_user import curd_user
 
-
 router = APIRouter()
 
 
@@ -31,21 +31,33 @@ router = APIRouter()
 async def login(*,
                 db: Session = Depends(deps.get_db),
                 redis: Redis = Depends(deps.get_redis),
-                user_info: user_info_schemas.LoginUserInfoSchema
+                user_info: user_info_schemas.LoginUserInfoSchema,
+                req: Request
                 ):
+    ip = req.client.host
+    ua = req.headers["User-Agent"]
     configs = db.query(ConfigSettings.value).filter(
         ConfigSettings.key == 'login_with_captcha', ConfigSettings.is_deleted == 0, ConfigSettings.status == 0
     ).first()
     if configs and configs.value == 'yes':
         code = await redis.get(f"{constants.REDIS_KEY_USER_CAPTCHA_CODE_KEY_PREFIX}_{user_info.key}")  # type: bytes
         if not code:
+            curd_logininfor.create(db, obj_in={'user_name': user_info.user, 'ipaddr': ip, 'browser': ua, 'status': '1',
+                                               'msg': error_code.ERROR_USER_CAPTCHA_CODE_INVALID})
             return respErrorJson(error=error_code.ERROR_USER_CAPTCHA_CODE_INVALID)  # 验证码失效
         elif code.decode('utf-8').lower() != user_info.code.lower():
+            curd_logininfor.create(db, obj_in={'user_name': user_info.user, 'ipaddr': ip, 'browser': ua, 'status': '1',
+                                               'msg': error_code.ERROR_USER_CAPTCHA_CODE_ERROR})
             return respErrorJson(error=error_code.ERROR_USER_CAPTCHA_CODE_ERROR)  # 验证码错误
     user = curd_user.authenticate(db, user=user_info.user, password=user_info.password)
+
     if not user:
+        curd_logininfor.create(db, obj_in={'user_name': user_info.user, 'ipaddr': ip, 'browser': ua, 'status': '1',
+                                           'msg': error_code.ERROR_USER_PASSWORD_ERROR})
         return respErrorJson(error=error_code.ERROR_USER_PASSWORD_ERROR)
     elif not user.is_active:
+        curd_logininfor.create(db, obj_in={'user_name': user_info.user, 'ipaddr': ip, 'browser': ua, 'status': '1',
+                                           'msg': error_code.ERROR_USER_NOT_ACTIVATE})
         return respErrorJson(error=error_code.ERROR_USER_NOT_ACTIVATE)
     access_token_expires = timedelta(minutes=constants.ACCESS_TOKEN_EXPIRE_MINUTES)
     # 登录token 只存放了user.id
@@ -53,6 +65,8 @@ async def login(*,
     await redis.setex(constants.REDIS_KEY_LOGIN_TOKEN_KEY_PREFIX + token,
                       timedelta(minutes=constants.ACCESS_TOKEN_EXPIRE_MINUTES),
                       user.id)
+    curd_logininfor.create(db, obj_in={'user_name': user_info.user, 'ipaddr': ip, 'browser': ua,
+                                       'msg': 'success'})
     return respSuccessJson(data={"token": token})
 
 
@@ -88,7 +102,7 @@ async def checkUserAvailability(*,
 @router.get("/info", summary="获取用户自己的资料")
 async def getUserInfo(*,
                       db: Session = Depends(deps.get_db),
-                      u: Users = Depends(deps.get_current_user) 
+                      u: Users = Depends(deps.get_current_user)
                       ):
     roles = [role.name for role in curd_user.getRoles(db, u['id'])]
     return respSuccessJson(data={
@@ -127,7 +141,7 @@ def changePassword(*,
 
 
 @router.post("/register", summary="用户注册")
-async def submitRegister(*, 
+async def submitRegister(*,
                          db: Session = Depends(deps.get_db),
                          redis: Redis = Depends(deps.get_redis),
                          client_ip: str = Depends(deps.get_ipaddress),
@@ -157,13 +171,13 @@ async def submitRegister(*,
                            timedelta(minutes=constants.USER_REGISTER_SUBMIT_EXPIRE_MINUTES))
     user_data = {
         'username': register_data.username,
-        'nickname': register_data.nickname or "", 
+        'nickname': register_data.nickname or "",
         'sex': register_data.sex or 0,
         'phone': register_data.phone,
         'email': register_data.email,
         'password': register_data.password,
-        'avatar': register_data.avatar, 
-        'is_active': True, 
+        'avatar': register_data.avatar,
+        'is_active': True,
     }
     if not redis or not email:  # 没有redis 或 没有邮箱服务时 直接注册成功
         return respSuccessJson() if curd_user.create(db, user_data) \
@@ -176,10 +190,10 @@ async def submitRegister(*,
     email_title = "注册验证邮件"
     email.send(user_data['email'], email_title, "register", email_data)
     return respSuccessJson()
-        
+
 
 @router.get("/register/{register_token}", summary="验证注册的token")
-async def verifyRegister(*, 
+async def verifyRegister(*,
                          register_token: str,
                          redis: Redis = Depends(deps.get_redis)
                          ):
@@ -188,7 +202,7 @@ async def verifyRegister(*,
         err = error_code.ERROR_USER_REGISTER_TOKEN_ERROR
         return respSuccessJson({'code': err.code, 'msg': err.msg})
     user_data = json.loads(user_data.decode('utf-8'))
-    return respSuccessJson({'code': 0, 'data': {'username': user_data['username'],'email': user_data['email']}})
+    return respSuccessJson({'code': 0, 'data': {'username': user_data['username'], 'email': user_data['email']}})
 
 
 @router.put("/register/{register_token}", summary="提交确认注册")
