@@ -34,6 +34,7 @@ async def listUser(*,
                    u: Users = Depends(deps.user_perm(["perm:user:get"])),
                    id: int = Query(None, gt=0),
                    username: str = Query(""),
+                   nickname: str = Query(""),
                    email: str = Query(""),
                    phone: str = Query(""),
                    status: int = Query(None),
@@ -42,9 +43,10 @@ async def listUser(*,
                    page: int = Query(1, gt=0),
                    page_size: int = Query(20, gt=0),
                    ):
-    return respSuccessJson(curd_user.search(db, _id=id, username=username, email=email, phone=phone, status=status,
-                                            created_after_ts=created_after_ts, created_before_ts=created_before_ts,
-                                            page=page, page_size=page_size))
+    return respSuccessJson(
+        curd_user.search(db, _id=id, username=username, nickname=nickname, email=email, phone=phone, status=status,
+                         created_after_ts=created_after_ts, created_before_ts=created_before_ts,
+                         page=page, page_size=page_size))
 
 
 @router.post("/user", summary="添加用户")
@@ -65,6 +67,17 @@ async def uploadAvatar(img: UploadFile):
     path = constants.MEDIA_AVATAR_BASE_DIR + new_img_name
     with open(os.path.join(constants.MEDIA_BASE_PATH, path), 'wb') as f:
         f.write(img_data)
+    return respSuccessJson({'path': path})
+
+
+@router.post("/user/file/importData", summary="上传导入数据")
+async def uploadImportData(file: UploadFile):
+    up_data = file.file.read()
+    up_name = file.filename  # type: str
+    new_img_name = f"{get_uuid()}.{up_name.split('.')[-1]}"
+    path = constants.MEDIA_EXCEL_BASE_DIR + new_img_name
+    with open(os.path.join(constants.MEDIA_BASE_PATH, path), 'wb') as f:
+        f.write(up_data)
     return respSuccessJson({'path': path})
 
 

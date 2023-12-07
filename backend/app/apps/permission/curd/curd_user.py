@@ -77,7 +77,7 @@ class CURDUser(CRUDBase):
     def setUserIsActive(self, db: Session, *, user_id: int, is_active: bool, modifier_id: int = 0):
         return super().update(db, _id=user_id, obj_in={'is_active': is_active}, modifier_id=modifier_id)
 
-    def search(self, db: Session, *, _id: int = None, username: str = "", email: str = "", phone: str = "",
+    def search(self, db: Session, *, _id: int = None, username: str = "",nickname:str="", email: str = "", phone: str = "",
                status: int = None, created_after_ts: int = None, created_before_ts: int = None,
                page: int = 1, page_size: int = 25):
         filters = []
@@ -87,6 +87,8 @@ class CURDUser(CRUDBase):
             filters.append(self.model.status == status)
         if username:
             filters.append(self.model.username.like(f"%{username}%"))
+        if nickname:
+            filters.append(self.model.nickname.like(f"%{nickname}%"))
         if email:
             filters.append(self.model.email.like(f"{email}%"))
         if phone:

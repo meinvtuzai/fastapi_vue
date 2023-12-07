@@ -3,9 +3,11 @@
  * Copyright (c) 2019 ruoyi
  */
 import axios from 'axios'
+import { Notification, MessageBox, Message, Loading } from 'element-ui'
 import fileDownload from 'js-file-download'
 import { getToken } from '@/utils/auth'
-
+import request from "@/utils/request";
+let downloadLoadingInstance;
 const baseURL = process.env.VUE_APP_BASE_API
 
 // 日期格式化
@@ -83,33 +85,20 @@ export function selectDictLabel(datas, value) {
 }
 
 // 通用下载方法
-export function download(fileName, query = null) {
-  var download_url = baseURL + '/report/excel_generate/' + fileName
-  // 原方法 无法支持token
-  // if (query !== null && query !== undefined) {
-  //   download_url = download_url + '?template=0'
-  //   for (var key in query) {
-  //     if (query[key] !== undefined && query[key] !== '' && query[key] !== null) {
-  //       download_url = download_url + '&' + key + '=' + query[key]
-  //     }
-  //   }
-  // }
-  // window.location.href = download_url
-
-  // 20210219 后端'Access-Control-Expose-Headers': 'content-disposition' 获取filename通知支持token
-  if (query !== null && query !== undefined) {
-    query.template = 0
-  }
-  return axios({
+export function download(fileName, query = null,filename = null) {
+  var download_url = '/report/excel_generate/' + fileName
+  downloadLoadingInstance = Loading.service({ text: "正在下载数据，请稍候", spinner: "el-icon-loading", background: "rgba(0, 0, 0, 0.7)", })
+  return request({
     url: download_url,
     method: 'get',
-    params: query,
     responseType: 'arraybuffer',
-    headers: { 'Authorization': `Bearer ` + getToken() }
+    params: query
   }).then((response) => {
     let file_name = response.headers['content-disposition'].split('filename=')[1].split(';')[0]
     file_name = decodeURIComponent(escape(file_name))
-    fileDownload(response.data, file_name) // 如果用方法一 ，这里需要安装 npm install js-file-download --save ,然后引用
+    console.log(file_name)
+    fileDownload(response.data, filename||file_name) // 如果用方法一 ，这里需要安装 npm install js-file-download --save ,然后引用
+    downloadLoadingInstance.close();
   })
 }
 

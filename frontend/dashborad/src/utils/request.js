@@ -45,6 +45,10 @@ service.interceptors.response.use(
     const res = response.data
     console.log(res);
 
+    // 二进制数据则直接返回
+    if (response.request.responseType ===  'blob' || response.request.responseType ===  'arraybuffer') {
+      return response
+    }
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 0) {
       Message({
@@ -58,7 +62,7 @@ service.interceptors.response.use(
         // to re-login
         MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
           confirmButtonText: 'Re-Login',
-          cancelButtonText: 'Cancel', 
+          cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(() => {
           store.dispatch('user/resetToken').then(() => {
