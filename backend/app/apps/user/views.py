@@ -23,6 +23,7 @@ from core import constants
 from core.config import settings
 from .schemas import user_info_schemas
 from .curd.curd_user import curd_user
+import user_agents
 
 router = APIRouter()
 
@@ -35,29 +36,33 @@ async def login(*,
                 req: Request
                 ):
     ip = req.client.host
-    ua = req.headers["User-Agent"]
+    user_agent = user_agents.parse(req.headers["User-Agent"])
+    ubrowser = user_agent.browser.family + ' ' + user_agent.browser.version_string
+    uos = user_agent.os.family + ' ' + user_agent.os.version_string
+    umodel = user_agent.device.model
+    obj_in = {'user_name': user_info.user, 'ipaddr': ip, 'browser': ubrowser, 'status': '1', 'os': uos}
     configs = db.query(ConfigSettings.value).filter(
         ConfigSettings.key == 'login_with_captcha', ConfigSettings.is_deleted == 0, ConfigSettings.status == 0
     ).first()
     if configs and configs.value == 'yes':
         code = await redis.get(f"{constants.REDIS_KEY_USER_CAPTCHA_CODE_KEY_PREFIX}_{user_info.key}")  # type: bytes
         if not code:
-            curd_logininfor.create(db, obj_in={'user_name': user_info.user, 'ipaddr': ip, 'browser': ua, 'status': '1',
-                                               'msg': error_code.ERROR_USER_CAPTCHA_CODE_INVALID})
+            obj_in.update({'msg': error_code.ERROR_USER_CAPTCHA_CODE_INVALID.msg})
+            curd_logininfor.create(db, obj_in=obj_in)
             return respErrorJson(error=error_code.ERROR_USER_CAPTCHA_CODE_INVALID)  # 验证码失效
         elif code.decode('utf-8').lower() != user_info.code.lower():
-            curd_logininfor.create(db, obj_in={'user_name': user_info.user, 'ipaddr': ip, 'browser': ua, 'status': '1',
-                                               'msg': error_code.ERROR_USER_CAPTCHA_CODE_ERROR})
+            obj_in.update({'msg': error_code.ERROR_USER_CAPTCHA_CODE_ERROR.msg})
+            curd_logininfor.create(db, obj_in=obj_in)
             return respErrorJson(error=error_code.ERROR_USER_CAPTCHA_CODE_ERROR)  # 验证码错误
     user = curd_user.authenticate(db, user=user_info.user, password=user_info.password)
 
     if not user:
-        curd_logininfor.create(db, obj_in={'user_name': user_info.user, 'ipaddr': ip, 'browser': ua, 'status': '1',
-                                           'msg': error_code.ERROR_USER_PASSWORD_ERROR})
+        obj_in.update({'msg': error_code.ERROR_USER_PASSWORD_ERROR.msg})
+        curd_logininfor.create(db, obj_in=obj_in)
         return respErrorJson(error=error_code.ERROR_USER_PASSWORD_ERROR)
     elif not user.is_active:
-        curd_logininfor.create(db, obj_in={'user_name': user_info.user, 'ipaddr': ip, 'browser': ua, 'status': '1',
-                                           'msg': error_code.ERROR_USER_NOT_ACTIVATE})
+        obj_in.update({'msg': error_code.ERROR_USER_NOT_ACTIVATE.msg})
+        curd_logininfor.create(db, obj_in=obj_in)
         return respErrorJson(error=error_code.ERROR_USER_NOT_ACTIVATE)
     access_token_expires = timedelta(minutes=constants.ACCESS_TOKEN_EXPIRE_MINUTES)
     # 登录token 只存放了user.id
@@ -65,8 +70,8 @@ async def login(*,
     await redis.setex(constants.REDIS_KEY_LOGIN_TOKEN_KEY_PREFIX + token,
                       timedelta(minutes=constants.ACCESS_TOKEN_EXPIRE_MINUTES),
                       user.id)
-    curd_logininfor.create(db, obj_in={'user_name': user_info.user, 'ipaddr': ip, 'browser': ua,
-                                       'msg': 'success'})
+    obj_in.update({'msg': '登录成功', 'status': '0'})
+    curd_logininfor.create(db, obj_in=obj_in)
     return respSuccessJson(data={"token": token})
 
 

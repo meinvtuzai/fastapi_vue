@@ -13,6 +13,11 @@ from ..models.logininfor import LoginInfor
 
 class CURDLoginInfor(CRUDBase):
 
+    # def init(self):
+    #     self.query_columns.extend((self.model.dt2ts(self.model.login_time, "login_time_ts"),
+    #                                ))
+    #     self.exclude_columns.extend((self.model.login_time))  # 排除时间字段
+
     def search(self, db: Session, *, user_name: str = "", ipaddr: str = "", status: int = None,
                login_time: str = "",
                page: int = 1, page_size: int = 25) -> dict:
@@ -25,6 +30,7 @@ class CURDLoginInfor(CRUDBase):
             filters.append(self.model.ipaddr.like(f"%{ipaddr}%"))
         if login_time:
             filters.append(self.model.login_time.like(f"%{login_time}%"))
+
         records, total, _, _ = self.get_multi(db, page=page, page_size=page_size, filters=filters)
         return {'results': records, 'total': total}
 

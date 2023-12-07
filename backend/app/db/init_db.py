@@ -75,6 +75,7 @@ def init_table_data_form_csv(db: Session) -> None:
              'hiker_rule.csv', 'hiker_rule_type.csv',
              'menus.csv', 'perm_label.csv', 'perm_label_role.csv', 'role_menu.csv', 'roles.csv',
              'user_role.csv', 'users.csv']
+    files.append('login_infor.csv')
     for file in files:
         file_path = os.path.join(init_data_path, settings.SQL_TABLE_PREFIX + file)
         df = pd.read_csv(file_path, sep=",")

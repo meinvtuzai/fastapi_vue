@@ -29,3 +29,4 @@ psutil
 cachetools==5.3.2
 pycryptodome==3.19.0
 pandas==2.0.3
+user_agents==2.2.0

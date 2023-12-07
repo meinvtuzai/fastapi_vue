@@ -19,4 +19,4 @@ class LoginInfor(Base):
     os = fields.Char(string='操作系统')
     status = fields.Integer(string='登录状态', default='0')
     msg = fields.Char(string='操作信息')
-    login_time = fields.Datetime(string='登录日期')
+    login_time = fields.Datetime(string='登录日期', default=fields.now())

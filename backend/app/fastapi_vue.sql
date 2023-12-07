@@ -11,7 +11,7 @@
  Target Server Version : 100318
  File Encoding         : 65001
 
- Date: 07/12/2023 22:17:36
+ Date: 08/12/2023 00:44:54
 */
 
 SET NAMES utf8mb4;
@@ -233,6 +233,37 @@ INSERT INTO `t_hiker_rule_type` VALUES (1, '2023-12-04 19:55:50', 1, '2023-12-05
 INSERT INTO `t_hiker_rule_type` VALUES (2, '2023-12-05 22:52:36', 1, '2023-12-05 22:52:46', 1, 1, '电影2', 3, 1);
 
 -- ----------------------------
+-- Table structure for t_login_infor
+-- ----------------------------
+DROP TABLE IF EXISTS `t_login_infor`;
+CREATE TABLE `t_login_infor`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created_time` datetime(0) NULL DEFAULT current_timestamp(0) COMMENT '创建时间',
+  `creator_id` int(11) NULL DEFAULT 0 COMMENT '创建人id',
+  `modified_time` datetime(0) NULL DEFAULT current_timestamp(0) COMMENT '更新时间',
+  `modifier_id` int(11) NULL DEFAULT 0 COMMENT '修改人id',
+  `is_deleted` int(11) NULL DEFAULT 0 COMMENT '逻辑删除:0=未删除,1=删除',
+  `user_name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '用户名称',
+  `ipaddr` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '登录地址',
+  `login_location` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '登录地点',
+  `browser` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '浏览器',
+  `os` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '操作系统',
+  `status` int(11) NULL DEFAULT 0 COMMENT '登录状态',
+  `msg` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '操作信息',
+  `login_time` datetime(0) NULL DEFAULT current_timestamp(0) COMMENT '登录日期',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `ix_t_login_infor_id`(`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of t_login_infor
+-- ----------------------------
+INSERT INTO `t_login_infor` VALUES (1, '2023-12-08 00:42:40', 0, '2023-12-08 00:42:40', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 119.0.0', 'Windows 10', 1, '密码错误', '2023-12-08 00:42:40');
+INSERT INTO `t_login_infor` VALUES (2, '2023-12-08 00:42:46', 0, '2023-12-08 00:42:46', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 119.0.0', 'Windows 10', 1, '密码错误', '2023-12-08 00:42:46');
+INSERT INTO `t_login_infor` VALUES (3, '2023-12-08 00:42:51', 0, '2023-12-08 00:42:51', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 119.0.0', 'Windows 10', 1, '密码错误', '2023-12-08 00:42:51');
+INSERT INTO `t_login_infor` VALUES (4, '2023-12-08 00:43:17', 0, '2023-12-08 00:43:17', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 119.0.0', 'Windows 10', 0, '登录成功', '2023-12-08 00:43:17');
+
+-- ----------------------------
 -- Table structure for t_menus
 -- ----------------------------
 DROP TABLE IF EXISTS `t_menus`;
@@ -256,7 +287,7 @@ CREATE TABLE `t_menus`  (
   `parent_id` int(11) NULL DEFAULT 0 COMMENT '上级菜单',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `ix_t_menus_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 28 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_menus
@@ -288,6 +319,7 @@ INSERT INTO `t_menus` VALUES (24, '2023-12-06 23:22:16', 1, '2023-12-06 23:22:16
 INSERT INTO `t_menus` VALUES (25, '2023-12-06 23:33:18', 1, '2023-12-06 23:37:20', 1, 0, 'build', '/tool/build/index', 0, 0, 0, 1, 'Build', '表单构建', 'build', 1, 15);
 INSERT INTO `t_menus` VALUES (26, '2023-12-07 22:06:50', 1, '2023-12-07 22:16:07', 1, 0, 'developer/:id(\\d+)', '/hiker/developer/index', 0, 1, 0, 1, 'DeveloperDetail', '开发者详情', 'peoples', 1, 10);
 INSERT INTO `t_menus` VALUES (27, '2023-12-07 22:09:16', 1, '2023-12-07 22:16:02', 1, 0, 'rule_type/:id(\\d+)', '/hiker/rule_type/index', 0, 1, 0, 2, 'RuleTypeDetail', '规则类型详情', 'component', 1, 10);
+INSERT INTO `t_menus` VALUES (28, '2023-12-07 22:56:42', 1, '2023-12-07 22:56:42', 0, 0, 'logininfor', '/monitor/logininfor/index', 0, 0, 0, 2, 'LoginInfor', '登录日志', 'people', 1, 17);
 
 -- ----------------------------
 -- Table structure for t_perm_label
