@@ -110,7 +110,7 @@
       <el-table-column label="类型" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <router-link :to="'/hiker/rule_type/' + scope.row.type_id" class="link-type">
-            <span>{{ scope.row.type_id }}</span>
+            <span>{{ scope.row.type_name }}</span>
           </router-link>
         </template>
       </el-table-column>
@@ -118,7 +118,7 @@
       <el-table-column label="开发者" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <router-link :to="'/hiker/developer/' + scope.row.dev_id" class="link-type">
-            <span>{{ scope.row.dev_id }}</span>
+            <span>{{ scope.row.dev_name }}</span>
           </router-link>
         </template>
       </el-table-column>

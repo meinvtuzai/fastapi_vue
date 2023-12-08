@@ -5,12 +5,13 @@
 # Author's Blog: https://blog.csdn.net/qq_32394351
 # Date  : 2023/12/2
 
-
+from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union, Tuple
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from sqlalchemy import asc, desc, func, distinct
-from common.curd_base import CRUDBase
+from common.curd_base import CRUDBase, ModelType
 from ..models.hiker_rule import HikerRuleType, HikerRule
+from ..models.hiker_developer import HikerDeveloper
 
 
 class CURDHikerRuleType(CRUDBase):
@@ -58,6 +59,8 @@ class CURDHikerRule(CRUDBase):
     def init(self):
         self.query_columns.extend((self.model.dt2ts(self.model.auth_date_time, "auth_date_time_ts"),
                                    self.model.dt2ts(self.model.last_active, "last_active_ts"),
+                                   HikerDeveloper.name.label('dev_name'),
+                                   HikerRuleType.name.label('type_name'),
                                    ))
         # self.exclude_columns.extend((self.model.auth_date_time,self.model.last_active))  # 排除时间字段
 
@@ -96,14 +99,13 @@ class CURDHikerRule(CRUDBase):
         #     'not_safe_note': record.not_safe_note,
         #     'last_active': str(record.last_active),
         # }
-        record = super().get(db,_id,to_dict)
+        record = super().get(db, _id, to_dict)
         # if record.get('auth_date_time'):
         #     record['auth_date_time'] = str(record['auth_date_time'])
         #
         # if record.get('last_active'):
         #     record['last_active'] = str(record['last_active'])
         return record
-
 
     def create(self, db: Session, *, obj_in, creator_id: int = 0):
         obj_in_data = obj_in if isinstance(obj_in, dict) else jsonable_encoder(obj_in)
@@ -145,6 +147,13 @@ class CURDHikerRule(CRUDBase):
         #         record['last_active'] = str(record['last_active'])
 
         return {'results': records, 'total': total}
+
+    def get_multi(self, db: Session, *, queries: Optional[list] = None, filters: Optional[list] = None,
+                  order_bys: Optional[list] = None, to_dict: bool = True, page: int = 1, page_size: int = 25
+                  ) -> Tuple[List[ModelType], int, int, int]:
+        # filters = (filters or []) + [self.model.dev_id == HikerDeveloper.id] + [self.model.type_id == HikerRuleType.id]
+        return super().get_multi(db, queries=queries, filters=filters, order_bys=order_bys, to_dict=to_dict, page=page,
+                                 page_size=page_size)
 
 
 curd_hiker_rule_type = CURDHikerRuleType(HikerRuleType)

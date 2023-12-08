@@ -93,6 +93,15 @@ def Many2one(comodel_name, string='', default=NONE, required=False, ondelete='se
                   server_default=text(default), nullable=not required, comment=string, primary_key=primary_key)
 
 
+def One2many(_table_class_, _tablename):
+    """
+    _table_class_:明细表的类名大写
+    relationship 本表的__tablename__ 。
+    """
+    return relationship(_table_class_, secondary=f"{settings.SQL_TABLE_PREFIX}{_table_class_}{_tablename}",
+                        backref=_tablename)
+
+
 def Text(string: str, default=NONE, required=False, index=False):
     primary_key = index
     if required and default == NONE:
