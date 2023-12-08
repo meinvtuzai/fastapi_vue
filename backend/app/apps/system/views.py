@@ -1,11 +1,14 @@
 from typing import Any, Optional
 
-
 from core.logger import logger
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import asc
 
+try:
+    from redis.asyncio import Redis as asyncRedis
+except ImportError:
+    from aioredis import Redis as asyncRedis
 from common.resp import respSuccessJson
 from .models import DictData, DictDetails, ConfigSettings
 from .schemas import ConfigSettingSchema, DictDataSchema, DictDetailSchema
@@ -43,9 +46,13 @@ async def getConfigSettingsList(*,
 @router.get("/config-setting/key/{key}", summary="通过Key获取单个配置")
 async def getConfigSettingByKey(*,
                                 db: Session = Depends(deps.get_db),
+                                r: asyncRedis = Depends(deps.get_redis),
                                 key: str
                                 ):
-    config_setting_obj = curd_config_setting.getByKey(db, key=key)
+    if r:
+        config_setting_obj = await curd_config_setting.getByKeyWithCache(r, db, key=key)
+    else:
+        config_setting_obj = curd_config_setting.getByKey(db, key=key)
     return respSuccessJson(config_setting_obj)
 
 
@@ -82,8 +89,11 @@ async def setConfigSettingByID(*,
                                db: Session = Depends(deps.get_db),
                                u: Users = Depends(deps.user_perm(["system:config-setting:put"])),
                                obj: ConfigSettingSchema,
+                               r: asyncRedis = Depends(deps.get_redis),
                                _id: int
                                ):
+    if r:
+        await curd_config_setting.deleteCacheByID(r, _id=_id)
     curd_config_setting.update(db, _id=_id, obj_in=obj, modifier_id=u['id'])
     return respSuccessJson()
 
@@ -92,23 +102,30 @@ async def setConfigSettingByID(*,
 async def delConfigSettingByID(*,
                                db: Session = Depends(deps.get_db),
                                u: Users = Depends(deps.user_perm(["system:config_setting:delete"])),
+                               r: asyncRedis = Depends(deps.get_redis),
                                _id: int
                                ):
+    if r:
+        await curd_config_setting.deleteCacheByID(r, _id=_id)
     curd_config_setting.delete(db, _id=_id, deleter_id=u['id'])
     return respSuccessJson()
 
 
-@router.get("/dict/type/{type}", summary="获取字典kv")
+@router.get("/dict/type/{_type}", summary="获取字典kv")
 async def getDict(*,
-                  type: str,
+                  _type: str,
+                  r: asyncRedis = Depends(deps.get_redis),
                   db: Session = Depends(deps.get_db)
                   ):
-    result = curd_dict_data.getByType(db, type=type)
+    if r:
+        result = await curd_dict_data.getByTypeWithCache(r, db, _type=_type)
+    else:
+        result = curd_dict_data.getByType(db, _type=_type)
     return respSuccessJson(result)
 
 
 @router.get("/dict/data", summary="获取字典")
-async def listDictData(*, 
+async def listDictData(*,
                        db: Session = Depends(deps.get_db),
                        u: Users = Depends(deps.user_perm(["system:dict:get"])),
                        page: int = 1,
@@ -159,9 +176,12 @@ async def addDictData(*,
 async def setDictData(*,
                       _id: int,
                       db: Session = Depends(deps.get_db),
+                      r: asyncRedis = Depends(deps.get_redis),
                       u: Users = Depends(deps.user_perm(["system:dict:put"])),
                       obj: DictDataSchema
                       ):
+    if r:
+        await curd_dict_data.deleteCacheByID(r, _id=_id)
     curd_dict_data.update(db, _id=_id, obj_in=obj, modifier_id=u['id'])
     return respSuccessJson()
 
@@ -170,14 +190,17 @@ async def setDictData(*,
 async def delDictData(*,
                       _id: int,
                       db: Session = Depends(deps.get_db),
+                      r: asyncRedis = Depends(deps.get_redis),
                       u: Users = Depends(deps.user_perm(["system:dict:delete"])),
                       ):
+    if r:
+        await curd_dict_data.deleteCacheByID(r, _id=_id)
     curd_dict_data.delete(db, _id=_id, deleter_id=u['id'])
     return respSuccessJson()
 
 
 @router.get("/dict/detail", summary="获取字典值")
-async def listDictDetail(*, 
+async def listDictDetail(*,
                          db: Session = Depends(deps.get_db),
                          u: Users = Depends(deps.user_perm(["system:dict:detail:get"])),
                          page: int = 1,
@@ -210,20 +233,26 @@ async def getDictDetail(*,
 @router.post("/dict/detail", summary="添加字典值")
 async def addDictDetail(*,
                         db: Session = Depends(deps.get_db),
+                        r: asyncRedis = Depends(deps.get_redis),
                         u: Users = Depends(deps.user_perm(["system:dict:detail:post"])),
                         obj: DictDetailSchema
                         ):
+    if r:
+        await curd_dict_data.deleteCacheByID(r, _id=obj.dict_data_id)
     curd_dict_detail.create(db, obj_in=obj, creator_id=u['id'])
     return respSuccessJson()
 
 
 @router.put("/dict/detail/{_id}", summary="修改字典值")
-async def setDictDetail(*, 
+async def setDictDetail(*,
                         _id: int,
                         db: Session = Depends(deps.get_db),
+                        r: asyncRedis = Depends(deps.get_redis),
                         u: Users = Depends(deps.user_perm(["system:dict:detail:put"])),
                         obj: DictDetailSchema
                         ):
+    if r:
+        await curd_dict_data.deleteCacheByID(r, _id=obj.dict_data_id)
     curd_dict_detail.update(db, _id=_id, obj_in=obj, modifier_id=u['id'])
     return respSuccessJson()
 
@@ -232,8 +261,12 @@ async def setDictDetail(*,
 async def delDictDetail(*,
                         _id: int,
                         db: Session = Depends(deps.get_db),
+                        r: asyncRedis = Depends(deps.get_redis),
                         u: Users = Depends(deps.user_perm(["system:dict:detail:delete"])),
                         ):
+    if r:
+        obj = curd_dict_detail.get(db, _id=_id)
+        await curd_dict_data.deleteCacheByID(r, _id=obj['dict_data_id'])
     curd_dict_detail.delete(db, _id=_id, deleter_id=u['id'])
     return respSuccessJson()
 

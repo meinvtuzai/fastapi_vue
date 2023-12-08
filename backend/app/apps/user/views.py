@@ -13,8 +13,9 @@ from sqlalchemy.orm import Session
 from utils.captcha_code import create_base64_code
 from utils.email import EmailSender
 from utils.encrypt import get_uuid
+
 from apps.permission.models.user import Users
-from apps.system.models import ConfigSettings
+
 from apps.monitor.curd.curd_logininfor import curd_logininfor
 from common import error_code, deps, security
 
@@ -23,7 +24,11 @@ from core import constants
 from core.config import settings
 from .schemas import user_info_schemas
 from .curd.curd_user import curd_user
+from ..system.curd.curd_config_setting import curd_config_setting
 import user_agents
+
+# from apps.system.models import ConfigSettings
+
 
 router = APIRouter()
 
@@ -41,10 +46,11 @@ async def login(*,
     uos = user_agent.os.family + ' ' + user_agent.os.version_string
     umodel = user_agent.device.model
     obj_in = {'user_name': user_info.user, 'ipaddr': ip, 'browser': ubrowser, 'status': '1', 'os': uos}
-    configs = db.query(ConfigSettings.value).filter(
-        ConfigSettings.key == 'login_with_captcha', ConfigSettings.is_deleted == 0, ConfigSettings.status == 0
-    ).first()
-    if configs and configs.value == 'yes':
+    # configs = db.query(ConfigSettings.value).filter(
+    #     ConfigSettings.key == 'login_with_captcha', ConfigSettings.is_deleted == 0, ConfigSettings.status == 0
+    # ).first()
+    configs = curd_config_setting.getByKey(db, key='login_with_captcha')
+    if configs and configs.get('value') == 'yes':
         code = await redis.get(f"{constants.REDIS_KEY_USER_CAPTCHA_CODE_KEY_PREFIX}_{user_info.key}")  # type: bytes
         if not code:
             obj_in.update({'msg': error_code.ERROR_USER_CAPTCHA_CODE_INVALID.msg})
