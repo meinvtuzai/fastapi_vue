@@ -128,6 +128,13 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="24">
+            <el-form-item label="归属字典" v-if="typeof form.dict_type != 'undefined'">
+              <label>{{ form.dict_type + ' ( ' + form.dict_name + ' )' }}</label>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
             <el-form-item label="数据标签" prop="dict_label">
               <el-input v-model="form.dict_label" placeholder="请输入数据标签"/>
             </el-form-item>
@@ -136,7 +143,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="数据值" prop="dict_value">
-              <el-input v-model="form.dict_value" placeholder="请输入数据标签"/>
+              <el-input v-model="form.dict_value" placeholder="请输入数据值"/>
             </el-form-item>
           </el-col>
           <el-col :span="6">

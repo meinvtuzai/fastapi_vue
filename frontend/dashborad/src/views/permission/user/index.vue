@@ -53,7 +53,7 @@
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="用户状态" clearable size="small" style="width: 200px">
-          <el-option v-for="dict in statusOptions" :key="dict.id" :label="dict.label" :value="dict.value" />
+          <el-option v-for="dict in statusOptions" :key="dict.id" :label="dict.label" :value="dict.value"/>
         </el-select>
       </el-form-item>
       <el-form-item label="创建时间">
@@ -99,7 +99,8 @@
           icon="el-icon-upload2"
           size="mini"
           @click="handleImport"
-        >导入</el-button>
+        >导入
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -108,17 +109,18 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="50" align="center" />
-      <el-table-column label="编号" align="center" prop="id" width="55" :show-overflow-tooltip="true" />
-      <el-table-column label="用户名" align="center" prop="username" :show-overflow-tooltip="true" />
-      <el-table-column label="昵称" align="center" prop="nickname" :show-overflow-tooltip="true" />
-      <el-table-column label="邮箱" align="center" prop="email" :show-overflow-tooltip="true" />
-      <el-table-column label="手机号码" align="center" prop="phone" width="120" />
+      <el-table-column type="selection" width="50" align="center"/>
+      <el-table-column label="编号" align="center" prop="id" width="55" :show-overflow-tooltip="true"/>
+      <el-table-column label="用户名" align="center" prop="username" :show-overflow-tooltip="true"/>
+      <el-table-column label="昵称" align="center" prop="nickname" :show-overflow-tooltip="true"/>
+      <el-table-column label="邮箱" align="center" prop="email" :show-overflow-tooltip="true"/>
+      <el-table-column label="手机号码" align="center" prop="phone" width="120"/>
       <el-table-column label="活跃" align="center" prop="is_active" width="60">
         <template slot-scope="scope">
           <el-switch v-model="scope.row.is_active" @change="handleChangIsActive(scope.row)"></el-switch>
@@ -130,11 +132,11 @@
           <span>{{ parseTime(scope.row.created_ts) }}</span>
         </template>
       </el-table-column>
-<!--      <el-table-column label="更新时间" align="center" prop="modified_ts">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.modified_ts) }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+      <!--      <el-table-column label="更新时间" align="center" prop="modified_ts">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          <span>{{ parseTime(scope.row.modified_ts) }}</span>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)">修改</el-button>
@@ -157,24 +159,24 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="用户昵称" prop="nickname">
-              <el-input v-model="form.nickname" placeholder="请输入用户昵称" />
+              <el-input v-model="form.nickname" placeholder="请输入用户昵称"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="用户名" prop="username">
-              <el-input v-model="form.username" placeholder="请输入用户名" />
+              <el-input v-model="form.username" placeholder="请输入用户名"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="手机号码" prop="phone">
-              <el-input v-model="form.phone" placeholder="请输入手机号码" maxlength="11" />
+              <el-input v-model="form.phone" placeholder="请输入手机号码" maxlength="11"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="邮箱" prop="email">
-              <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="18" />
+              <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="18"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -182,7 +184,7 @@
           <el-col :span="12">
             <el-form-item label="用户性别" prop="sex">
               <el-select v-model="form.sex" placeholder="请选择">
-                <el-option v-for="dict in sexOptions" :key="dict.value" :label="dict.label" :value="dict.value" />
+                <el-option v-for="dict in sexOptions" :key="dict.value" :label="dict.label" :value="dict.value"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -190,7 +192,7 @@
           <el-col :span="12">
             <el-form-item label="状态" prop="status">
               <el-select v-model="form.status" placeholder="请选择">
-                <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
+                <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -252,10 +254,13 @@
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         <div class="el-upload__tip text-center" slot="tip">
           <div class="el-upload__tip" slot="tip">
-            <el-checkbox v-model="upload.updateSupport" /> 是否更新已经存在的用户数据
+            <el-checkbox v-model="upload.updateSupport"/>
+            是否更新已经存在的用户数据
           </div>
           <span>仅允许导入xls、xlsx格式文件。</span>
-          <el-link type="primary" :underline="false" style="font-size:12px;vertical-align: baseline;" @click="importTemplate">下载模板</el-link>
+          <el-link type="primary" :underline="false" style="font-size:12px;vertical-align: baseline;"
+                   @click="importTemplate">下载模板
+          </el-link>
         </div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
@@ -282,7 +287,6 @@ import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
 import AvatarUpload from './AvatarUpload'
 import {getToken} from "@/utils/auth";
-import {parseTime} from "@/utils/ruoyi";
 
 
 export default {
@@ -334,7 +338,7 @@ export default {
         // 是否更新已经存在的用户数据
         updateSupport: 0,
         // 设置上传的请求头部
-        headers: { Token: getToken() },
+        headers: {Token: getToken()},
         // 上传的地址
         url: process.env.VUE_APP_BASE_API + "permission/user/file/importData"
       },
@@ -355,27 +359,27 @@ export default {
       fileBase: process.env.VUE_APP_MEDIA_BASE,
       defaultAvatar: "images/avatar/default/avatar.jpg",
       // 设置上传的请求头部
-      headers: { Authorization: "Token " + getToken() },
+      headers: {Authorization: "Token " + getToken()},
       // 上传网站图片地址
       uploadAvatarUrl: process.env.VUE_APP_BASE_API + "permission/user/profile/avatar",
       // 表单校验
       rules: {
         username: [
-          { required: true, message: '用户编号不能为空', trigger: 'blur' },
-          { pattern: /^[a-zA-Z]{1}([a-zA-Z0-9]|[-_]){4,19}$/, trigger: "blur", message: "只能输入5-20个以字母开头的字串"},
+          {required: true, message: '用户编号不能为空', trigger: 'blur'},
+          {pattern: /^[a-zA-Z]{1}([a-zA-Z0-9]|[-_]){4,19}$/, trigger: "blur", message: "只能输入5-20个以字母开头的字串"},
         ],
         nickname: [
-          { required: true, message: '用户名称不能为空', trigger: 'blur' }
+          {required: true, message: '用户名称不能为空', trigger: 'blur'}
         ],
         roles: [
-          { required: true, message: '角色不能为空', trigger: 'blur' }
+          {required: true, message: '角色不能为空', trigger: 'blur'}
         ],
         email: [
-          { required: true, trigger: "blur", message: "邮箱不能为空" },
-          { type: "email",trigger: "blur", message: "请输入正确的邮箱地址" },
+          {required: true, trigger: "blur", message: "邮箱不能为空"},
+          {type: "email", trigger: "blur", message: "请输入正确的邮箱地址"},
         ],
         phone: [
-          { required: true, message: '手机号码不能为空', trigger: 'blur' },
+          {required: true, message: '手机号码不能为空', trigger: 'blur'},
           {
             pattern: /^1[2|3|4|5|6|7|8|9][0-9]\d{8}$/,
             message: '请输入正确的手机号码',
@@ -383,10 +387,10 @@ export default {
           }
         ],
         sex: [
-          { required: true, message: '性别不能为空', trigger: 'blur' }
+          {required: true, message: '性别不能为空', trigger: 'blur'}
         ],
         status: [
-          { required: true, message: '状态不能为空', trigger: 'blur' }
+          {required: true, message: '状态不能为空', trigger: 'blur'}
         ]
       },
     }
@@ -395,19 +399,23 @@ export default {
     this.getList()
     this.getDicts('permission_user_status').then(response => {
       this.statusOptions = response.data.details
-      this.statusOptions.forEach( item => { if (item.is_default) this.defaultStatusValue = item.value })
+      this.statusOptions.forEach(item => {
+        if (item.is_default) this.defaultStatusValue = item.value
+      })
     })
     this.getDicts('permission_user_sex').then(response => {
       this.sexOptions = response.data.details;
-      this.sexOptions.forEach(item => { if (item.is_default) this.defaultSexValue = item.value })
+      this.sexOptions.forEach(item => {
+        if (item.is_default) this.defaultSexValue = item.value
+      })
     })
-    getRoleSelectList().then( response => {
+    getRoleSelectList().then(response => {
       this.roleOptions = response.data.roles;
       this.getParameter('user_init_roles').then(response => {
         if (response.code === 0) {
           let values = response.data.value.split(',');
           this.defaultRolesId = [];
-          this.roleOptions.forEach( item => {
+          this.roleOptions.forEach(item => {
             if (values.indexOf(item.key) >= 0) {
               this.defaultRolesId.push(item.id)
             }
@@ -421,7 +429,7 @@ export default {
     getList() {
       this.loading = true
       console.log(this.dateRange);
-      if (this.dateRange.length > 0){
+      if (this.dateRange.length > 0) {
         this.queryParams.created_after_ts = parseInt((new Date(this.dateRange[0] + " 00:00:00")).getTime() / 1000);
         this.queryParams.created_before_ts = parseInt((new Date(this.dateRange[1] + " 23:59:59")).getTime() / 1000);
       }
@@ -509,7 +517,7 @@ export default {
       this.$prompt('请输入"' + row.username + '-' + row.nickname + '"的新密码', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
-      }).then(({ value }) => {
+      }).then(({value}) => {
         resetUserPwd(row.id, value).then(response => {
           if (response.code === 0) {
             this.msgSuccess('修改成功，新密码是：' + value)
@@ -524,14 +532,14 @@ export default {
     handleChangIsActive(row) {
       console.log(row.is_active)
       changeUserIsActive(row.id, row.is_active).then(response => {
-        if(response.code === 0) {
+        if (response.code === 0) {
           this.msgSuccess("修改成功")
         }
         this.getList();
       })
     },
     /** 提交按钮 */
-    submitForm: function() {
+    submitForm: function () {
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== undefined) {
@@ -559,18 +567,18 @@ export default {
       const userIds = row.id || this.ids
       this.$confirm('是否确认删除数据?', '警告', {
         confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'
-      }).then(function() {
+      }).then(function () {
         return delUser(userIds)
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
-      }).catch(function() {
+      }).catch(function () {
       })
     },
     /** 导出按钮操作 */
     handleExport() {
       this.download('system_user', {
-        ...this.queryParams,...{template:'0'}
+        ...this.queryParams, ...{template: '0'}
       }, `用户信息_${parseTime(new Date().getTime())}.xlsx`)
     },
     /** 导入按钮操作 */
@@ -581,7 +589,7 @@ export default {
     /** 下载模板操作 */
     importTemplate() {
       this.download('system_user', {
-        ...this.queryParams,...{template:'1'}
+        ...this.queryParams, ...{template: '1'}
       }, `user_template_${parseTime(new Date().getTime())}.xlsx`)
     },
     // 文件上传中处理
@@ -593,7 +601,7 @@ export default {
       this.upload.open = false;
       this.upload.isUploading = false;
       this.$refs.upload.clearFiles();
-      this.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", { dangerouslyUseHTMLString: true });
+      this.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", {dangerouslyUseHTMLString: true});
       this.getList();
     },
     // 提交上传文件
@@ -606,7 +614,7 @@ export default {
       this.form.avatar = this.defaultAvatar;
     },
     //修改图片后的回传事件
-    uploadPicture(path){
+    uploadPicture(path) {
       this.form.avatar = path;
     },
     handleAvatarSuccess(res) {
@@ -617,10 +625,10 @@ export default {
       }
     },
     handleAvatarError(err, file, fileList) {
-     this.msgError(err);
+      this.msgError(err);
     },
     beforeAvatarUpload(file) {
-      const imgType = ['image/jpeg','image/x-icon'];
+      const imgType = ['image/jpeg', 'image/x-icon'];
       const isJPG = imgType.map(function (type) {
         return file.type === type;
       });

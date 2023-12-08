@@ -75,7 +75,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">i
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="编号" align="center" prop="id" width="55"/>
       <el-table-column label="名称" align="center" prop="name" :show-overflow-tooltip="true"/>
       <el-table-column label="描述" align="center" prop="key" :show-overflow-tooltip="true"/>
@@ -86,11 +86,11 @@
           <span>{{ parseTime(scope.row.created_ts) }}</span>
         </template>
       </el-table-column>
-<!--      <el-table-column label="更新时间" align="center" prop="modified_ts">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.modified_ts) }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+      <!--      <el-table-column label="更新时间" align="center" prop="modified_ts">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          <span>{{ parseTime(scope.row.modified_ts) }}</span>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -123,10 +123,10 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="角色名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入参数名称" />
+          <el-input v-model="form.name" placeholder="请输入参数名称"/>
         </el-form-item>
         <el-form-item label="角色描述" prop="key">
-          <el-input v-model="form.key" placeholder="请输入参数键" />
+          <el-input v-model="form.key" placeholder="请输入参数键"/>
         </el-form-item>
         <el-row>
           <el-col :span="12">
@@ -141,15 +141,17 @@
                   v-for="dict in statusOptions"
                   :key="dict.value"
                   :label="dict.value"
-                >{{ dict.label }}</el-radio>
+                >{{ dict.label }}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
         </el-row>
-         <el-form-item label="菜单权限">
+        <el-form-item label="菜单权限">
           <el-checkbox v-model="menuExpand" @change="handleCheckedTreeExpand($event, 'menu')">展开/折叠</el-checkbox>
           <el-checkbox v-model="menuNodeAll" @change="handleCheckedTreeNodeAll($event, 'menu')">全选/全不选</el-checkbox>
-          <el-checkbox v-model="form.menuCheckStrictly" @change="handleCheckedTreeConnect($event, 'menu')">父子联动</el-checkbox>
+          <el-checkbox v-model="form.menuCheckStrictly" @change="handleCheckedTreeConnect($event, 'menu')">父子联动
+          </el-checkbox>
           <el-tree
             ref="menu"
             class="tree-border"
@@ -216,7 +218,7 @@ export default {
       // 表单校验
       rules: {
         name: [
-          { required: true, message: '角色名称不能为空', trigger: 'blur' }
+          {required: true, message: '角色名称不能为空', trigger: 'blur'}
         ],
       }
     }
@@ -232,10 +234,10 @@ export default {
     getList() {
       this.loading = true
       listRole(this.queryParams).then(response => {
-        this.list = response.data.results
-        this.total = response.data.total
-        this.loading = false
-      }
+          this.list = response.data.results
+          this.total = response.data.total
+          this.loading = false
+        }
       )
     },
     /** 查询菜单树结构 */
@@ -289,12 +291,14 @@ export default {
     handleAdd() {
       this.reset()
       this.open = true
-      this.title = '添加字典类型'
+      this.title = '添加角色'
       this.getMenuTreeselect();
       getRoleMaxOrderNum().then(response => {
         this.form.order_num = response.data.max_order_num + 1
       })
-      this.statusOptions.forEach(item => { if (item.is_default) this.form.status = item.value })
+      this.statusOptions.forEach(item => {
+        if (item.is_default) this.form.status = item.value
+      })
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -332,11 +336,13 @@ export default {
         this.form = response.data
         this.open = true
         this.title = '修改参数'
-        setTimeout(()=>{this.$refs.menu.setCheckedNodes(response.data.menus)}, 200)
+        setTimeout(() => {
+          this.$refs.menu.setCheckedNodes(response.data.menus)
+        }, 200)
       })
     },
     /** 提交按钮 */
-    submitForm: function() {
+    submitForm: function () {
       this.$refs['form'].validate(valid => {
         if (valid) {
           this.form.menus = this.$refs.menu.getCheckedKeys();
@@ -375,16 +381,16 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids
-      this.$confirm('是否确认删除字典编号为"' + ids + '"的数据项?', '警告', {
+      this.$confirm('是否确认删除角色编号为"' + ids + '"的数据项?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(function() {
+      }).then(function () {
         return delRole(ids)
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
-      }).catch(function() {
+      }).catch(function () {
       })
     }
   }

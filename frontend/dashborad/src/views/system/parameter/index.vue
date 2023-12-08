@@ -75,7 +75,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">i
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="编号" align="center" prop="id" width="55"/>
       <el-table-column label="参数名称" align="center" prop="name" :show-overflow-tooltip="true"/>
       <el-table-column label="参数键" align="center" prop="key" :show-overflow-tooltip="true"/>
@@ -88,11 +88,11 @@
           <span>{{ parseTime(scope.row.created_ts) }}</span>
         </template>
       </el-table-column>
-<!--      <el-table-column label="更新时间" align="center" prop="modified_ts">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.modified_ts) }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+      <!--      <el-table-column label="更新时间" align="center" prop="modified_ts">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          <span>{{ parseTime(scope.row.modified_ts) }}</span>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -125,13 +125,13 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="参数名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入参数名称" />
+          <el-input v-model="form.name" placeholder="请输入参数名称"/>
         </el-form-item>
         <el-form-item label="参数键" prop="key">
-          <el-input v-model="form.key" placeholder="请输入参数键" />
+          <el-input v-model="form.key" placeholder="请输入参数键"/>
         </el-form-item>
         <el-form-item label="参数值" prop="value">
-          <el-input v-model="form.value" placeholder="请输入常数值" />
+          <el-input v-model="form.value" placeholder="请输入常数值"/>
         </el-form-item>
         <el-row>
           <el-col :span="12">
@@ -146,13 +146,14 @@
                   v-for="dict in statusOptions"
                   :key="dict.value"
                   :label="dict.value"
-                >{{ dict.label }}</el-radio>
+                >{{ dict.label }}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
         </el-row>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -207,13 +208,13 @@ export default {
       // 表单校验
       rules: {
         name: [
-          { required: true, message: '参数名称不能为空', trigger: 'blur' }
+          {required: true, message: '参数名称不能为空', trigger: 'blur'}
         ],
         key: [
-          { required: true, message: '参数键不能为空', trigger: 'blur' }
+          {required: true, message: '参数键不能为空', trigger: 'blur'}
         ],
         value: [
-          { required: true, message: '参数值不能为空', trigger: 'blur' }
+          {required: true, message: '参数值不能为空', trigger: 'blur'}
         ],
       }
     }
@@ -229,10 +230,10 @@ export default {
     getList() {
       this.loading = true
       listConfigSettings(this.queryParams).then(response => {
-        this.list = response.data.data
-        this.total = response.data.total
-        this.loading = false
-      }
+          this.list = response.data.data
+          this.total = response.data.total
+          this.loading = false
+        }
       )
     },
     // 字典状态字典翻译
@@ -277,7 +278,9 @@ export default {
       getConfigSettingMaxOrderNum().then(response => {
         this.form.order_num = response.data.max_order_num + 1
       })
-      this.statusOptions.forEach(item => { if (item.is_default) this.form.status = item.value })
+      this.statusOptions.forEach(item => {
+        if (item.is_default) this.form.status = item.value
+      })
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -296,7 +299,7 @@ export default {
       })
     },
     /** 提交按钮 */
-    submitForm: function() {
+    submitForm: function () {
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== undefined) {
@@ -326,16 +329,16 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids
-      this.$confirm('是否确认删除字典编号为"' + ids + '"的数据项?', '警告', {
+      this.$confirm('是否确认删除参数编号为"' + ids + '"的数据项?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(function() {
+      }).then(function () {
         return delConfigSetting(ids)
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
-      }).catch(function() {
+      }).catch(function () {
       })
     }
   }
