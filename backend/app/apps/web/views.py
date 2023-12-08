@@ -61,11 +61,14 @@ async def baidu():
 @router.put('/database_update', summary="数据库升级")
 async def database_update(obj: database_schemas.updateSchema):
     if obj.auth_code == settings.DATABASE_UPDATE_AUTH:
-        if update_db():
+        code, result = update_db()
+        if code == 0:
             return respSuccessJson()
-        return respErrorJson(error=error_code.ERROR_DATABASE_CMD_ERROR)
+        # return respErrorJson(error=error_code.ERROR_DATABASE_CMD_ERROR)
+        return respSuccessJson(data={"error": error_code.ERROR_DATABASE_CMD_ERROR.msg + " " + result})
     else:
-        return respErrorJson(error=error_code.ERROR_DATABASE_AUTH_ERROR)
+        # return respErrorJson(error=error_code.ERROR_DATABASE_AUTH_ERROR)
+        return respSuccessJson(data={"error": error_code.ERROR_DATABASE_AUTH_ERROR.msg})
 
 
 @router.websocket("/ws")

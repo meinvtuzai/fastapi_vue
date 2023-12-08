@@ -30,3 +30,4 @@ id,created_time,creator_id,modified_time,modifier_id,is_deleted,label,remark,sta
 29,2023-12-07 00:00:33,0,2023-12-07 00:00:33,0,0,perm:user:delete,,0
 30,2023-12-07 19:50:07,0,2023-12-07 19:50:07,0,0,report:excel_generate:get,,0
 31,2023-12-07 21:39:27,0,2023-12-07 21:39:27,0,0,report:excel_generate:post,,0
+32,2023-12-09 02:27:25,0,2023-12-09 02:27:25,0,0,system:config_setting:delete,,0

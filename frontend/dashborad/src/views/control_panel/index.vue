@@ -57,25 +57,31 @@ export default {
         let data = response.data;
         console.log(data);
         if (data.value) {
-          const loading = this.$loading({
+          const loading2 = this.$loading({
             lock: true,
             text: '数据库升级中，请稍等...',
             spinner: 'el-icon-loading',
             background: 'rgba(0, 0, 0, 0.7)'
           });
-          setRecord({auth_code: data.value}).then(response => {
-            let code = response.code
-            loading.close();
+          try {
+            setRecord({auth_code: data.value}).then(response => {
+              let code = response.code
+              loading2.close();
+              this.loading = false;
+              if (code === 0 && !response.data.error) {
+                this.$message({
+                  message: '数据库升级成功',
+                  type: 'success'
+                });
+              } else {
+                this.$message.error('数据库升级失败:' + response.data.error);
+              }
+            });
+          }catch (e) {
+            loading2.close();
             this.loading = false;
-            if (code === 0) {
-              this.$message({
-                message: '数据库升级成功',
-                type: 'success'
-              });
-            } else {
-              this.$message.error('数据库升级失败:' + response.msg);
-            }
-          });
+          }
+
         } else {
           this.loading = false
         }
