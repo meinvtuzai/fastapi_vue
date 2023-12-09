@@ -9,10 +9,12 @@ import os
 
 from sqlalchemy.orm import Session
 from apps.user.curd.curd_user import curd_user
+from apps.system.curd.curd_config_setting import curd_config_setting
 from apps.permission.curd.curd_role import curd_role
 from app.core.config import settings
 from apps.permission.models.user import Users
 from apps.permission.models.role import Roles
+from apps.system.models import ConfigSettings
 from apps.user.schemas.user_info_schemas import UserCreateSchema
 from apps.permission.schemas import RoleSchema
 from utils.tools import get_md5
@@ -23,6 +25,9 @@ logger = logging.getLogger(__name__)
 
 
 def init_users_and_roles(db: Session) -> None:
+    """
+    初始化增加角色和用户到数据库
+    """
     users = []
     roles = []
     user = db.query(Users).filter(Users.username == settings.FIRST_SUPERUSER).first()
@@ -69,7 +74,46 @@ def init_users_and_roles(db: Session) -> None:
             db.commit()
 
 
+def init_params(db: Session) -> None:
+    """
+    初始化加载俩系统参数到数据库
+    """
+    config_ids = []
+    configs = db.query(ConfigSettings.value).filter(
+        ConfigSettings.key == 'login_with_captcha').first()
+    if not configs:
+        obj_in = {
+            "name": "需要登录验证码",
+            "key": "login_with_captcha",
+            "value": "yes" if settings.LOGIN_WITH_CAPTCHA else "no",
+            "remark": "yes 开启 no 关闭",
+            "status": 0,
+            "order_num": 9,
+        }
+        configs = curd_config_setting.create(db=db, obj_in=obj_in)
+    config_ids.append(configs)
+    configs = db.query(ConfigSettings.value).filter(
+        ConfigSettings.key == 'database_update_auth').first()
+    if not configs:
+        obj_in = {
+            "name": "数据库升级密码",
+            "key": "database_update_auth",
+            "value": settings.DATABASE_UPDATE_AUTH,
+            "remark": "默认密码hjdhnx",
+            "status": 0,
+            "order_num": 10,
+        }
+        configs = curd_config_setting.create(db=db, obj_in=obj_in)
+    config_ids.append(configs)
+    logger.info(config_ids)
+    # db.commit()
+    # db.close()
+
+
 def init_table_data_form_csv(db: Session) -> None:
+    """
+    从本地csv文件初始化数据到数据库
+    """
     init_data_path = os.path.join(os.path.dirname(__file__), "init_data")
     files = ['config_settings.csv', 'dict_data.csv', 'dict_details.csv', 'hiker_developer.csv',
              'hiker_rule.csv', 'hiker_rule_type.csv',
@@ -96,4 +140,5 @@ def init_table_data_form_csv(db: Session) -> None:
 def init_db(session: Session) -> None:
     db = session
     # init_users_and_roles(db) # 纯净模式啥也没有
+    # init_params(db)  # 初始化系统参数
     init_table_data_form_csv(db)  # demo模式，有数据

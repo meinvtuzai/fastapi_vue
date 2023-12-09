@@ -100,6 +100,8 @@ class Settings(BaseSettings):
     SECOND_SUPERUSER_PASSWORD: str = "hjdhnx"
 
     USERS_OPEN_REGISTRATION: bool = False
+    # 登录需要验证码
+    LOGIN_WITH_CAPTCHA: bool = False
 
     # 代理
     IP_AGENTS = [""]
