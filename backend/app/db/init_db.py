@@ -104,6 +104,18 @@ def init_params(db: Session) -> None:
             "order_num": 10,
         }
         configs = curd_config_setting.create(db=db, obj_in=obj_in)
+    configs = db.query(ConfigSettings.value).filter(
+        ConfigSettings.key == 'log_captcha_error').first()
+    if not configs:
+        obj_in = {
+            "name": "登录日志记录验证码错误",
+            "key": "log_captcha_error",
+            "value": settings.LOG_CAPTCHA_ERROR,
+            "remark": "0/false不记录 1/true记录",
+            "status": 0,
+            "order_num": 11,
+        }
+        configs = curd_config_setting.create(db=db, obj_in=obj_in)
     config_ids.append(configs)
     logger.info(config_ids)
     # db.commit()
@@ -140,5 +152,5 @@ def init_table_data_form_csv(db: Session) -> None:
 def init_db(session: Session) -> None:
     db = session
     # init_users_and_roles(db) # 纯净模式啥也没有
-    # init_params(db)  # 初始化系统参数
-    init_table_data_form_csv(db)  # demo模式，有数据
+    init_params(db)  # 初始化系统参数
+    # init_table_data_form_csv(db)  # demo模式，有数据

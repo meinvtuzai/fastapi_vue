@@ -8,10 +8,12 @@
 
 from fastapi import APIRouter, Depends, Query, File, UploadFile
 from sqlalchemy.orm import Session
+from sqlalchemy import asc, desc, func
 from ...permission.models import Users
 
 from common import deps, error_code
 from ..curd.curd_logininfor import curd_logininfor as curd
+from ..models.logininfor import LoginInfor
 
 from common.resp import respSuccessJson, respErrorJson
 
@@ -28,9 +30,15 @@ async def searchRecords(*,
                         user_name: str = Query(None),
                         ipaddr: str = Query(None),
                         login_time: str = Query(None),
+                        order_by: str = Query(None),
+                        is_desc: bool = Query(None),
                         page: int = Query(1, gt=0),
                         page_size: int = Query(20, gt=0),
                         ):
+    order_bys = []
+    if order_by:
+        if order_by == 'login_time':
+            order_bys += [desc(LoginInfor.login_time)] if is_desc else [asc(LoginInfor.login_time)]
     res = curd.search(db, user_name=user_name, ipaddr=ipaddr, status=status, login_time=login_time, page=page,
-                      page_size=page_size)
+                      page_size=page_size, order_bys=order_bys)
     return respSuccessJson(res)

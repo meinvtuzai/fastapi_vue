@@ -4,6 +4,7 @@
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Author's Blog: https://blog.csdn.net/qq_32394351
 # Date  : 2023/12/2
+from typing import Optional
 
 from sqlalchemy.orm import Session
 from sqlalchemy import asc, desc, func, distinct
@@ -19,7 +20,7 @@ class CURDLoginInfor(CRUDBase):
     #     self.exclude_columns.extend((self.model.login_time))  # 排除时间字段
 
     def search(self, db: Session, *, user_name: str = "", ipaddr: str = "", status: int = None,
-               login_time: str = "",
+               login_time: str = "", order_bys: Optional[list] = None,
                page: int = 1, page_size: int = 25) -> dict:
         filters = []
         if status is not None:
@@ -31,7 +32,7 @@ class CURDLoginInfor(CRUDBase):
         if login_time:
             filters.append(self.model.login_time.like(f"%{login_time}%"))
 
-        records, total, _, _ = self.get_multi(db, page=page, page_size=page_size, filters=filters)
+        records, total, _, _ = self.get_multi(db, page=page, page_size=page_size, filters=filters, order_bys=order_bys)
         return {'results': records, 'total': total}
 
 

@@ -103,6 +103,9 @@ class Settings(BaseSettings):
     # 登录需要验证码
     LOGIN_WITH_CAPTCHA: bool = False
 
+    # 登录验证码错误记录到日志
+    LOG_CAPTCHA_ERROR: bool = False
+
     # 代理
     IP_AGENTS = [""]
 

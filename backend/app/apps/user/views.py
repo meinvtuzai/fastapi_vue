@@ -50,15 +50,18 @@ async def login(*,
     #     ConfigSettings.key == 'login_with_captcha', ConfigSettings.is_deleted == 0, ConfigSettings.status == 0
     # ).first()
     configs = curd_config_setting.getByKey(db, key='login_with_captcha')
+    log_captcha_error = curd_config_setting.getByKey(db, key='log_captcha_error').get('value')
     if configs and configs.get('value') == 'yes':
         code = await redis.get(f"{constants.REDIS_KEY_USER_CAPTCHA_CODE_KEY_PREFIX}_{user_info.key}")  # type: bytes
         if not code:
             obj_in.update({'msg': error_code.ERROR_USER_CAPTCHA_CODE_INVALID.msg})
-            curd_logininfor.create(db, obj_in=obj_in)
+            if log_captcha_error:
+                curd_logininfor.create(db, obj_in=obj_in)
             return respErrorJson(error=error_code.ERROR_USER_CAPTCHA_CODE_INVALID)  # 验证码失效
         elif code.decode('utf-8').lower() != user_info.code.lower():
             obj_in.update({'msg': error_code.ERROR_USER_CAPTCHA_CODE_ERROR.msg})
-            curd_logininfor.create(db, obj_in=obj_in)
+            if log_captcha_error:
+                curd_logininfor.create(db, obj_in=obj_in)
             return respErrorJson(error=error_code.ERROR_USER_CAPTCHA_CODE_ERROR)  # 验证码错误
     user = curd_user.authenticate(db, user=user_info.user, password=user_info.password)
 

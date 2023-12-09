@@ -118,8 +118,8 @@
     <pagination
       v-show="total>0"
       :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
+      :page.sync="queryParams.page"
+      :limit.sync="queryParams.page_size"
       @pagination="getList"
     />
   </div>
@@ -157,8 +157,8 @@ export default {
       statusOptions: [],
       // 查询参数
       queryParams: {
-        pageNum: 1,
-        pageSize: 10,
+        page: 1,
+        page_size: 10,
         ipaddr: undefined,
         userName: undefined,
         status: undefined
@@ -203,8 +203,8 @@ export default {
     },
     /** 排序触发事件 */
     handleSortChange(column, prop, order) {
-      this.queryParams.orderByColumn = column.prop;
-      this.queryParams.isAsc = column.order;
+      this.queryParams.order_by = column.prop;
+      this.queryParams.is_desc = column.order==='descending';
       this.getList();
     },
     /** 删除按钮操作 */
