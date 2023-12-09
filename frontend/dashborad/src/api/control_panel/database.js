@@ -8,6 +8,7 @@ export function setRecord(data) {
     baseURL:new URL(process.env.VUE_APP_BASE_API).origin,
     url: api_url,
     method: 'put',
-    data: data
+    data: data,
+    timeout: 60*1000
   })
 }
