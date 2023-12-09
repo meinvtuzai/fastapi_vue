@@ -11,7 +11,7 @@
  Target Server Version : 100318
  File Encoding         : 65001
 
- Date: 08/12/2023 00:44:54
+ Date: 09/12/2023 17:50:30
 */
 
 SET NAMES utf8mb4;
@@ -29,7 +29,7 @@ CREATE TABLE `alembic_version`  (
 -- ----------------------------
 -- Records of alembic_version
 -- ----------------------------
-INSERT INTO `alembic_version` VALUES ('0a393a130e0c');
+INSERT INTO `alembic_version` VALUES ('c4a4fb15795a');
 
 -- ----------------------------
 -- Table structure for t_config_settings
@@ -51,14 +51,15 @@ CREATE TABLE `t_config_settings`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `ix_t_config_settings_name`(`name`) USING BTREE,
   INDEX `ix_t_config_settings_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_config_settings
 -- ----------------------------
 INSERT INTO `t_config_settings` VALUES (1, '2022-11-13 02:47:53', 0, '2022-11-13 02:47:53', 0, 0, '用户初始角色', 'user_init_roles', 'general', '0', 0, 1);
-INSERT INTO `t_config_settings` VALUES (2, '2023-12-04 22:13:09', 1, '2023-12-04 22:13:09', 0, 0, '数据库升级密码', 'database_update_auth', 'hjdhnx', NULL, 0, 2);
-INSERT INTO `t_config_settings` VALUES (3, '2023-12-04 23:04:31', 1, '2023-12-06 00:42:54', 1, 0, '登录需要验证码', 'login_with_captcha', 'no', 'yes 开启 no 关闭', 0, 3);
+INSERT INTO `t_config_settings` VALUES (2, '2023-12-04 22:13:09', 1, '2023-12-09 12:29:32', 1, 0, '数据库升级密码', 'database_update_auth', 'hjdhnx', '默认密码hjdhnx', 0, 2);
+INSERT INTO `t_config_settings` VALUES (3, '2023-12-04 23:04:31', 1, '2023-12-09 15:57:02', 1, 0, '登录需要验证码', 'login_with_captcha', 'no', 'yes 开启 no 关闭', 0, 3);
+INSERT INTO `t_config_settings` VALUES (4, '2023-12-09 12:53:44', 0, '2023-12-09 12:53:44', 0, 0, '登录日志记录验证码错误', 'log_captcha_error', '0', '0/false不记录 1/true记录', 0, 11);
 
 -- ----------------------------
 -- Table structure for t_dict_data
@@ -155,7 +156,7 @@ CREATE TABLE `t_hiker_developer`  (
 -- ----------------------------
 -- Records of t_hiker_developer
 -- ----------------------------
-INSERT INTO `t_hiker_developer` VALUES (1, '2023-12-02 18:00:37', 1, '2023-12-05 23:48:58', 1, 0, '道长', '434857005', '123456789', 0, 0, 1, NULL);
+INSERT INTO `t_hiker_developer` VALUES (1, '2023-12-02 18:00:37', 1, '2023-12-09 16:55:06', 1, 0, '道长', '434857005', '123456789', 0, 0, 1, NULL);
 
 -- ----------------------------
 -- Table structure for t_hiker_rule
@@ -199,14 +200,14 @@ CREATE TABLE `t_hiker_rule`  (
   `last_active` datetime(0) NULL DEFAULT current_timestamp(0) COMMENT '开发者上次提交时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `ix_t_hiker_rule_id`(`id`) USING BTREE,
-  INDEX `type_id`(`type_id`) USING BTREE,
-  INDEX `dev_id`(`dev_id`) USING BTREE
+  INDEX `dev_id`(`dev_id`) USING BTREE,
+  INDEX `type_id`(`type_id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_hiker_rule
 -- ----------------------------
-INSERT INTO `t_hiker_rule` VALUES (1, '2023-12-04 20:00:34', 1, '2023-12-05 23:48:47', 1, 0, '道德经', 1, 2, '\"{\\\"name\\\":\\\"道德经\\\"}\"', 'hiker://empty#', 1, NULL, '2023-12-04 20:00:34', 0, NULL, NULL, NULL, 1, 0, 0, 1, 0, 'home_rule_url', '1', '道长', NULL, 1, 1, 1, 1, 1, 1, NULL, '2023-12-04 20:00:34');
+INSERT INTO `t_hiker_rule` VALUES (1, '2023-12-04 20:00:34', 1, '2023-12-09 16:54:53', 1, 0, '道德经', 1, 2, '\"{\\\"name\\\":\\\"道德经\\\"}\"', 'hiker://empty#', 1, NULL, '2023-12-04 20:00:34', 0, NULL, NULL, NULL, 1, 0, 0, 1, 0, 'home_rule_url', '1', '道长', NULL, 1, 1, 1, 1, 1, 1, NULL, '2023-12-04 20:00:34');
 
 -- ----------------------------
 -- Table structure for t_hiker_rule_type
@@ -229,8 +230,8 @@ CREATE TABLE `t_hiker_rule_type`  (
 -- ----------------------------
 -- Records of t_hiker_rule_type
 -- ----------------------------
-INSERT INTO `t_hiker_rule_type` VALUES (1, '2023-12-04 19:55:50', 1, '2023-12-05 23:48:53', 1, 0, '影视', 2, 1);
-INSERT INTO `t_hiker_rule_type` VALUES (2, '2023-12-05 22:52:36', 1, '2023-12-05 22:52:46', 1, 1, '电影2', 3, 1);
+INSERT INTO `t_hiker_rule_type` VALUES (1, '2023-12-04 19:55:50', 1, '2023-12-09 16:55:14', 1, 0, '影视', 2, 1);
+INSERT INTO `t_hiker_rule_type` VALUES (2, '2023-12-05 22:52:36', 1, '2023-12-09 16:55:12', 1, 0, '电影2', 3, 1);
 
 -- ----------------------------
 -- Table structure for t_login_infor
@@ -253,15 +254,23 @@ CREATE TABLE `t_login_infor`  (
   `login_time` datetime(0) NULL DEFAULT current_timestamp(0) COMMENT '登录日期',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `ix_t_login_infor_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 48 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_login_infor
 -- ----------------------------
-INSERT INTO `t_login_infor` VALUES (1, '2023-12-08 00:42:40', 0, '2023-12-08 00:42:40', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 119.0.0', 'Windows 10', 1, '密码错误', '2023-12-08 00:42:40');
-INSERT INTO `t_login_infor` VALUES (2, '2023-12-08 00:42:46', 0, '2023-12-08 00:42:46', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 119.0.0', 'Windows 10', 1, '密码错误', '2023-12-08 00:42:46');
-INSERT INTO `t_login_infor` VALUES (3, '2023-12-08 00:42:51', 0, '2023-12-08 00:42:51', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 119.0.0', 'Windows 10', 1, '密码错误', '2023-12-08 00:42:51');
-INSERT INTO `t_login_infor` VALUES (4, '2023-12-08 00:43:17', 0, '2023-12-08 00:43:17', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 119.0.0', 'Windows 10', 0, '登录成功', '2023-12-08 00:43:17');
+INSERT INTO `t_login_infor` VALUES (36, '2023-12-09 17:04:23', 0, '2023-12-09 17:04:23', 0, 0, 'admin', '127.0.0.1', NULL, 'Edge 119.0.0', 'Windows 10', 1, '密码错误', '2023-12-09 17:04:23');
+INSERT INTO `t_login_infor` VALUES (37, '2023-12-09 17:04:24', 0, '2023-12-09 17:04:24', 0, 0, 'admin', '127.0.0.1', NULL, 'Edge 119.0.0', 'Windows 10', 1, '密码错误', '2023-12-09 17:04:24');
+INSERT INTO `t_login_infor` VALUES (38, '2023-12-09 17:04:24', 0, '2023-12-09 17:04:24', 0, 0, 'admin', '127.0.0.1', NULL, 'Edge 119.0.0', 'Windows 10', 1, '密码错误', '2023-12-09 17:04:24');
+INSERT INTO `t_login_infor` VALUES (39, '2023-12-09 17:04:25', 0, '2023-12-09 17:04:25', 0, 0, 'admin', '127.0.0.1', NULL, 'Edge 119.0.0', 'Windows 10', 1, '密码错误', '2023-12-09 17:04:25');
+INSERT INTO `t_login_infor` VALUES (40, '2023-12-09 17:04:25', 0, '2023-12-09 17:04:25', 0, 0, 'admin', '127.0.0.1', NULL, 'Edge 119.0.0', 'Windows 10', 1, '密码错误', '2023-12-09 17:04:25');
+INSERT INTO `t_login_infor` VALUES (41, '2023-12-09 17:04:26', 0, '2023-12-09 17:04:26', 0, 0, 'admin', '127.0.0.1', NULL, 'Edge 119.0.0', 'Windows 10', 1, '密码错误', '2023-12-09 17:04:26');
+INSERT INTO `t_login_infor` VALUES (42, '2023-12-09 17:04:26', 0, '2023-12-09 17:04:26', 0, 0, 'admin', '127.0.0.1', NULL, 'Edge 119.0.0', 'Windows 10', 1, '密码错误', '2023-12-09 17:04:26');
+INSERT INTO `t_login_infor` VALUES (43, '2023-12-09 17:04:27', 0, '2023-12-09 17:04:27', 0, 0, 'admin', '127.0.0.1', NULL, 'Edge 119.0.0', 'Windows 10', 1, '密码错误', '2023-12-09 17:04:27');
+INSERT INTO `t_login_infor` VALUES (44, '2023-12-09 17:04:27', 0, '2023-12-09 17:04:27', 0, 0, 'admin', '127.0.0.1', NULL, 'Edge 119.0.0', 'Windows 10', 1, '密码错误', '2023-12-09 17:04:27');
+INSERT INTO `t_login_infor` VALUES (45, '2023-12-09 17:04:27', 0, '2023-12-09 17:04:27', 0, 0, 'admin', '127.0.0.1', NULL, 'Edge 119.0.0', 'Windows 10', 1, '密码错误', '2023-12-09 17:04:27');
+INSERT INTO `t_login_infor` VALUES (46, '2023-12-09 17:04:28', 0, '2023-12-09 17:04:28', 0, 0, 'admin', '127.0.0.1', NULL, 'Edge 119.0.0', 'Windows 10', 1, '密码错误', '2023-12-09 17:04:28');
+INSERT INTO `t_login_infor` VALUES (47, '2023-12-09 17:25:00', 0, '2023-12-09 17:25:00', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 119.0.0', 'Windows 10', 0, '登录成功', '2023-12-09 17:25:00');
 
 -- ----------------------------
 -- Table structure for t_menus
@@ -337,7 +346,7 @@ CREATE TABLE `t_perm_label`  (
   `status` int(11) NULL DEFAULT 0 COMMENT '状态',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `ix_t_perm_label_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 36 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_perm_label
@@ -373,6 +382,10 @@ INSERT INTO `t_perm_label` VALUES (28, '2023-12-05 22:52:46', 0, '2023-12-05 22:
 INSERT INTO `t_perm_label` VALUES (29, '2023-12-07 00:00:33', 0, '2023-12-07 00:00:33', 0, 0, 'perm:user:delete', '', 0);
 INSERT INTO `t_perm_label` VALUES (30, '2023-12-07 19:50:07', 0, '2023-12-07 19:50:07', 0, 0, 'report:excel_generate:get', '', 0);
 INSERT INTO `t_perm_label` VALUES (31, '2023-12-07 21:39:27', 0, '2023-12-07 21:39:27', 0, 0, 'report:excel_generate:post', '', 0);
+INSERT INTO `t_perm_label` VALUES (32, '2023-12-09 02:27:25', 0, '2023-12-09 02:27:25', 0, 0, 'system:config_setting:delete', '', 0);
+INSERT INTO `t_perm_label` VALUES (33, '2023-12-09 16:20:03', 0, '2023-12-09 16:20:03', 0, 0, 'monitor:logininfor:delete', '', 0);
+INSERT INTO `t_perm_label` VALUES (34, '2023-12-09 16:50:10', 0, '2023-12-09 16:50:10', 0, 0, 'hiker:developer:delete', '', 0);
+INSERT INTO `t_perm_label` VALUES (35, '2023-12-09 16:54:11', 0, '2023-12-09 16:54:11', 0, 0, 'hiker:rule:delete', '', 0);
 
 -- ----------------------------
 -- Table structure for t_perm_label_role
@@ -389,8 +402,8 @@ CREATE TABLE `t_perm_label_role`  (
   `role_id` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `ix_t_perm_label_role_id`(`id`) USING BTREE,
-  INDEX `role_id`(`role_id`) USING BTREE,
-  INDEX `label_id`(`label_id`) USING BTREE
+  INDEX `label_id`(`label_id`) USING BTREE,
+  INDEX `role_id`(`role_id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Fixed;
 
 -- ----------------------------
@@ -413,8 +426,8 @@ CREATE TABLE `t_role_menu`  (
   `menu_id` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `ix_t_role_menu_id`(`id`) USING BTREE,
-  INDEX `menu_id`(`menu_id`) USING BTREE,
-  INDEX `role_id`(`role_id`) USING BTREE
+  INDEX `role_id`(`role_id`) USING BTREE,
+  INDEX `menu_id`(`menu_id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Fixed;
 
 -- ----------------------------
@@ -511,8 +524,7 @@ CREATE TABLE `t_users`  (
 -- ----------------------------
 INSERT INTO `t_users` VALUES (1, '2022-11-13 02:58:19', 0, '2023-12-07 22:14:30', 1, 0, 'admin', '超级管理员', 0, '12345678910', 'admin@beginner2020.top', '$2b$12$nlyWZAzu4C9cgbHV/FE1X.nwBKiGemATgCxikPQEQVznMqBCrDw/e', 'images/avatar/5ce5f4fa-ff60-47c0-9414-d332b12b99b3.', 0, 1, 1);
 INSERT INTO `t_users` VALUES (2, '2022-11-22 00:48:34', 0, '2022-11-22 00:55:57', 1, 0, 'opt', 'opt', 0, '12345678911', 'opt@beginner2020.top', '$2b$12$EbJD0X5U0LwAvf5EVvYxZO20Jyv2xLKU1quekOyX3SwhdVepz1RFu', NULL, 0, 1, 0);
-INSERT INTO `t_users` VALUES (3, '2022-11-22 00:50:26', 0, '2022-11-22 00:50:26', 0, 0, 'user', '', 0, '12345678912', 'user@beginner2020.top', '$2b$12$Wov4niPCoLOeBcRNgGDNhekSZBgB/GAhYs25CLHfJG.me1KbFP0am', NULL, 0, 1, 0);
-INSERT INTO `t_users` VALUES (4, '2023-12-02 15:36:42', 1, '2023-12-07 19:23:42', 1, 0, 'hjdhnx', '道长', 2, '13154671296', '434857005@qq.com', '$2b$12$X3LQ2VXThey.YB/WGlwYq.35CKOeKkBgmA6TTR91q/VYe6hGDAWRO', 'images/avatar/f84e9577-9047-470e-bcde-16173ca1811c.jpg', 0, 1, 0);
-INSERT INTO `t_users` VALUES (5, '2023-12-06 13:18:51', 0, '2023-12-07 00:00:33', 1, 1, 'hjdhnx2', '', 0, '1', '1', '$2b$12$Kk/jQFj.MvpF6vCiPfzaAOB5yHLhmDdSU65dJXtGovM0jxODwS5ZW', NULL, 0, 1, 0);
+INSERT INTO `t_users` VALUES (3, '2022-11-22 00:50:26', 0, '2023-12-09 16:47:45', 1, 0, 'user', '', 0, '12345678912', 'user@beginner2020.top', '$2b$12$Wov4niPCoLOeBcRNgGDNhekSZBgB/GAhYs25CLHfJG.me1KbFP0am', NULL, 0, 1, 0);
+INSERT INTO `t_users` VALUES (4, '2023-12-02 15:36:42', 1, '2023-12-09 16:48:08', 1, 0, 'hjdhnx', '道长', 2, '13154671296', '434857005@qq.com', '$2b$12$X3LQ2VXThey.YB/WGlwYq.35CKOeKkBgmA6TTR91q/VYe6hGDAWRO', 'images/avatar/f84e9577-9047-470e-bcde-16173ca1811c.jpg', 0, 1, 0);
 
 SET FOREIGN_KEY_CHECKS = 1;
