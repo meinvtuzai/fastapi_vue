@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import asc, desc, func, distinct
 from common.curd_base import CRUDBase
 from ..models.logininfor import LoginInfor
-from network.request import Request
+from utils.httpapi import get_location_by_ip
 
 
 class CURDLoginInfor(CRUDBase):
@@ -32,22 +32,7 @@ class CURDLoginInfor(CRUDBase):
             if logined_record:
                 obj_in_data['login_location'] = logined_record.login_location
             else:
-                try:
-                    ip_url = f'https://qifu-api.baidubce.com/ip/geo/v1/district?ip={ipaddr}'
-                    request = Request(method="GET", url=ip_url, agent=False, follow_redirects=True, timeout=0.5)
-                    # 同步
-                    r = request.request()
-                    resp = r.json()
-                    if resp.get('msg') == '查询成功':
-                        d = resp['data']
-                        prov = d['prov']
-                        city = d['city']
-                        district = d['district']
-                        owner = d['owner']
-                        obj_in_data['login_location'] = f'{prov}{city}{district}{owner}'
-                except Exception as e:
-                    print(f'查询ip归属地发生错误:{e}')
-                    pass
+                obj_in_data['login_location'] = get_location_by_ip(ipaddr)
 
         # db_obj = self.model(**obj_in_data)
         db_obj = obj_in_data

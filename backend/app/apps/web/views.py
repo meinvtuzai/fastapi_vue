@@ -12,6 +12,7 @@ from common import error_code
 from core.config import settings
 from utils.web import htmler
 from utils.cmd import update_db
+from utils.httpapi import get_location_by_ip
 from network.request import Request
 from common.resp import respSuccessJson, respErrorJson
 from .schemas import database_schemas
@@ -59,6 +60,11 @@ async def baidu():
     # r = request.request()
     # print(r.text)
     return HTMLResponse(r.text)
+
+
+@router.get('/get_ip_location/{ipaddr}', summary="获取ip归属地")
+async def get_ip_location(ipaddr):
+    return HTMLResponse(get_location_by_ip(ipaddr))
 
 
 @router.put('/database_update', summary="数据库升级")
