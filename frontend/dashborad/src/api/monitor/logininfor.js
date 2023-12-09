@@ -1,18 +1,20 @@
 import request from '@/utils/request'
 
+const api_url = '/monitor/logininfor'
+
 // 查询登录日志列表
 export function list(query) {
   return request({
-    url: '/monitor/logininfor/list',
+    url: api_url + '/list',
     method: 'get',
     params: query
   })
 }
 
 // 删除登录日志
-export function delLogininfor(infoId) {
+export function delRecord(id) {
   return request({
-    url: '/monitor/logininfor/' + infoId,
+    url: api_url + '/' + id,
     method: 'delete'
   })
 }
@@ -28,7 +30,7 @@ export function unlockLogininfor(userName) {
 // 清空登录日志
 export function cleanLogininfor() {
   return request({
-    url: '/monitor/logininfor/clean',
+    url: api_url + '/clean',
     method: 'delete'
   })
 }

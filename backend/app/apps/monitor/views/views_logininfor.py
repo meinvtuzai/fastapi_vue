@@ -5,7 +5,6 @@
 # Author's Blog: https://blog.csdn.net/qq_32394351
 # Date  : 2023/12/7
 
-
 from fastapi import APIRouter, Depends, Query, File, UploadFile
 from sqlalchemy.orm import Session
 from sqlalchemy import asc, desc, func
@@ -42,3 +41,23 @@ async def searchRecords(*,
     res = curd.search(db, user_name=user_name, ipaddr=ipaddr, status=status, login_time=login_time, page=page,
                       page_size=page_size, order_bys=order_bys)
     return respSuccessJson(res)
+
+
+@router.delete(api_url + "/clean", summary="清空登录日志")
+async def clearRecord(*,
+                      db: Session = Depends(deps.get_db),
+                      u: Users = Depends(deps.user_perm([f"{access_name}:delete"])),
+                      ):
+    curd.clear(db)
+    return respSuccessJson()
+
+
+@router.delete(api_url + "/{_ids}", summary="删除登录日志")
+async def delRecord(*,
+                    db: Session = Depends(deps.get_db),
+                    u: Users = Depends(deps.user_perm([f"{access_name}:delete"])),
+                    _ids: str,
+                    ):
+    _ids = list(map(lambda x: int(x), _ids.split(',')))
+    curd.removes(db, _ids=_ids)
+    return respSuccessJson()

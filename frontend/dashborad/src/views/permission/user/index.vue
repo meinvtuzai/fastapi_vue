@@ -287,6 +287,7 @@ import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
 import AvatarUpload from './AvatarUpload'
 import {getToken} from "@/utils/auth";
+import {parseTime} from "@/utils";
 
 
 export default {
@@ -366,7 +367,11 @@ export default {
       rules: {
         username: [
           {required: true, message: '用户编号不能为空', trigger: 'blur'},
-          {pattern: /^[a-zA-Z]{1}([a-zA-Z0-9]|[-_]){4,19}$/, trigger: "blur", message: "只能输入5-20个以字母开头的字串"},
+          {
+            pattern: /^[a-zA-Z]{1}([a-zA-Z0-9]|[-_]){4,19}$/,
+            trigger: "blur",
+            message: "只能输入5-20个以字母开头的字串"
+          },
         ],
         nickname: [
           {required: true, message: '用户名称不能为空', trigger: 'blur'}

@@ -32,7 +32,7 @@ async def searchRecords(*,
                         page: int = Query(1, gt=0),
                         page_size: int = Query(20, gt=0),
                         ):
-    res = curd.search(db, name=name, author=author,value=value, url=url,dev_id=dev_id,page=page, page_size=page_size)
+    res = curd.search(db, name=name, author=author, value=value, url=url, dev_id=dev_id, page=page, page_size=page_size)
     return respSuccessJson(res)
 
 
@@ -67,11 +67,12 @@ async def setRecord(*,
     return respSuccessJson()
 
 
-@router.delete(api_url + "/{_id}", summary="删除规则")
+@router.delete(api_url + "/{_ids}", summary="删除规则")
 async def delRecord(*,
                     db: Session = Depends(deps.get_db),
                     u: Users = Depends(deps.user_perm([f"{access_name}:delete"])),
-                    _id: int,
+                    _ids: str,
                     ):
-    curd.delete(db, _id=_id, deleter_id=u['id'])
+    _ids = list(map(lambda x: int(x), _ids.split(',')))
+    curd.deletes(db, _ids=_ids, deleter_id=u['id'])
     return respSuccessJson()

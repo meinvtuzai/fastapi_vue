@@ -114,13 +114,14 @@ async def setUser(*,
     return respSuccessJson()
 
 
-@router.delete("/user/{user_id}", summary="删除用户")
+@router.delete("/user/{_ids}", summary="删除用户")
 async def delUser(*,
                   db: Session = Depends(deps.get_db),
                   u: Users = Depends(deps.user_perm(["perm:user:delete"])),
-                  user_id: int,
+                  _ids: str,
                   ):
-    curd_user.delete(db, _id=user_id, deleter_id=u['id'])
+    _ids = list(map(lambda x: int(x), _ids.split(',')))
+    curd_user.deletes(db, _ids=_ids, deleter_id=u['id'])
     return respSuccessJson()
 
 

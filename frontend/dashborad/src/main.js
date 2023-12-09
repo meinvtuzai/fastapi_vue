@@ -22,8 +22,8 @@ import plugins from './plugins' // plugins
 import './assets/icons' // icon
 import './permission' // permission control
 import './utils/error-log' // error log
-import { getDicts } from '@/api/system/dict/data'
-import { resetForm, selectDictLabel, download, handleTree, parseTime,addDateRange } from '@/utils/ruoyi'
+import {getDicts} from '@/api/system/dict/data'
+import {resetForm, selectDictLabel, download, handleTree, parseTime, addDateRange} from '@/utils/ruoyi'
 // 分页组件
 import Pagination from "@/components/Pagination";
 // 自定义表格工具组件
@@ -36,6 +36,8 @@ import FileUpload from "@/components/FileUpload"
 import ImageUpload from "@/components/ImageUpload"
 // 图片预览组件
 import ImagePreview from "@/components/ImagePreview"
+// 字典标签组件
+import DictTag from '@/components/DictTag'
 
 import * as filters from './filters'
 import {getParameter} from "@/api/system/parameter"; // global filters
@@ -51,26 +53,28 @@ Vue.prototype.parseTime = parseTime
 Vue.prototype.download = download
 Vue.prototype.handleTree = handleTree
 
-Vue.prototype.msgSuccess = function(msg) {
-  this.$message({ showClose: true, message: msg, type: 'success' })
+Vue.prototype.msgSuccess = function (msg) {
+  this.$message({showClose: true, message: msg, type: 'success'})
 }
 
-Vue.prototype.msgError = function(msg) {
-  this.$message({ showClose: true, message: msg, type: 'error' })
+Vue.prototype.msgError = function (msg) {
+  this.$message({showClose: true, message: msg, type: 'error'})
 }
 
-Vue.prototype.msgInfo = function(msg) {
+Vue.prototype.msgInfo = function (msg) {
   this.$message.info(msg)
 }
 
 Vue.prototype.$md5 = md5
 
 // 全局组件挂载
+Vue.component('DictTag', DictTag)
 Vue.component('Pagination', Pagination)
 Vue.component('RightToolbar', RightToolbar)
 Vue.component('Editor', Editor)
 Vue.component('FileUpload', FileUpload)
 Vue.component('ImageUpload', ImageUpload)
+Vue.component('ImagePreview', ImagePreview)
 Vue.component('ImagePreview', ImagePreview)
 
 // 按钮级别权限配置

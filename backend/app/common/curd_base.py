@@ -139,14 +139,24 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def remove(self, db: Session, *, _id: int) -> ModelType:
         """ 物理删除 """
         obj = db.query(self.model).filter(self.model.id == _id)
-        db.delete(obj)
+        # db.delete(obj) # 这个写法错误的
+        obj.delete()
         db.commit()
         return obj
 
     def removes(self, db: Session, *, _ids: List[int]) -> ModelType:
         """ 物理删除 """
         obj = db.query(self.model).filter(self.model.id.in_(_ids))
-        db.delete(obj)
+
+        # db.delete(obj) # 这个写法错误的
+        obj.delete()
+        db.commit()
+        return obj
+
+    def clear(self, db: Session) -> ModelType:
+        """ 物理清空 """
+        obj = db.query(self.model)
+        obj.delete()
         db.commit()
         return obj
 
