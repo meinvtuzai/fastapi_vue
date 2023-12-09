@@ -10,9 +10,9 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="用户名称" prop="userName">
+      <el-form-item label="用户名称" prop="user_name">
         <el-input
-          v-model="queryParams.userName"
+          v-model="queryParams.user_name"
           placeholder="请输入用户名称"
           clearable
           style="width: 240px;"
@@ -160,7 +160,7 @@ export default {
         page: 1,
         page_size: 10,
         ipaddr: undefined,
-        userName: undefined,
+        user_name: undefined,
         status: undefined
       }
     };
@@ -184,14 +184,14 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
+      this.queryParams.page = 1;
       this.getList();
     },
     /** 重置按钮操作 */
     resetQuery() {
       this.dateRange = [];
       this.resetForm("queryForm");
-      this.queryParams.pageNum = 1;
+      this.queryParams.page = 1;
       this.$refs.tables.sort(this.defaultSort.prop, this.defaultSort.order)
     },
     /** 多选框选中数据 */
@@ -199,7 +199,7 @@ export default {
       this.ids = selection.map(item => item.infoId)
       this.single = selection.length!=1
       this.multiple = !selection.length
-      this.selectName = selection.map(item => item.userName);
+      this.selectName = selection.map(item => item.user_name);
     },
     /** 排序触发事件 */
     handleSortChange(column, prop, order) {

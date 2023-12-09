@@ -31,6 +31,7 @@ class CURDLoginInfor(CRUDBase):
             filters.append(self.model.ipaddr.like(f"%{ipaddr}%"))
         if login_time:
             filters.append(self.model.login_time.like(f"%{login_time}%"))
+        # FIXME: 暂不支持开始和结束时间区间查询
 
         records, total, _, _ = self.get_multi(db, page=page, page_size=page_size, filters=filters, order_bys=order_bys)
         return {'results': records, 'total': total}
