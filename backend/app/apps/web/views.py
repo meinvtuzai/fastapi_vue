@@ -53,7 +53,10 @@ async def baidu():
     # url = "https://www.iesdouyin.com/web/api/v2/user/info?sec_uid=MS4wLjABAAAAc4BIGF22ZcPBMtc73GAKSf-vEiPWKTLC3RJA423NK_E"
     url = "https://www.baidu.com"
     request = Request(method="GET", url=url, agent=False, follow_redirects=True)
+    # 异步
     r = await request.fetch()
+    # 同步
+    # r = request.request()
     # print(r.text)
     return HTMLResponse(r.text)
 

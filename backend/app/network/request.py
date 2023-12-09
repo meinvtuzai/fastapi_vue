@@ -113,3 +113,14 @@ class Request:
         async with httpx.AsyncClient(proxies=proxies) as session:
             response = await session.request(method=self.method, url=self.url, **self.requests_kwargs)
             return response
+
+    def request(self):
+        self.make_requests_kwargs()
+        if self.agent:
+            proxies = {
+                "http://": random.choice(settings.IP_AGENTS),
+            }
+        else:
+            proxies = self.__dict__.get("proxies", {})
+        response = httpx.Client(proxies=proxies).request(method=self.method, url=self.url, **self.requests_kwargs)
+        return response
