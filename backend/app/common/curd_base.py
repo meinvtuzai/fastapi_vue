@@ -140,7 +140,8 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         """ 物理删除 """
         obj = db.query(self.model).filter(self.model.id == _id)
         # db.delete(obj) # 这个写法错误的
-        obj.delete()
+        db.delete(*obj)  # 这个写法可行
+        # obj.delete()
         db.commit()
         return obj
 
@@ -149,6 +150,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         obj = db.query(self.model).filter(self.model.id.in_(_ids))
 
         # db.delete(obj) # 这个写法错误的
+        # db.delete(*obj) # 这个写法可行
         obj.delete()
         db.commit()
         return obj

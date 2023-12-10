@@ -6,6 +6,10 @@ class ErrorBase(BaseModel):
     code: int
     msg: str = ""
 
+    def set_msg(self, msg):
+        self.msg = msg
+        return self
+
 
 # 找不到路径
 ERROR_NOT_FOUND = ErrorBase(code=404, msg="api 路径错误")
@@ -36,3 +40,6 @@ ERROR_HIKER_RULE_TYPE_ADD_ERROR = ErrorBase(code=5101, msg="规则类型添加�
 ERROR_HIKER_DEVELOPER_ADD_ERROR = ErrorBase(code=5102, msg="开发者添加失败，可能是qq重复")
 ERROR_DATABASE_AUTH_ERROR = ErrorBase(code=5200, msg="数据库升级执行码错误")
 ERROR_DATABASE_CMD_ERROR = ErrorBase(code=5201, msg="数据库升级脚本执行错误")
+
+ERROR_TASK_NOT_FOUND = ErrorBase(code=4004, msg="任务未找到")
+ERROR_TASK_INVALID = ErrorBase(code=40045, msg="定时任务执行异常")

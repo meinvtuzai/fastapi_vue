@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse  # , ORJSONResponse
 from pydantic import BaseModel
 from typing import Union, Optional
 import datetime
+import decimal
 import json
 import typing
 
@@ -18,6 +19,8 @@ class DateEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime.datetime):
             return obj.strftime("%Y-%m-%d %H:%M:%S")
+        elif isinstance(obj, decimal.Decimal):
+            return float(obj)
         else:
             return json.JSONEncoder.default(self, obj)
 

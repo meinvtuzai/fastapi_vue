@@ -13,7 +13,8 @@ from common.exceptions import customExceptions
 from .config import settings
 from .middleware import middleware
 from db.cache import registerRedis
-from timer import scheduler
+# from tasks.timer import scheduler # 这个是没固化数据库的。scheduler.start() 启动
+from common.sys_schedule import scheduler  # 固化数据库,scheduler.init_scheduler() 初始化
 from workers import app as celery_app
 from utils.notes import set_start_time
 
@@ -76,8 +77,11 @@ class InitializeApp(object):
 
         @app.on_event("startup")
         async def startup():
-            scheduler.start()  # 定时任务
             set_start_time()  # 写入程序启动时间
+
+            # scheduler.start()  # 定时任务
+            # 初始化 apscheduler
+            scheduler.init_scheduler()
 
         @app.on_event('shutdown')
         async def shutdown():

@@ -7,3 +7,4 @@
 
 from .views.views_server import router as monitor_server_api
 from .views.views_logininfor import router as monitor_logininfor_api
+from .views.views_job import router as monitor_job_api
