@@ -12,12 +12,13 @@ from typing import List, Optional
 class JobSchema(BaseModel):
     job_id: str = ''
     job_name: str
-    job_group: str = 'setInterval'
     func_name: str
-    func_args: str = ''
-    cron_model: str = 'interval'
-    coalesce: str
-    next_run: Optional[str] = None
     cron_expression: str
+    next_run: Optional[str] = None
+    func_args: str = ''
+    job_group: str = 'setInterval'
+    cron_model: str = 'cron'
+    coalesce: int = 0
     status: int = 0
     misfire_policy: int = 3
+    active: bool = False

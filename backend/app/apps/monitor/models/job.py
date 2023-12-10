@@ -11,7 +11,7 @@ from db import fields
 
 class Job(Base):
     """ 定时任务 """
-    job_id = fields.Char(string='任务id', required=False)
+    job_id = fields.Char(string='任务代号', required=False)
     job_name = fields.Char(string='任务名称', required=True)
     job_group = fields.Char(string='任务组名')
     func_name = fields.Char(string='调用目标字符串')
@@ -22,3 +22,4 @@ class Job(Base):
     cron_expression = fields.Char(string='cron执行表达式')
     status = fields.Integer(string='任务状态')
     misfire_policy = fields.Integer(string='执行策略')  # 1 立即执行 2 执行一次  3放弃执行
+    active = fields.Boolean(string='是否启用', default=True)

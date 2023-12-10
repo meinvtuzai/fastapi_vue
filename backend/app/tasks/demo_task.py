@@ -6,8 +6,10 @@
 # Date  : 2023/12/10
 
 from core.logger import logger
+from datetime import datetime
 
 
 def demo(task_id: str):
     print(f'=========task_id:{task_id}=========')
-    logger.info("demo_task.py执行一次定时任务......")
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    logger.info(f"demo_task.py执行一次定时任务 {now} ......")

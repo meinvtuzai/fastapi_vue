@@ -7,7 +7,6 @@
 from apscheduler.executors.pool import ProcessPoolExecutor
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
-
 from core.config import settings
 
 
@@ -29,10 +28,10 @@ class ScheduleCli(object):
         :return:
         """
         interval_task = {
-            # 配置存储器
-            "jobstores": {
-                'default': SQLAlchemyJobStore(url=settings.getSqlalchemyURL())
-            },
+            # 配置存储器 |不配置了，手写一个job表
+            # "jobstores": {
+            #     'default': SQLAlchemyJobStore(url=settings.getSqlalchemyURL())
+            # },
             # 配置执行器
             "executors": {
                 # 使用进程池进行调度，最大进程数是10个

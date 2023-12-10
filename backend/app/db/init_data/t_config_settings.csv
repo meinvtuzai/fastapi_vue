@@ -3,3 +3,4 @@ id,created_time,creator_id,modified_time,modifier_id,is_deleted,name,key,value,r
 2,2023-12-04 22:13:09,1,2023-12-09 12:29:32,1,0,数据库升级密码,database_update_auth,hjdhnx,默认密码hjdhnx,0,2
 3,2023-12-04 23:04:31,1,2023-12-09 15:57:02,1,0,登录需要验证码,login_with_captcha,no,yes 开启 no 关闭,0,3
 4,2023-12-09 12:53:44,0,2023-12-09 12:53:44,0,0,登录日志记录验证码错误,log_captcha_error,0,0/false不记录 1/true记录,0,11
+13,2023-12-10 16:19:44,1,2023-12-10 16:20:17,1,1,定时任务启动状态,sys_job_status,0,0 暂停 1 运行,0,12

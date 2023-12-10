@@ -66,16 +66,20 @@ export function changeJobStatus(id, status) {
   })
 }
 
+// 修改是否启用
+export function changeActive(id, active) {
+  return request({
+    url: api_url + '/' + id + '/active',
+    method: 'put',
+    data: {'active': active}
+  })
+}
+
 
 // 定时任务立即执行一次
-export function runJob(jobId, jobGroup) {
-  const data = {
-    jobId,
-    jobGroup
-  }
+export function runJob(id) {
   return request({
-    url: api_url + '/run',
+    url: api_url + `/${id}/run`,
     method: 'put',
-    data: data
   })
 }

@@ -34,3 +34,6 @@ id,created_time,creator_id,modified_time,modifier_id,is_deleted,label,remark,sta
 33,2023-12-09 16:20:03,0,2023-12-09 16:20:03,0,0,monitor:logininfor:delete,,0
 34,2023-12-09 16:50:10,0,2023-12-09 16:50:10,0,0,hiker:developer:delete,,0
 35,2023-12-09 16:54:11,0,2023-12-09 16:54:11,0,0,hiker:rule:delete,,0
+36,2023-12-10 17:41:10,0,2023-12-10 17:41:10,0,0,monitor:job:post,,0
+37,2023-12-10 18:16:32,0,2023-12-10 18:16:32,0,0,monitor:job:put,,0
+38,2023-12-10 18:25:10,0,2023-12-10 18:25:10,0,0,monitor:job:delete,,0

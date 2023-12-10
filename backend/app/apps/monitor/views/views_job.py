@@ -4,24 +4,35 @@
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Author's Blog: https://blog.csdn.net/qq_32394351
 # Date  : 2023/12/10
-import json
-from datetime import datetime
 from fastapi import APIRouter, Depends, Query, Body
 from sqlalchemy.orm import Session
 from common import deps, error_code
-from common.sys_schedule import scheduler
 from ..curd.curd_job import Job, curd_job as curd
-from common.task_apscheduler import query_job_all, query_job_id, modify_job, del_job, cron_pattern
-from tasks.demo_task import demo
+from common.task_apscheduler import query_job_all, query_job_id, add_job, modify_job, del_job, start_job, pause_job, \
+    _format_fun, create_no_store_job
 from common.resp import respSuccessJson, respErrorJson
-from common.schemas import StatusSchema
+from common.schemas import StatusSchema, ActiveSchema
 from ...permission.models import Users
 from ..schemas import job_schemas
+from core.logger import logger
 
 router = APIRouter()
 
 access_name = 'monitor:job'
 api_url = '/job'
+
+"""
+定时任务与业务逻辑结合
+根据业务逻辑调用上面封装好的apscheduler函数实现定时任务功能，下面是业务逻辑的views层业务代码，它的开发逻辑如下。
+
+1.创建任务时，将任务信息添加到数据库中，任务信息包含任务id、任务名称name、任务定时表达式cron、任务状态status、默认任务状态为暂停。此时不调用Apscheduler创建任务。
+2.只有点击运行startTask运行任务时，从数据库中查询任务信息，将任务信息添加到apscheduler中，运行任务。
+3.编辑任务时，调用task_apscheduler.py文件删除任务函数，从apscheduler中删除该任务。然后更新数据库中的任务信息。
+4.暂停任务时，调用task_apscheduler.py文件暂停任务函数，暂停apscheduler中该任务。同时更新数据库中任务状态为暂停。
+5.启动任务，调用task_apscheduler.py文件启动任务函数，启动apscheduler中该任务。同时更新数据库中任务状态为启动。
+6.删除任务，调用task_apscheduler.py文件删除任务函数，从apscheduler中删除该任务。然后删除数据库中的任务信息。
+
+"""
 
 
 def get_no_store_res():
@@ -90,56 +101,26 @@ async def get_job_detail(*,
     return respSuccessJson(curd.get(db, _id=int(job_id)))
 
 
-def create_no_store_job(obj: job_schemas.JobSchema):
-    """
-    创建job
-
-    简易的任务调度演示 可自行参考文档 https://apscheduler.readthedocs.io/en/stable/
-    三种模式
-    date: use when you want to run the job just once at a certain point of time
-    interval: use when you want to run the job at fixed intervals of time
-    cron: use when you want to run the job periodically at certain time(s) of day
-
-    :return:
-    """
-    job_id = obj.job_id or obj.job_name
-    cron_expression = obj.cron_expression
-    func_args = obj.func_args
-    cron_model = obj.cron_model
-    func_name = obj.func_name
-    next_run = obj.next_run or datetime.now()
-    try:
-        func_args = json.loads(func_args)
-    except:
-        func_args = [job_id]
-
-    res = query_job_id(job_id)
-    if res:
-        return {"id": res.id, 'error': error_code.ERROR_TASK_INVALID.set_msg(f"{job_id} job already exists")}
-
-    schedule_job = scheduler.add_job(
-        func=func_name,
-        trigger=cron_model,
-        args=func_args,
-        id=job_id,  # job ID
-        next_run_time=next_run,
-        **cron_pattern(cron_expression),
-    )
-    return {"id": schedule_job.id}
-
-
 @router.post(api_url, summary="新增定时任务调度")
 async def addRecord(*,
                     db: Session = Depends(deps.get_db),
                     u: Users = Depends(deps.user_perm([f"{access_name}:post"])),
                     obj: job_schemas.JobSchema,
                     ):
-    if not obj.next_run:
-        obj.next_run = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    job_id, error = create_no_store_job(obj)
+    if error:
+        return respErrorJson(error=error)
+    try:
+        # 如果添加的状态是暂停的，这里手动设置一下暂停
+        if obj.status == 0:
+            pause_job(job_id)
+    except Exception as e:
+        logger.info(f'改变任务状态发生错误:{e}')
+
     res = curd.create(db, obj_in=obj, creator_id=u['id'])
     if res:
-        # create_no_store_job(obj)
-        return respSuccessJson()
+        return respSuccessJson({'id': job_id})
+
     return respErrorJson(error=error_code.ERROR_TASK_ADD_ERROR)
 
 
@@ -150,8 +131,45 @@ async def setStatus(*,
                     _id: int,
                     obj: StatusSchema
                     ):
+    job = db.query(Job).filter(Job.id == _id).first()
+    try:
+        if obj.status == 0:
+            pause_job(job.job_id)
+        elif obj.status == 1:
+            start_job(job.job_id)
+    except Exception as e:
+        logger.info(f'改变任务状态发生错误:{e}')
     curd.setStatus(db, _id=_id, status=obj.status, modifier_id=u['id'])
     return respSuccessJson()
+
+
+@router.put(api_url + "/{_id}/active", summary="修改定时任务是否使用中[自启]，不会删除正在运行的任务")
+async def setActive(*,
+                    db: Session = Depends(deps.get_db),
+                    u: Users = Depends(deps.user_perm([f"{access_name}:put"])),
+                    _id: int,
+                    obj: ActiveSchema
+                    ):
+    curd.setActive(db, _id=_id, active=obj.active, modifier_id=u['id'])
+    return respSuccessJson()
+
+
+@router.put(api_url + '/{_id}/run', summary="定时任务立即执行一次")
+async def run_job(*,
+                  db: Session = Depends(deps.get_db),
+                  u: Users = Depends(deps.user_perm([f"{access_name}:put"])),
+                  _id: int,
+                  ):
+    job = db.query(Job).filter(Job.id == _id).first()
+    if not job:
+        return respErrorJson(error_code.ERROR_TASK_NOT_FOUND.set_msg(f"not found job {_id}"))
+
+    try:
+        func = _format_fun(job.func_name)
+        func(job.job_id)
+        return respSuccessJson()
+    except Exception as e:
+        return respErrorJson(error_code.ERROR_TASK_INVALID.set_msg(f"{e}"))
 
 
 @router.put(api_url + "/{_id}", summary="修改定时任务调度")
@@ -161,6 +179,22 @@ async def setRecord(*,
                     _id: int,
                     obj: job_schemas.JobSchema,
                     ):
+    # 删掉重新添加
+    try:
+        del_job(obj.job_id)
+    except Exception as e:
+        logger.info(f'修改定时任务调度发生错误:{e}')
+
+    job_id, error = create_no_store_job(obj)
+    if error:
+        return respErrorJson(error=error)
+    try:
+        # 如果添加的状态是暂停的，这里手动设置一下暂停
+        if obj.status == 0:
+            pause_job(job_id)
+    except Exception as e:
+        logger.info(f'改变任务状态发生错误:{e}')
+
     curd.update(db, _id=_id, obj_in=obj, modifier_id=u['id'])
     return respSuccessJson()
 
@@ -172,17 +206,12 @@ async def delRecord(*,
                     _ids: str,
                     ):
     _ids = list(map(lambda x: int(x), _ids.split(',')))
+    jobs = db.query(Job).filter(Job.id.in_(_ids), Job.is_deleted != 1).all()
+    for job in jobs:
+        try:
+            del_job(job.job_id)
+        except Exception as e:
+            logger.info(f'删除定时任务调度发生错误:{e}')
+
     curd.deletes(db, _ids=_ids, deleter_id=u['id'])
-    return respSuccessJson()
-
-
-@router.put(api_url + '/run', summary="定时任务立即执行一次")
-async def run_job(
-        job_id: str = Body(..., title="job_id", embed=True),
-        job_group: str = Body(..., title="job_group", embed=True),
-):
-    res = query_job_id(job_id)
-    if not res:
-        return respErrorJson(error_code.ERROR_TASK_NOT_FOUND.set_msg(f"not found job {job_id}"))
-
     return respSuccessJson()
