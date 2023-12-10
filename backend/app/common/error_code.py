@@ -42,4 +42,5 @@ ERROR_DATABASE_AUTH_ERROR = ErrorBase(code=5200, msg="数据库升级执行码�
 ERROR_DATABASE_CMD_ERROR = ErrorBase(code=5201, msg="数据库升级脚本执行错误")
 
 ERROR_TASK_NOT_FOUND = ErrorBase(code=4004, msg="任务未找到")
-ERROR_TASK_INVALID = ErrorBase(code=40045, msg="定时任务执行异常")
+ERROR_TASK_INVALID = ErrorBase(code=4005, msg="定时任务执行异常")
+ERROR_TASK_ADD_ERROR = ErrorBase(code=4006, msg="定时任务添加失败，可能是job_id重复")

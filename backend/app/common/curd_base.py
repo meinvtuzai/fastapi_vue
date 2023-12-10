@@ -116,6 +116,15 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         db.commit()
         return obj
 
+    def setStatus(self, db: Session, *, _id: int, status: int, modifier_id: int = 0):
+        """
+        设置状态
+        """
+        update_data = {'status': status, 'modifier_id': modifier_id}
+        obj = db.query(self.model).filter(self.model.id == _id).update(update_data)
+        db.commit()
+        return obj
+
     def delete(self, db: Session, *, _id: int, deleter_id: int = 0) -> ModelType:
         """ 逻辑删除 """
         update_data = {self.model.is_deleted: 1}

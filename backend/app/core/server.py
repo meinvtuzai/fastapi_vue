@@ -14,7 +14,7 @@ from .config import settings
 from .middleware import middleware
 from db.cache import registerRedis
 # from tasks.timer import scheduler # 这个是没固化数据库的。scheduler.start() 启动
-from common.sys_schedule import scheduler  # 固化数据库,scheduler.init_scheduler() 初始化
+from common.task_apscheduler import scheduler_register, scheduler  # 固化数据库,scheduler.init_scheduler() 初始化
 from workers import app as celery_app
 from utils.notes import set_start_time
 
@@ -81,7 +81,8 @@ class InitializeApp(object):
 
             # scheduler.start()  # 定时任务
             # 初始化 apscheduler
-            scheduler.init_scheduler()
+            # scheduler.init_scheduler()  # noqa 去掉不合理提示
+            scheduler_register()
 
         @app.on_event('shutdown')
         async def shutdown():
