@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 from apps.user.curd.curd_user import curd_user
 from apps.system.curd.curd_config_setting import curd_config_setting
 from apps.permission.curd.curd_role import curd_role
-from app.core.config import settings
+from core.config import settings
 from apps.permission.models.user import Users
 from apps.permission.models.role import Roles
 from apps.system.models import ConfigSettings

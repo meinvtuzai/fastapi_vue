@@ -6,7 +6,7 @@
 # from db.session import SessionLocal
 from . import app
 import traceback
-# from app.apps.user.curd.curd_user import curd_user
+# from apps.user.curd.curd_user import curd_user
 from core.logger import logger
 
 
