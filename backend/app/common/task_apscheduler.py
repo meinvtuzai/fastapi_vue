@@ -15,6 +15,7 @@ from .sys_schedule import scheduler
 from .deps import get_db
 from core.logger import logger
 from apps.monitor.models.job import Job
+from numpy import safe_eval
 
 
 # 注册scheduler
@@ -189,7 +190,8 @@ def create_no_store_job(obj: job_schemas.JobSchema):
     obj.next_run = next_run
 
     try:
-        func_args = json.loads(func_args)
+        # func_args = json.loads(func_args)
+        func_args = safe_eval(func_args)
     except:
         func_args = [job_id]
 
@@ -230,7 +232,7 @@ class JobInit:
                 job_name=active_job.job_name,
                 func_name=active_job.func_name,
                 # job_group=active_job.job_group,
-                # func_args=active_job.func_args,
+                func_args=active_job.func_args,
                 # coalesce=active_job.coalesce,
                 cron_expression=active_job.cron_expression,
                 next_run=active_job_next_run.strftime("%Y-%m-%d %H:%M:%S"),

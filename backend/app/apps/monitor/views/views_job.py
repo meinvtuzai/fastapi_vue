@@ -5,6 +5,7 @@
 # Author's Blog: https://blog.csdn.net/qq_32394351
 # Date  : 2023/12/10
 from fastapi import APIRouter, Depends, Query, Body
+from numpy import safe_eval
 from sqlalchemy.orm import Session
 from common import deps, error_code
 from ..curd.curd_job import Job, curd_job as curd
@@ -164,9 +165,14 @@ async def run_job(*,
     if not job:
         return respErrorJson(error_code.ERROR_TASK_NOT_FOUND.set_msg(f"not found job {_id}"))
 
+    func_args = job.func_args
     try:
         func = _format_fun(job.func_name)
-        func(job.job_id)
+        try:
+            func_args = safe_eval(func_args)
+        except:
+            func_args = [job.job_id]
+        func(*func_args)
         return respSuccessJson()
     except Exception as e:
         return respErrorJson(error_code.ERROR_TASK_INVALID.set_msg(f"{e}"))

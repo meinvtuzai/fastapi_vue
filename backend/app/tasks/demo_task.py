@@ -9,7 +9,7 @@ from core.logger import logger
 from datetime import datetime
 
 
-def demo(task_id: str):
-    print(f'=========task_id:{task_id}=========')
+def demo(task_id: str, *args):
+    print(f'=========task_id:{task_id},args:{args}=========')
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     logger.info(f"demo_task.py执行一次定时任务 {now} ......")

@@ -203,9 +203,9 @@
                 调用方法
                 <el-tooltip placement="top">
                   <div slot="content">
-                    Bean调用示例：ryTask.ryParams('ry')
-                    <br/>Class类调用示例：com.ruoyi.quartz.task.RyTask.ryParams('ry')
-                    <br/>参数说明：支持字符串，布尔类型，长整型，浮点型，整型
+                    Bean调用示例：tasks.demo_task.demo
+                    <br/>Class类调用示例：tasks.demo_task.demo
+                    <br/>函数字符串说明：请注意是你app目录下存在的路径和方法名
                   </div>
                   <i class="el-icon-question"></i>
                 </el-tooltip>
@@ -213,6 +213,26 @@
               <el-input v-model="form.func_name" placeholder="请输入调用目标字符串"/>
             </el-form-item>
           </el-col>
+
+          <el-col :span="24">
+            <el-form-item prop="func_args">
+              <span slot="label">
+                传入参数
+                <el-tooltip placement="top">
+                  <div slot="content">
+                    Bean调用参数示例：['1']
+                    <br/>参数说明：支持字符串，布尔类型，长整型，浮点型，整型
+                    <br/>后台逻辑待完善
+                  </div>
+                  <i class="el-icon-question"></i>
+                </el-tooltip>
+              </span>
+              <el-input v-model="form.func_args" placeholder="请输入函数参数如['1']"/>
+            </el-form-item>
+          </el-col>
+
+
+
           <el-col :span="24">
             <el-form-item label="cron表达式" prop="cron_expression">
               <el-input v-model="form.cron_expression" placeholder="请输入cron执行表达式">
@@ -469,6 +489,7 @@ export default {
         job_name: undefined,
         job_group: undefined,
         func_name: undefined,
+        func_args: undefined,
         cron_expression: undefined,
         misfire_policy: 1,
         coalesce: 0,
