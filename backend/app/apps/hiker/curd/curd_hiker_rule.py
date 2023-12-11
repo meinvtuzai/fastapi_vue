@@ -139,6 +139,10 @@ class CURDHikerRule(CRUDBase):
         if name:
             filters.append(self.model.name.like(f"%{name}%"))
         records, total, _, _ = self.get_multi(db, page=page, page_size=page_size, filters=filters)
+
+        # 增加where条件: 连表查，否则会出现笛卡尔积现象
+        filters.append(self.model.dev_id == HikerDeveloper.id)
+        filters.append(self.model.type_id == HikerRuleType.id)
         # for record in records:
         #     if record.get('auth_date_time'):
         #         record['auth_date_time'] = str(record['auth_date_time'])

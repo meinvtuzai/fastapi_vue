@@ -37,3 +37,4 @@ id,created_time,creator_id,modified_time,modifier_id,is_deleted,label,remark,sta
 36,2023-12-10 17:41:10,0,2023-12-10 17:41:10,0,0,monitor:job:post,,0
 37,2023-12-10 18:16:32,0,2023-12-10 18:16:32,0,0,monitor:job:put,,0
 38,2023-12-10 18:25:10,0,2023-12-10 18:25:10,0,0,monitor:job:delete,,0
+39,2023-12-11 20:42:25,0,2023-12-11 20:42:25,0,0,perm:menu:delete,,0

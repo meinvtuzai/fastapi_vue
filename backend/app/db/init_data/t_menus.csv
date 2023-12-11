@@ -27,3 +27,4 @@ id,created_time,creator_id,modified_time,modifier_id,is_deleted,path,component,i
 26,2023-12-07 22:06:50,1,2023-12-07 22:16:07,1,0,developer/:id(\d+),/hiker/developer/index,0,1,0,1,DeveloperDetail,开发者详情,peoples,1,10
 27,2023-12-07 22:09:16,1,2023-12-07 22:16:02,1,0,rule_type/:id(\d+),/hiker/rule_type/index,0,1,0,2,RuleTypeDetail,规则类型详情,component,1,10
 28,2023-12-07 22:56:42,1,2023-12-07 22:56:42,0,0,logininfor,/monitor/logininfor/index,0,0,0,2,LoginInfor,登录日志,people,1,17
+29,2023-12-11 20:39:10,1,2023-12-11 20:42:25,1,1,control_panel1,/hello,0,0,0,1,,hello world,clipboard,1,7

@@ -152,5 +152,5 @@ def init_table_data_form_csv(db: Session) -> None:
 def init_db(session: Session) -> None:
     db = session
     # init_users_and_roles(db) # 纯净模式啥也没有
-    init_params(db)  # 初始化系统参数
-    # init_table_data_form_csv(db)  # demo模式，有数据
+    # init_params(db)  # 初始化系统参数
+    init_table_data_form_csv(db)  # demo模式，有数据
