@@ -55,23 +55,25 @@ def get_no_store_res():
     return res
 
 
-@router.post(api_url + "/file/importData", summary="上传导入数据")
-async def uploadImportData(file: UploadFile):
+@router.post(api_url + "/file/importData", summary="上传定时任务脚本")
+async def uploadImportData(*,
+                        u: Users = Depends(deps.user_perm([f"{access_name}:post"])),
+                           updateSupport: bool = Query(...),
+                           file: UploadFile):
     up_data = file.file.read()
     up_name = file.filename  # type: str
-    # 获取当前脚本文件的绝对路径
-    current_path = os.path.abspath(__file__)
-    # 获取当前脚本文件所在的目录路径
-    current_dir = os.path.dirname(current_path)
     # 获取项目根目录
-    project_dir = os.path.dirname(current_dir)
+    project_dir = os.getcwd()
     task_dir = os.path.join(project_dir, 'tasks')
+    os.makedirs(task_dir, exist_ok=True)
     save_path = os.path.join(task_dir, up_name)
-    os.makedirs(task_dir,exist_ok=True)
-
-    with open(save_path, 'wb') as f:
-        f.write(up_data)
-    return respSuccessJson({'path': save_path})
+    can_save = (not os.path.exists(save_path)) or updateSupport
+    if can_save:
+        with open(save_path, 'wb') as f:
+            f.write(up_data)
+        return respSuccessJson(data={'path': save_path}, msg='上传成功')
+    else:
+        return respErrorJson(error_code.ERROR_TASK_ADD_ERROR.set_msg(f'上传失败:脚本文件{save_path}已存在'))
 
 
 @router.get(api_url + '/now', summary="查询当前内存定时任务")

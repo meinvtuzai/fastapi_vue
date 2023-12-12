@@ -14,7 +14,7 @@
           icon="el-icon-upload2"
           size="mini"
           @click="handleImport"
-        >导入定时任务
+        >上传定时任务脚本
         </el-button>
       </el-col>
     </el-form>
@@ -31,7 +31,7 @@
   </span>
     </el-dialog>
 
-    <!-- 定时任务导入对话框 -->
+    <!-- 定时任务上传对话框 -->
     <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
       <el-upload
         ref="upload"
@@ -50,9 +50,9 @@
         <div class="el-upload__tip text-center" slot="tip">
           <div class="el-upload__tip" slot="tip">
             <el-checkbox v-model="upload.updateSupport"/>
-            是否更新已经存在的定时任务文件
+            是否覆盖已经存在的定时任务脚本文件
           </div>
-          <span>仅允许导入py格式文件。</span>
+          <span>仅允许上传py格式文件。</span>
           <el-link type="primary" :underline="false" style="font-size:12px;vertical-align: baseline;"
                    @click="importTemplate">下载模板
           </el-link>
@@ -85,11 +85,11 @@ export default {
       open: false,
       // 表单参数
       form: {},
-      // 定时任务导入参数
+      // 定时任务上传参数
       upload: {
-        // 是否显示弹出层（定时任务导入）
+        // 是否显示弹出层（定时任务上传）
         open: false,
-        // 弹出层标题（定时任务导入）
+        // 弹出层标题（定时任务上传）
         title: "",
         // 是否禁用上传
         isUploading: false,
@@ -169,16 +169,17 @@ export default {
       this.init()
       location.reload();
     },
-    /** 导入按钮操作 */
+    /** 上传按钮操作 */
     handleImport() {
-      this.upload.title = "用户导入";
+      this.upload.title = "定时任务脚本上传";
       this.upload.open = true;
     },
     /** 下载模板操作 */
     importTemplate() {
-      this.download('system_user', {
-        ...this.queryParams, ...{template: '1'}
-      }, `user_template_${parseTime(new Date().getTime())}.xlsx`)
+      this.$message('没写这个功能')
+      // this.download('system_user', {
+      //   ...this.queryParams, ...{template: '1'}
+      // }, `user_template_${parseTime(new Date().getTime())}.xlsx`)
     },
     // 文件上传中处理
     handleFileUploadProgress(event, file, fileList) {
@@ -189,8 +190,7 @@ export default {
       this.upload.open = false;
       this.upload.isUploading = false;
       this.$refs.upload.clearFiles();
-      this.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", {dangerouslyUseHTMLString: true});
-      this.getList();
+      this.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "上传结果", {dangerouslyUseHTMLString: true});
     },
     // 提交上传文件
     submitFileForm() {

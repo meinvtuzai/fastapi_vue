@@ -71,14 +71,17 @@ async def uploadAvatar(img: UploadFile):
 
 
 @router.post("/user/file/importData", summary="上传导入数据")
-async def uploadImportData(file: UploadFile):
+async def uploadImportData(*,
+                           file: UploadFile,
+                           u: Users = Depends(deps.user_perm(["perm:user:post"])),
+                           ):
     up_data = file.file.read()
     up_name = file.filename  # type: str
     new_img_name = f"{get_uuid()}.{up_name.split('.')[-1]}"
     path = constants.MEDIA_EXCEL_BASE_DIR + new_img_name
     with open(os.path.join(constants.MEDIA_BASE_PATH, path), 'wb') as f:
         f.write(up_data)
-    return respSuccessJson({'path': path})
+    return respSuccessJson(data={'path': path},msg='导入成功')
 
 
 @router.put("/user/{user_id}/password", summary="修改指定用户的密码")
