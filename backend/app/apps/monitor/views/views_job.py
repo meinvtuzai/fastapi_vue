@@ -117,7 +117,7 @@ async def addRecord(*,
             pause_job(job_id)
     except Exception as e:
         logger.info(f'改变任务状态发生错误:{e}')
-
+    del obj.server_restart
     res = curd.create(db, obj_in=obj, creator_id=u['id'])
     if res:
         return respSuccessJson({'id': job_id})
@@ -166,13 +166,30 @@ async def run_job(*,
         return respErrorJson(error_code.ERROR_TASK_NOT_FOUND.set_msg(f"not found job {_id}"))
 
     func_args = job.func_args
+    func_kwargs = job.func_kwargs
+
+    func_args_list = [job.job_id]
+    func_kwargs_dict = {}
+    try:
+        args_list = safe_eval(func_args)
+        if isinstance(args_list, list):
+            func_args_list.extend(args_list)
+    except Exception as e:
+        logger.info(f'func_args 序列化列表发生错误:{e}')
+
+    try:
+        args_dict = safe_eval(func_kwargs)
+        if isinstance(args_dict, dict):
+            func_kwargs_dict.update(args_dict)
+    except Exception as e:
+        logger.info(f'func_kwargs 序列化列表发生错误:{e}')
+
+    func_args = func_args_list
+    func_kwargs = func_kwargs_dict
+
     try:
         func = _format_fun(job.func_name)
-        try:
-            func_args = safe_eval(func_args)
-        except:
-            func_args = [job.job_id]
-        func(*func_args)
+        func(*func_args, **func_kwargs)
         return respSuccessJson()
     except Exception as e:
         return respErrorJson(error_code.ERROR_TASK_INVALID.set_msg(f"{e}"))
@@ -200,7 +217,7 @@ async def setRecord(*,
             pause_job(job_id)
     except Exception as e:
         logger.info(f'改变任务状态发生错误:{e}')
-
+    del obj.server_restart
     curd.update(db, _id=_id, obj_in=obj, modifier_id=u['id'])
     return respSuccessJson()
 

@@ -6,7 +6,7 @@ DEFAULT_ENV_FILE = os.path.abspath(os.path.join(BASE_DIR,
                                                 "./configs/.env"))  # default env file path: './configs/.env' when run "python main.py", you can change in this if you want
 
 # 登录状态自动过期
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 300
 REGISTER_TOKEN_EXPIRE_HOURS = 24
 USER_CAPTCHA_CODE_EXPIRE_MINUTES = 15
 USER_REGISTER_SUBMIT_NUM_LIMIT = 5

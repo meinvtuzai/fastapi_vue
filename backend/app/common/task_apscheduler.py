@@ -4,11 +4,11 @@
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Author's Blog: https://blog.csdn.net/qq_32394351
 # Date  : 2023/12/10
-import json
+
 from datetime import datetime, timedelta
 import importlib
 from apscheduler.triggers.cron import CronTrigger
-
+from core.config import settings
 from apps.monitor.schemas import job_schemas
 from . import error_code
 from .sys_schedule import scheduler
@@ -153,11 +153,6 @@ def get_job_status(job_data):
     return str(job_data).split(",")[-1].strip(")")
 
 
-def check_cron_pattern(cron_expression):
-    if len(cron_expression.strip().split(' ')) != 6:
-        raise 'cron格式错误'
-
-
 def create_no_store_job(obj: job_schemas.JobSchema):
     """
     创建job
@@ -173,6 +168,7 @@ def create_no_store_job(obj: job_schemas.JobSchema):
     job_id = obj.job_id or obj.job_name
     cron_expression = obj.cron_expression
     func_args = obj.func_args
+    func_kwargs = obj.func_kwargs
     func_name = obj.func_name
     next_run = obj.next_run
     if next_run:
@@ -180,20 +176,36 @@ def create_no_store_job(obj: job_schemas.JobSchema):
             next_run = datetime.strptime(next_run, '%Y-%m-%d %H:%M:%S')
         except:
             try:
-                next_run = datetime.strptime(next_run, '%Y-%m-%dT%H:%M:%S.000Z')
+                next_run = datetime.strptime(next_run, '%Y-%m-%dT%H:%M:%S.%fZ')
             except:
                 pass
+    if not obj.server_restart:
+        now = datetime.now()
+        now_next = now + timedelta(seconds=settings.JOB_DELTA)
+        if not next_run or next_run < now_next:
+            next_run = now_next
+        obj.next_run = next_run
 
-    now = datetime.now()
-    if not next_run or next_run < now + timedelta(seconds=30):
-        next_run = now + timedelta(seconds=30)
-    obj.next_run = next_run
+    func_args_list = [job_id]
+    func_kwargs_dict = {}
+    try:
+        # func_args = json.loads(func_args)
+        args_list = safe_eval(func_args)
+        if isinstance(args_list, list):
+            func_args_list.extend(args_list)
+    except Exception as e:
+        logger.info(f'func_args 序列化列表发生错误:{e}')
 
     try:
         # func_args = json.loads(func_args)
-        func_args = safe_eval(func_args)
-    except:
-        func_args = [job_id]
+        args_dict = safe_eval(func_kwargs)
+        if isinstance(args_dict, dict):
+            func_kwargs_dict.update(args_dict)
+    except Exception as e:
+        logger.info(f'func_kwargs 序列化列表发生错误:{e}')
+
+    func_args = func_args_list
+    func_kwargs = func_kwargs_dict
 
     res = query_job_id(job_id)
     if res:
@@ -202,6 +214,7 @@ def create_no_store_job(obj: job_schemas.JobSchema):
     schedule_job = add_job(
         func_name=func_name,
         args=func_args,
+        kwargs=func_kwargs,
         id=job_id,
         next_run_time=next_run,
         cron=cron_expression,
@@ -218,25 +231,30 @@ class JobInit:
     def _automatic_task(self):
         # 查询数据库开了自动重启的任务
         active_jobs = self.db.query(Job).filter(Job.active == True).all()
-        # 重启后延迟1分钟开启定时任务
-        next_run = datetime.now() + timedelta(minutes=1)
         add_list = []
         for active_job in active_jobs:
             if query_job_id(active_job.job_id):
                 logger.info(f"定时任务重复启用:【{active_job.job_id}】")
                 continue
             # 更新下次执行时间
-            active_job_next_run = next_run if active_job.next_run < next_run else active_job.next_run
+            next_run = active_job.next_run
+            now = datetime.now()
+            now_next = now + timedelta(seconds=settings.JOB_DELTA)
+            # 如果下次执行时间 < 当前时间加定时任务刷新间隔,把下次执行时间设置为此时间
+            active_job_next_run = now_next if next_run < now_next else next_run
+
             obj = job_schemas.JobSchema(
                 job_id=active_job.job_id,
                 job_name=active_job.job_name,
                 func_name=active_job.func_name,
                 # job_group=active_job.job_group,
                 func_args=active_job.func_args,
+                func_kwargs=active_job.func_kwargs,
                 # coalesce=active_job.coalesce,
                 cron_expression=active_job.cron_expression,
                 next_run=active_job_next_run.strftime("%Y-%m-%d %H:%M:%S"),
                 status=1,  # 启动
+                server_restart=True  # 重启来的
             )
             job_id, error = create_no_store_job(obj)
             if error:
@@ -246,7 +264,8 @@ class JobInit:
                 active_job.status = 1
                 active_job.next_run = active_job_next_run
                 add_list.append(active_job)
-                logger.info(f'定时任务【{active_job.job_id}:{active_job.job_name}】将在1分钟后运行')
+                logger.info(
+                    f'定时任务【{active_job.job_id}:{active_job.job_name}】将在{settings.JOB_DELTA}秒钟后运行.下次执行时间为:{active_job_next_run}')
 
             except Exception as e:
                 logger.info(f'改变任务状态发生错误:{e}')

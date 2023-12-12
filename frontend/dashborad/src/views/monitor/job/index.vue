@@ -217,7 +217,7 @@
           <el-col :span="24">
             <el-form-item prop="func_args">
               <span slot="label">
-                传入参数
+                传入位置参数
                 <el-tooltip placement="top">
                   <div slot="content">
                     Bean调用参数示例：['1']
@@ -230,6 +230,25 @@
               <el-input v-model="form.func_args" placeholder="请输入函数参数如['1']"/>
             </el-form-item>
           </el-col>
+
+          <el-col :span="24">
+            <el-form-item prop="func_kwargs">
+              <span slot="label">
+                传入关键参数
+                <el-tooltip placement="top">
+                  <div slot="content">
+                    Bean调用参数示例：{'a':'1'}
+                    <br/>参数说明：支持字符串，布尔类型，长整型，浮点型，整型
+                    <br/>后台逻辑待完善
+                  </div>
+                  <i class="el-icon-question"></i>
+                </el-tooltip>
+              </span>
+              <el-input v-model="form.func_kwargs" placeholder="请输入函数参数如{'a':'1'}"/>
+            </el-form-item>
+          </el-col>
+
+
 
 
 
@@ -405,6 +424,13 @@ export default {
       },
       pickerOptions: {
         shortcuts: [{
+          text: '1分钟后',
+          onClick(picker) {
+            const date = new Date();
+            date.setTime(date.getTime() + 60 * 1000);
+            picker.$emit('pick', date);
+          }
+        },{
           text: '今天',
           onClick(picker) {
             picker.$emit('pick', new Date());
@@ -490,6 +516,7 @@ export default {
         job_group: undefined,
         func_name: undefined,
         func_args: undefined,
+        func_kwargs: undefined,
         cron_expression: undefined,
         misfire_policy: 1,
         coalesce: 0,

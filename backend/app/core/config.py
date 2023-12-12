@@ -106,6 +106,9 @@ class Settings(BaseSettings):
     # 登录验证码错误记录到日志
     LOG_CAPTCHA_ERROR: bool = False
 
+    # 定时任务动态刷新间隔时间(秒)
+    JOB_DELTA: int = 10
+
     # 代理
     IP_AGENTS = [""]
 
