@@ -379,6 +379,7 @@
 <script>
 import {listJob, getJob, delRecord, addJob, setRecord, runJob, changeJobStatus, changeActive} from "@/api/monitor/job";
 import Crontab from '@/components/Crontab'
+import {parseTime} from "@/utils";
 
 export default {
   components: {Crontab},
@@ -659,9 +660,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('monitor/job/export', {
-        ...this.queryParams
-      }, `job_${new Date().getTime()}.xlsx`)
+      this.download('job', {
+        ...this.queryParams, ...{template: '0'}
+      }, `定时任务_${parseTime(new Date().getTime())}.xlsx`)
     }
   }
 };

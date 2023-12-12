@@ -4,7 +4,9 @@
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Author's Blog: https://blog.csdn.net/qq_32394351
 # Date  : 2023/12/10
-from fastapi import APIRouter, Depends, Query, Body
+import os
+
+from fastapi import APIRouter, Depends, Query, Body, UploadFile
 from numpy import safe_eval
 from sqlalchemy.orm import Session
 from common import deps, error_code
@@ -51,6 +53,25 @@ def get_no_store_res():
         )
     res = {'results': schedules, 'total': len(schedules)}
     return res
+
+
+@router.post(api_url + "/file/importData", summary="上传导入数据")
+async def uploadImportData(file: UploadFile):
+    up_data = file.file.read()
+    up_name = file.filename  # type: str
+    # 获取当前脚本文件的绝对路径
+    current_path = os.path.abspath(__file__)
+    # 获取当前脚本文件所在的目录路径
+    current_dir = os.path.dirname(current_path)
+    # 获取项目根目录
+    project_dir = os.path.dirname(current_dir)
+    task_dir = os.path.join(project_dir, 'tasks')
+    save_path = os.path.join(task_dir, up_name)
+    os.makedirs(task_dir,exist_ok=True)
+
+    with open(save_path, 'wb') as f:
+        f.write(up_data)
+    return respSuccessJson({'path': save_path})
 
 
 @router.get(api_url + '/now', summary="查询当前内存定时任务")

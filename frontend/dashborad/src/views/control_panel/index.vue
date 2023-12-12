@@ -7,6 +7,16 @@
         </el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="handleRefresh">刷新</el-button>
       </el-form-item>
+
+      <el-col :span="24">
+        <el-button
+          type="primary"
+          icon="el-icon-upload2"
+          size="mini"
+          @click="handleImport"
+        >导入定时任务
+        </el-button>
+      </el-col>
     </el-form>
 
     <el-dialog
@@ -20,12 +30,48 @@
     <el-button type="primary" @click="handleUpdateDatabase">确 定</el-button>
   </span>
     </el-dialog>
+
+    <!-- 定时任务导入对话框 -->
+    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
+      <el-upload
+        ref="upload"
+        :limit="1"
+        accept=".py"
+        :headers="upload.headers"
+        :action="upload.url + '?updateSupport=' + upload.updateSupport"
+        :disabled="upload.isUploading"
+        :on-progress="handleFileUploadProgress"
+        :on-success="handleFileSuccess"
+        :auto-upload="false"
+        drag
+      >
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__tip text-center" slot="tip">
+          <div class="el-upload__tip" slot="tip">
+            <el-checkbox v-model="upload.updateSupport"/>
+            是否更新已经存在的定时任务文件
+          </div>
+          <span>仅允许导入py格式文件。</span>
+          <el-link type="primary" :underline="false" style="font-size:12px;vertical-align: baseline;"
+                   @click="importTemplate">下载模板
+          </el-link>
+        </div>
+      </el-upload>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitFileForm">确 定</el-button>
+        <el-button @click="upload.open = false">取 消</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
 import {getParameter} from '@/api/system/parameter'
 import {setRecord} from '@/api/control_panel/database'
+import {getToken} from "@/utils/auth";
+import {parseTime} from "@/utils";
 
 export default {
   name: 'ControlPanel',
@@ -39,6 +85,21 @@ export default {
       open: false,
       // 表单参数
       form: {},
+      // 定时任务导入参数
+      upload: {
+        // 是否显示弹出层（定时任务导入）
+        open: false,
+        // 弹出层标题（定时任务导入）
+        title: "",
+        // 是否禁用上传
+        isUploading: false,
+        // 是否更新已经存在的定时任务数据
+        updateSupport: 0,
+        // 设置上传的请求头部
+        headers: {Token: getToken()},
+        // 上传的地址
+        url: process.env.VUE_APP_BASE_API + "monitor/job/file/importData"
+      },
     }
   },
   created() {
@@ -107,6 +168,33 @@ export default {
     handleRefresh() {
       this.init()
       location.reload();
+    },
+    /** 导入按钮操作 */
+    handleImport() {
+      this.upload.title = "用户导入";
+      this.upload.open = true;
+    },
+    /** 下载模板操作 */
+    importTemplate() {
+      this.download('system_user', {
+        ...this.queryParams, ...{template: '1'}
+      }, `user_template_${parseTime(new Date().getTime())}.xlsx`)
+    },
+    // 文件上传中处理
+    handleFileUploadProgress(event, file, fileList) {
+      this.upload.isUploading = true;
+    },
+    // 文件上传成功处理
+    handleFileSuccess(response, file, fileList) {
+      this.upload.open = false;
+      this.upload.isUploading = false;
+      this.$refs.upload.clearFiles();
+      this.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", {dangerouslyUseHTMLString: true});
+      this.getList();
+    },
+    // 提交上传文件
+    submitFileForm() {
+      this.$refs.upload.submit();
     },
 
   }
