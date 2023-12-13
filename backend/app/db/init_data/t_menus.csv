@@ -28,3 +28,4 @@ id,created_time,creator_id,modified_time,modifier_id,is_deleted,path,component,i
 27,2023-12-07 22:09:16,1,2023-12-07 22:16:02,1,0,rule_type/:id(\d+),/hiker/rule_type/index,0,1,0,2,RuleTypeDetail,规则类型详情,component,1,10
 28,2023-12-07 22:56:42,1,2023-12-07 22:56:42,0,0,logininfor,/monitor/logininfor/index,0,0,0,2,LoginInfor,登录日志,people,1,17
 29,2023-12-11 20:39:10,1,2023-12-11 20:42:25,1,1,control_panel1,/hello,0,0,0,1,,hello world,clipboard,1,7
+30,2023-12-13 22:44:56,1,2023-12-13 22:44:56,0,0,pip,/monitor/pip/index,0,0,0,2,Pip,依赖管理,list,1,17

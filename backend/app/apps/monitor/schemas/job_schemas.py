@@ -6,7 +6,6 @@
 # Date  : 2023/12/10
 import re
 
-from pydantic import BaseModel
 from typing import List, Optional
 from pydantic import BaseModel, Field, ValidationError, validator
 

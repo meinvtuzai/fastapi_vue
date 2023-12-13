@@ -44,3 +44,6 @@ ERROR_DATABASE_CMD_ERROR = ErrorBase(code=5201, msg="数据库升级脚本执行
 ERROR_TASK_NOT_FOUND = ErrorBase(code=4004, msg="任务未找到")
 ERROR_TASK_INVALID = ErrorBase(code=4005, msg="定时任务执行异常")
 ERROR_TASK_ADD_ERROR = ErrorBase(code=4006, msg="定时任务添加失败，可能是job_id重复")
+
+ERROR_PIP_ADD_ERROR = ErrorBase(code=5006, msg="依赖安装失败")
+ERROR_PIP_ADD_EXIST_ERROR = ErrorBase(code=5007, msg="依赖安装失败,已经安装过此依赖")

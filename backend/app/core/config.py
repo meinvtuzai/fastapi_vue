@@ -111,6 +111,9 @@ class Settings(BaseSettings):
 
     # 代理
     IP_AGENTS = [""]
+    # pip依赖代理
+    PIP_PROXY = "https://mirrors.cloud.tencent.com/pypi/simple"
+    # PIP_PROXY = "https://pypi.douban.com/simple/"
 
     class Config:
         env_file = ".env"
