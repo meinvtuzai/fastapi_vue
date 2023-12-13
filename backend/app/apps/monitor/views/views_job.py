@@ -18,6 +18,7 @@ from common.schemas import StatusSchema, ActiveSchema
 from ...permission.models import Users
 from ..schemas import job_schemas
 from core.logger import logger
+from utils.tools import thread_it
 
 router = APIRouter()
 
@@ -57,7 +58,7 @@ def get_no_store_res():
 
 @router.post(api_url + "/file/importData", summary="上传定时任务脚本")
 async def uploadImportData(*,
-                        u: Users = Depends(deps.user_perm([f"{access_name}:post"])),
+                           u: Users = Depends(deps.user_perm([f"{access_name}:post"])),
                            updateSupport: bool = Query(...),
                            file: UploadFile):
     up_data = file.file.read()
@@ -198,21 +199,22 @@ async def run_job(*,
         if isinstance(args_list, list):
             func_args_list.extend(args_list)
     except Exception as e:
-        logger.info(f'func_args 序列化列表发生错误:{e}')
+        logger.info(f'{job.job_name} func_args 序列化列表发生错误:{e}')
 
     try:
         args_dict = safe_eval(func_kwargs)
         if isinstance(args_dict, dict):
             func_kwargs_dict.update(args_dict)
     except Exception as e:
-        logger.info(f'func_kwargs 序列化列表发生错误:{e}')
+        logger.info(f'{job.job_name} func_kwargs 序列化列表发生错误:{e}')
 
     func_args = func_args_list
     func_kwargs = func_kwargs_dict
 
     try:
         func = _format_fun(job.func_name)
-        func(*func_args, **func_kwargs)
+        # func(*func_args, **func_kwargs) # 同步执行，会卡
+        thread_it(func, *func_args, **func_kwargs)  # 开线程执行
         return respSuccessJson()
     except Exception as e:
         return respErrorJson(error_code.ERROR_TASK_INVALID.set_msg(f"{e}"))

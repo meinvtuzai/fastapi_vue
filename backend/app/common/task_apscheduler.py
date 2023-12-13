@@ -166,6 +166,7 @@ def create_no_store_job(obj: job_schemas.JobSchema):
     :return:
     """
     job_id = obj.job_id or obj.job_name
+    job_name = obj.job_name
     cron_expression = obj.cron_expression
     func_args = obj.func_args
     func_kwargs = obj.func_kwargs
@@ -194,7 +195,7 @@ def create_no_store_job(obj: job_schemas.JobSchema):
         if isinstance(args_list, list):
             func_args_list.extend(args_list)
     except Exception as e:
-        logger.info(f'func_args 序列化列表发生错误:{e}')
+        logger.info(f'{job_name} func_args 序列化列表发生错误:{e}')
 
     try:
         # func_args = json.loads(func_args)
@@ -202,7 +203,7 @@ def create_no_store_job(obj: job_schemas.JobSchema):
         if isinstance(args_dict, dict):
             func_kwargs_dict.update(args_dict)
     except Exception as e:
-        logger.info(f'func_kwargs 序列化列表发生错误:{e}')
+        logger.info(f'{job_name} func_kwargs 序列化列表发生错误:{e}')
 
     func_args = func_args_list
     func_kwargs = func_kwargs_dict

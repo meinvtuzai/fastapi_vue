@@ -11,6 +11,7 @@ import hashlib
 import base64
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_v1_5 as Cipher_pkcs1_v1_5
+from threading import Thread
 
 
 def crack_pwd(pwd, key):
@@ -104,6 +105,12 @@ def round_float(float_num, num=2):
     context = decimal.getcontext()
     context.rounding = decimal.ROUND_HALF_UP
     return float(round(decimal.Decimal(str(float_num)), num))
+
+
+def thread_it(func, *args, **kwargs):
+    t = Thread(target=func, args=args, kwargs=kwargs)
+    t.setDaemon(True)
+    t.start()
 
 
 if __name__ == '__main__':
