@@ -15,7 +15,6 @@ from .middleware import middleware
 from db.cache import registerRedis
 # from tasks.timer import scheduler # 这个是没固化数据库的。scheduler.start() 启动
 from common.task_apscheduler import scheduler_register, scheduler  # 固化数据库,scheduler.init_scheduler() 初始化
-from workers import app as celery_app
 from utils.notes import set_start_time
 
 
@@ -51,8 +50,6 @@ class InitializeApp(object):
         # for _route in app.routes:
         #     r = _route.__dict__
         #     print(r['path'], r.get('methods', {}))
-        # celery_app.worker_main(['-A','workers', 'worker','-l', 'info','-c',' 1'])
-        # celery_app.beat_main(['-A','workers', 'beat', '-l', 'INFO'])
         return app
 
     @staticmethod

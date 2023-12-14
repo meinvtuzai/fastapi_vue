@@ -60,8 +60,8 @@ class Settings(BaseSettings):
         return f"redis://{pwd}{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_DB}?encoding=utf-8"
 
     # celery
-    CELERY_BROKER: str = 'redis://127.0.0.1:6379/2'
-    CELERY_BACKEND: str = 'redis://127.0.0.1:6379/3'
+    # CELERY_BROKER: str = 'redis://127.0.0.1:6379/2'
+    # CELERY_BACKEND: str = 'redis://127.0.0.1:6379/3'
 
     # email 不填SMTP_HOST代表不使用邮箱服务， 填写后账号注册会有邮件确认
     SMTP_TLS: bool = False
