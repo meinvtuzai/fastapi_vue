@@ -19,13 +19,14 @@ id,created_time,creator_id,modified_time,modifier_id,is_deleted,path,component,i
 18,2023-12-05 09:09:57,1,2023-12-07 00:03:28,1,0,job,/monitor/job/index,0,0,0,2,Job,定时任务,time-range,1,17
 19,2023-12-05 09:11:12,1,2023-12-07 00:03:23,1,0,server,/monitor/server/index,0,0,0,1,Server,服务监控,server,1,17
 20,2023-12-06 22:49:09,1,2023-12-06 22:49:09,0,0,blog,/tool/blog/index,0,0,0,2,Blog,博客,log,1,15
-21,2023-12-06 22:53:25,1,2023-12-07 22:11:54,1,0,online,/monitor/online/index,0,1,0,3,Online,在线用户,online,1,17
-22,2023-12-06 22:55:02,1,2023-12-07 22:11:47,1,0,cache, /monitor/cache/index,0,1,0,3,,缓存监控,redis,1,17
-23,2023-12-06 22:56:00,1,2023-12-07 22:12:00,1,0,cacheList,/monitor/cache/list,0,0,0,4,cacheList,缓存列表,redis-list,1,17
+21,2023-12-06 22:53:25,1,2023-12-15 00:17:28,1,0,online,/monitor/online/index,0,1,0,6,Online,在线用户,online,1,17
+22,2023-12-06 22:55:02,1,2023-12-15 00:17:17,1,0,cache, /monitor/cache/index,0,1,0,5,,缓存监控,redis,1,17
+23,2023-12-06 22:56:00,1,2023-12-15 00:17:23,1,0,cacheList,/monitor/cache/list,0,0,0,5,cacheList,缓存列表,redis-list,1,17
 24,2023-12-06 23:22:16,1,2023-12-06 23:22:16,0,0,icons,/components/icons/index,0,0,0,3,Icons,图标组件,icon,1,15
 25,2023-12-06 23:33:18,1,2023-12-06 23:37:20,1,0,build,/tool/build/index,0,0,0,1,Build,表单构建,build,1,15
 26,2023-12-07 22:06:50,1,2023-12-07 22:16:07,1,0,developer/:id(\d+),/hiker/developer/index,0,1,0,1,DeveloperDetail,开发者详情,peoples,1,10
 27,2023-12-07 22:09:16,1,2023-12-07 22:16:02,1,0,rule_type/:id(\d+),/hiker/rule_type/index,0,1,0,2,RuleTypeDetail,规则类型详情,component,1,10
-28,2023-12-07 22:56:42,1,2023-12-07 22:56:42,0,0,logininfor,/monitor/logininfor/index,0,0,0,2,LoginInfor,登录日志,people,1,17
+28,2023-12-07 22:56:42,1,2023-12-15 00:16:45,1,0,logininfor,/monitor/logininfor/index,0,0,0,3,LoginInfor,登录日志,people,1,17
 29,2023-12-11 20:39:10,1,2023-12-11 20:42:25,1,1,control_panel1,/hello,0,0,0,1,,hello world,clipboard,1,7
-30,2023-12-13 22:44:56,1,2023-12-13 22:44:56,0,0,pip,/monitor/pip/index,0,0,0,2,Pip,依赖管理,list,1,17
+30,2023-12-13 22:44:56,1,2023-12-15 00:16:50,1,0,pip,/monitor/pip/index,0,0,0,4,Pip,依赖管理,list,1,17
+31,2023-12-15 00:11:11,1,2023-12-15 00:17:03,1,0,job-log/:id(\d+),/monitor/job/log,0,1,0,2,JobLog,定时任务执行日志,log,1,17

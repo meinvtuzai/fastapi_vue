@@ -30,6 +30,7 @@ async def searchRecords(*,
                         page: int = Query(1, gt=0),
                         page_size: int = Query(20, gt=0),
                         ):
+    req_str = get_requirements()
     result = get_pip_package_info()
     packages_origin = result['pip_package_list']
     packages = packages_origin
@@ -46,6 +47,7 @@ async def searchRecords(*,
             'id': packages_origin.index(package) + 1,
             'name': package,
             'version': package_info[package],
+            'is_local': package in req_str,
         })
     total = len(records)
     start = page_size * (page - 1)
@@ -63,6 +65,7 @@ async def getRecord(*,
                     u: Users = Depends(deps.user_perm([f"{access_name}:get"])),
                     _id: int,
                     ):
+    req_str = get_requirements()
     result = get_pip_package_info()
     packages = result['pip_package_list']
     package_info = result['pip_package_info']
@@ -71,6 +74,7 @@ async def getRecord(*,
         "id": _id,
         "name": package_name,
         "version": package_info[package_name],
+        'is_local': package_name in req_str,
     }
 
     return respSuccessJson(res)

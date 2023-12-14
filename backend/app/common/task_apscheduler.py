@@ -8,6 +8,7 @@
 from datetime import datetime, timedelta
 import importlib
 from apscheduler.triggers.cron import CronTrigger
+from apscheduler.events import EVENT_JOB_ERROR, EVENT_JOB_MISSED, EVENT_JOB_EXECUTED
 from core.config import settings
 from apps.monitor.schemas import job_schemas
 from . import error_code
@@ -18,9 +19,25 @@ from apps.monitor.models.job import Job
 from numpy import safe_eval
 
 
+def job_listener(Event):
+    job = scheduler.get_job(Event.job_id)
+    if job:
+        if not Event.exception:
+            logger.info("jobname=%s|jobtrigger=%s|jobtime=%s|retval=%s", job.name, job.trigger,
+                        Event.scheduled_run_time, Event.retval)
+        else:
+            logger.error("jobname=%s|jobtrigger=%s|errcode=%s|exception=[%s]|traceback=[%s]|scheduled_time=%s",
+                         job.name,
+                         job.trigger, Event.code,
+                         Event.exception, Event.traceback, Event.scheduled_run_time)
+    else:
+        logger.info("任务执行一次后已自动清除:job_id=%s|jobtime=%s|retval=%s", Event.job_id, Event.scheduled_run_time, Event.retval)
+
+
 # 注册scheduler
 def scheduler_register():
     scheduler.init_scheduler()  # noqa 去掉不合理提示
+    scheduler.add_listener(job_listener, EVENT_JOB_ERROR | EVENT_JOB_MISSED | EVENT_JOB_EXECUTED)
     JobInit().init_jobs_pause()  # noqa
 
 
@@ -56,6 +73,17 @@ def cron_pattern(expression):
     if expression[5] != '?':
         args['day_of_week'] = expression[5]
     return args
+
+
+def add_task(func=None, args=None, kwargs=None, id=None, name=None, next_run_time=None):
+    """
+    1秒后执行一次后台任务
+    """
+    if not next_run_time:
+        # next_run_time = datetime.now() + timedelta(seconds=settings.JOB_DELTA)
+        next_run_time = datetime.now() + timedelta(seconds=1)
+    return scheduler.add_job(func, 'date', id=str(id), args=args, kwargs=kwargs, name=name,
+                             next_run_time=next_run_time)
 
 
 def add_job(func_name=None, args=None, kwargs=None, id=None, name=None, next_run_time=None,
@@ -217,6 +245,7 @@ def create_no_store_job(obj: job_schemas.JobSchema):
         args=func_args,
         kwargs=func_kwargs,
         id=job_id,
+        name=job_name,
         next_run_time=next_run,
         cron=cron_expression,
     )

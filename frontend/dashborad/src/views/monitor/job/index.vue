@@ -605,7 +605,7 @@ export default {
     /** 任务日志列表查询 */
     handleJobLog(row) {
       const id = row.id || 0;
-      this.$router.push('/monitor/job-log/index/' + id)
+      this.$router.push('/monitor/job-log/' + id)
     },
     /** 新增按钮操作 */
     handleAdd() {

@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 from common import deps, error_code
 from ..curd.curd_job import Job, curd_job as curd
 from common.task_apscheduler import query_job_all, query_job_id, add_job, modify_job, del_job, start_job, pause_job, \
-    _format_fun, create_no_store_job
+    _format_fun, create_no_store_job, add_task
 from common.resp import respSuccessJson, respErrorJson
 from common.schemas import StatusSchema, ActiveSchema
 from ...permission.models import Users
@@ -214,7 +214,9 @@ async def run_job(*,
     try:
         func = _format_fun(job.func_name)
         # func(*func_args, **func_kwargs) # 同步执行，会卡
-        thread_it(func, *func_args, **func_kwargs)  # 开线程执行
+        # thread_it(func, *func_args, **func_kwargs)  # 开线程执行
+        # 延迟1秒任务调度
+        add_task(func=func, args=func_args, kwargs=func_kwargs, id='temp_' + job.job_id, name='temp_' + job.job_name)
         return respSuccessJson()
     except Exception as e:
         return respErrorJson(error_code.ERROR_TASK_INVALID.set_msg(f"{e}"))

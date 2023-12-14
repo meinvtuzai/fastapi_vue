@@ -4,7 +4,7 @@
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Author's Blog: https://blog.csdn.net/qq_32394351
 # Date  : 2023/12/13
-
+import os
 import subprocess
 from core.config import settings
 
@@ -16,6 +16,22 @@ def do_cmd(adbshell):
     except Exception as e:
         print(e)
         return None
+
+
+def get_requirements():
+    # 获取依赖文件内容
+
+    # project_dir = os.getcwd()
+    # 获取当前脚本文件的绝对路径
+    current_path = os.path.abspath(__file__)
+    # 获取当前脚本文件所在的目录路径
+    current_dir = os.path.dirname(current_path)
+    # 获取项目根目录
+    project_dir = os.path.dirname(current_dir)
+    req_dir = os.path.join(project_dir, 'requirements.txt')
+    with open(req_dir, encoding='utf-8') as f:
+        req_text = f.read()
+    return req_text
 
 
 # 解析 pip list
@@ -76,9 +92,11 @@ __all__ = [
     "do_cmd_install",
     "do_cmd_uninstall",
     "do_cmd_upgrade",
+    "get_requirements",
 ]
 
 if __name__ == "__main__":
     package = "requests"
-    print(get_pip_someone_package(package))
-    print(get_pip_package_info())
+    # print(get_pip_someone_package(package))
+    # print(get_pip_package_info())
+    # print(get_requirements())

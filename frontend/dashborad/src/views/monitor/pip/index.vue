@@ -64,6 +64,12 @@
       <el-table-column label="序号" align="center" prop="id" width="55"/>
       <el-table-column label="名称" align="center" prop="name" :show-overflow-tooltip="true"/>
       <el-table-column label="版本" align="center" prop="version" :show-overflow-tooltip="true"/>
+      <el-table-column label="是否内置" align="center" prop="is_local" width="100">
+        <template slot-scope="scope">
+          <el-switch v-model="scope.row.is_local" disabled/>
+        </template>
+      </el-table-column>
+
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -98,8 +104,11 @@
         <el-form-item label="依赖名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入依赖名称" :readOnly="form_readonly"/>
         </el-form-item>
-        <el-form-item label="依赖版本" prop="key">
+        <el-form-item label="依赖版本" prop="version">
           <el-input v-model="form.version" placeholder="请输入依赖版本"/>
+        </el-form-item>
+        <el-form-item label="是否内置" prop="is_local">
+          <el-switch v-model="form.is_local" disabled></el-switch>
         </el-form-item>
 
       </el-form>
@@ -145,7 +154,7 @@ export default {
       },
       // 表单参数
       form: {},
-      form_readonly:false,
+      form_readonly: false,
       // 表单校验
       rules: {
         name: [
@@ -179,6 +188,7 @@ export default {
         id: undefined,
         version: undefined,
         name: undefined,
+        is_local: undefined,
       }
       this.resetForm('form')
     },
@@ -249,6 +259,12 @@ export default {
     /** 卸载按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids
+      const id_list = Array.isArray(ids) ? ids : [ids]
+      let data = this.list.filter(it => id_list.includes(it.id) && it.is_local);
+      if (data.length > 0) {
+        this.$message.error('不允许卸载内置模块:' + data[0].name)
+        return
+      }
       this.$confirm('是否确认卸载依赖编号为"' + ids + '"的数据项?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
