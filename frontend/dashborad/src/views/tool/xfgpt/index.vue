@@ -42,16 +42,21 @@ export default {
       userInput: '',
       aiContentRequest: '',
       finalChat: [],
-      loading: false
+      loading: false,
+      test_msg:'{"header":{"app_id":"6fafca91","uid":"12345"},"parameter":{"chat":{"domain":"general","temperature":0.5,"max_tokens":1024}},"payload":{"message":{"text":[{"role":"user","content":"你是谁"},{"role":"assistant","content":"....."},{"role":"user","content":"你会做什么"}]}}}',
+      // test_url:'wss://spark-openapi.cn-huabei-1.xf-yun.com/v1/assistants/vicrmmy973oy_v1', //force机器人
+      test_url:'wss://spark-openapi.cn-huabei-1.xf-yun.com/v1/assistants/c2zsj6y3ulrl_v1', //成语机器人
     };
   },
   methods: {
     getWebsocketUrl() {
+      const self = this
       return new Promise((resolve, reject) => {
         const apiKey = '3bd86468db9c5087a2131908bb2005f1';
         const apiSecret = 'Mjc3MDhmOTZjZWNiNGJiMDZiZjIwM2Vk';
-        const url = 'wss://spark-api.xf-yun.com/v1.1/chat'; //这里使用的是星火大模型1.x版本
+        // const url = 'wss://spark-api.xf-yun.com/v1.1/chat'; //这里使用的是星火大模型1.x版本
         // const url = 'wss://spark-api.xf-yun.com/v3.1/chat'; //这里使用的是星火大模型3.x版本
+        const url = self.test_url
         const host = window.location.host;
         const date = new Date().toGMTString();
         const algorithm = 'hmac-sha256';
@@ -108,8 +113,8 @@ export default {
         },
         parameter: {
           chat: {
-            domain: 'general',//如果是chat2这里也需要进行相应修改
-            // domain: 'generalv3',//如果是chat2这里也需要进行相应修改
+            // domain: 'general',//如果是chat2这里也需要进行相应修改
+            domain: 'generalv3',//如果是chat2这里也需要进行相应修改
             temperature: 0.5,
             max_tokens: 1024,
           },
@@ -136,13 +141,14 @@ export default {
     },
     result(resultData) {
       let jsonData = JSON.parse(resultData);
-      //console.log(jsonData)
+      // console.log(jsonData)
       this.totalRes += resultData;
       //this.$refs.outputText.value = this.totalRes;
       //加入到ai回答中
       if (jsonData.header.status !== 2) {//不为结束就进行添加
         this.requestHandle(jsonData)
       } else {
+        this.requestHandle(jsonData) // 结束还是添加
         let contentSomething = {
           ai: this.aiContentRequest,
           user: this.userInput
