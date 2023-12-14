@@ -30,3 +30,4 @@ id,created_time,creator_id,modified_time,modifier_id,is_deleted,path,component,i
 29,2023-12-11 20:39:10,1,2023-12-11 20:42:25,1,1,control_panel1,/hello,0,0,0,1,,hello world,clipboard,1,7
 30,2023-12-13 22:44:56,1,2023-12-15 00:16:50,1,0,pip,/monitor/pip/index,0,0,0,4,Pip,依赖管理,list,1,17
 31,2023-12-15 00:11:11,1,2023-12-15 00:17:03,1,0,job-log/:id(\d+),/monitor/job/log,0,1,0,2,JobLog,定时任务执行日志,log,1,17
+32,2023-12-15 00:36:18,1,2023-12-15 00:36:18,0,0,xfgpt,/tool/xfgpt/index,0,0,0,4,XfGpt,讯飞GPT,example,1,15
