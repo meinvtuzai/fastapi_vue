@@ -11,7 +11,7 @@
  Target Server Version : 100318
  File Encoding         : 65001
 
- Date: 16/12/2023 13:11:16
+ Date: 16/12/2023 13:22:08
 */
 
 SET NAMES utf8mb4;
@@ -271,9 +271,9 @@ CREATE TABLE `t_job`  (
 -- ----------------------------
 -- Records of t_job
 -- ----------------------------
-INSERT INTO `t_job` VALUES (1, '2023-12-10 21:31:19', 1, '2023-12-16 12:47:40', 1, 0, 'demo', '测试', 'setInterval', '30 20 * * * ?', 1, 'tasks.demo_task.demo', '[\'hello world\']', 'cron', 0, '2023-12-16 12:47:50', 1, 1, '{\'a\':\'1\',\'b\':\'2\'}');
-INSERT INTO `t_job` VALUES (14, '2023-12-13 00:26:59', 1, '2023-12-16 12:47:40', 1, 0, 'demo2', '测试2', 'setInterval', '30 10 * * * ?', 1, 'tasks.demo_task.demo', '[\'哈哈哈哈哈\']', 'cron', 0, '2023-12-16 12:47:50', 1, 1, '{\'key\':\'你好吗\'}');
-INSERT INTO `t_job` VALUES (15, '2023-12-13 00:53:05', 1, '2023-12-16 12:47:40', 1, 0, 'kzz', '可转债打新查询', 'setInterval', '0 0 8 1/1 * ?', 1, 'tasks.kzz_spider.get_now_kzz', '', 'cron', 0, '2023-12-16 12:47:50', 1, 1, '{\'dayeExtra\':8}');
+INSERT INTO `t_job` VALUES (1, '2023-12-10 21:31:19', 1, '2023-12-16 13:18:15', 1, 0, 'demo', '测试', 'setInterval', '30 20 * * * ?', 1, 'tasks.demo_task.demo', '[\'hello world\']', 'cron', 0, '2023-12-16 13:18:25', 1, 1, '{\'a\':\'1\',\'b\':\'2\'}');
+INSERT INTO `t_job` VALUES (14, '2023-12-13 00:26:59', 1, '2023-12-16 13:18:15', 1, 0, 'demo2', '测试2', 'setInterval', '30 10 * * * ?', 1, 'tasks.demo_task.demo', '[\'哈哈哈哈哈\']', 'cron', 0, '2023-12-16 13:18:25', 1, 1, '{\'key\':\'你好吗\'}');
+INSERT INTO `t_job` VALUES (15, '2023-12-13 00:53:05', 1, '2023-12-16 13:18:15', 1, 0, 'kzz', '可转债打新查询', 'setInterval', '0 0 8 1/1 * ?', 1, 'tasks.kzz_spider.get_now_kzz', '', 'cron', 0, '2023-12-16 13:18:25', 1, 1, '{\'dayeExtra\':8}');
 
 -- ----------------------------
 -- Table structure for t_login_infor
@@ -506,7 +506,7 @@ CREATE TABLE `t_role_menu`  (
   INDEX `ix_t_role_menu_id`(`id`) USING BTREE,
   INDEX `menu_id`(`menu_id`) USING BTREE,
   INDEX `role_id`(`role_id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 93 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Fixed;
+) ENGINE = MyISAM AUTO_INCREMENT = 115 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Fixed;
 
 -- ----------------------------
 -- Records of t_role_menu
@@ -515,30 +515,28 @@ INSERT INTO `t_role_menu` VALUES (1, '2022-11-22 00:55:04', 0, '2022-11-22 00:55
 INSERT INTO `t_role_menu` VALUES (2, '2022-11-22 00:55:04', 0, '2022-11-22 00:55:04', 0, 0, 3, 4);
 INSERT INTO `t_role_menu` VALUES (3, '2022-11-22 00:55:04', 0, '2022-11-22 00:55:04', 0, 0, 3, 5);
 INSERT INTO `t_role_menu` VALUES (4, '2022-11-22 00:55:04', 0, '2022-11-22 00:55:04', 0, 0, 3, 8);
-INSERT INTO `t_role_menu` VALUES (87, '2023-12-16 12:36:08', 1, '2023-12-16 12:36:08', 0, 0, 2, 15);
-INSERT INTO `t_role_menu` VALUES (86, '2023-12-16 12:36:08', 1, '2023-12-16 12:36:08', 0, 0, 2, 30);
-INSERT INTO `t_role_menu` VALUES (85, '2023-12-16 12:36:08', 1, '2023-12-16 12:36:08', 0, 0, 2, 28);
-INSERT INTO `t_role_menu` VALUES (84, '2023-12-16 12:36:08', 1, '2023-12-16 12:36:08', 0, 0, 2, 18);
-INSERT INTO `t_role_menu` VALUES (83, '2023-12-16 12:36:08', 1, '2023-12-16 12:36:08', 0, 0, 2, 19);
-INSERT INTO `t_role_menu` VALUES (82, '2023-12-16 12:36:08', 1, '2023-12-16 12:36:08', 0, 0, 2, 17);
-INSERT INTO `t_role_menu` VALUES (81, '2023-12-16 12:36:08', 1, '2023-12-16 12:36:08', 0, 0, 2, 13);
-INSERT INTO `t_role_menu` VALUES (80, '2023-12-16 12:36:08', 1, '2023-12-16 12:36:08', 0, 0, 2, 27);
-INSERT INTO `t_role_menu` VALUES (79, '2023-12-16 12:36:08', 1, '2023-12-16 12:36:08', 0, 0, 2, 12);
-INSERT INTO `t_role_menu` VALUES (78, '2023-12-16 12:36:07', 1, '2023-12-16 12:36:07', 0, 0, 2, 11);
-INSERT INTO `t_role_menu` VALUES (77, '2023-12-16 12:36:07', 1, '2023-12-16 12:36:07', 0, 0, 2, 26);
-INSERT INTO `t_role_menu` VALUES (76, '2023-12-16 12:36:07', 1, '2023-12-16 12:36:07', 0, 0, 2, 10);
-INSERT INTO `t_role_menu` VALUES (75, '2023-12-16 12:36:07', 1, '2023-12-16 12:36:07', 0, 0, 2, 14);
-INSERT INTO `t_role_menu` VALUES (74, '2023-12-16 12:36:07', 1, '2023-12-16 12:36:07', 0, 0, 2, 4);
-INSERT INTO `t_role_menu` VALUES (73, '2023-12-16 12:36:07', 1, '2023-12-16 12:36:07', 0, 0, 2, 5);
-INSERT INTO `t_role_menu` VALUES (72, '2023-12-16 12:36:07', 1, '2023-12-16 12:36:07', 0, 0, 2, 8);
-INSERT INTO `t_role_menu` VALUES (71, '2023-12-16 12:36:07', 1, '2023-12-16 12:36:07', 0, 0, 2, 2);
-INSERT INTO `t_role_menu` VALUES (70, '2023-12-16 12:36:07', 1, '2023-12-16 12:36:07', 0, 0, 2, 6);
-INSERT INTO `t_role_menu` VALUES (69, '2023-12-16 12:36:07', 1, '2023-12-16 12:36:07', 0, 0, 2, 7);
-INSERT INTO `t_role_menu` VALUES (88, '2023-12-16 12:36:08', 1, '2023-12-16 12:36:08', 0, 0, 2, 16);
-INSERT INTO `t_role_menu` VALUES (89, '2023-12-16 12:36:08', 1, '2023-12-16 12:36:08', 0, 0, 2, 25);
-INSERT INTO `t_role_menu` VALUES (90, '2023-12-16 12:36:08', 1, '2023-12-16 12:36:08', 0, 0, 2, 20);
-INSERT INTO `t_role_menu` VALUES (91, '2023-12-16 12:36:08', 1, '2023-12-16 12:36:08', 0, 0, 2, 24);
-INSERT INTO `t_role_menu` VALUES (92, '2023-12-16 12:36:08', 1, '2023-12-16 12:36:08', 0, 0, 2, 32);
+INSERT INTO `t_role_menu` VALUES (114, '2023-12-16 13:21:28', 1, '2023-12-16 13:21:28', 0, 0, 2, 32);
+INSERT INTO `t_role_menu` VALUES (113, '2023-12-16 13:21:28', 1, '2023-12-16 13:21:28', 0, 0, 2, 24);
+INSERT INTO `t_role_menu` VALUES (112, '2023-12-16 13:21:28', 1, '2023-12-16 13:21:28', 0, 0, 2, 20);
+INSERT INTO `t_role_menu` VALUES (111, '2023-12-16 13:21:28', 1, '2023-12-16 13:21:28', 0, 0, 2, 25);
+INSERT INTO `t_role_menu` VALUES (110, '2023-12-16 13:21:28', 1, '2023-12-16 13:21:28', 0, 0, 2, 16);
+INSERT INTO `t_role_menu` VALUES (109, '2023-12-16 13:21:28', 1, '2023-12-16 13:21:28', 0, 0, 2, 15);
+INSERT INTO `t_role_menu` VALUES (108, '2023-12-16 13:21:28', 1, '2023-12-16 13:21:28', 0, 0, 2, 30);
+INSERT INTO `t_role_menu` VALUES (107, '2023-12-16 13:21:28', 1, '2023-12-16 13:21:28', 0, 0, 2, 28);
+INSERT INTO `t_role_menu` VALUES (106, '2023-12-16 13:21:28', 1, '2023-12-16 13:21:28', 0, 0, 2, 18);
+INSERT INTO `t_role_menu` VALUES (105, '2023-12-16 13:21:28', 1, '2023-12-16 13:21:28', 0, 0, 2, 19);
+INSERT INTO `t_role_menu` VALUES (104, '2023-12-16 13:21:28', 1, '2023-12-16 13:21:28', 0, 0, 2, 17);
+INSERT INTO `t_role_menu` VALUES (103, '2023-12-16 13:21:28', 1, '2023-12-16 13:21:28', 0, 0, 2, 13);
+INSERT INTO `t_role_menu` VALUES (102, '2023-12-16 13:21:28', 1, '2023-12-16 13:21:28', 0, 0, 2, 27);
+INSERT INTO `t_role_menu` VALUES (101, '2023-12-16 13:21:28', 1, '2023-12-16 13:21:28', 0, 0, 2, 12);
+INSERT INTO `t_role_menu` VALUES (100, '2023-12-16 13:21:28', 1, '2023-12-16 13:21:28', 0, 0, 2, 11);
+INSERT INTO `t_role_menu` VALUES (99, '2023-12-16 13:21:28', 1, '2023-12-16 13:21:28', 0, 0, 2, 26);
+INSERT INTO `t_role_menu` VALUES (98, '2023-12-16 13:21:28', 1, '2023-12-16 13:21:28', 0, 0, 2, 10);
+INSERT INTO `t_role_menu` VALUES (97, '2023-12-16 13:21:28', 1, '2023-12-16 13:21:28', 0, 0, 2, 14);
+INSERT INTO `t_role_menu` VALUES (96, '2023-12-16 13:21:28', 1, '2023-12-16 13:21:28', 0, 0, 2, 4);
+INSERT INTO `t_role_menu` VALUES (95, '2023-12-16 13:21:28', 1, '2023-12-16 13:21:28', 0, 0, 2, 5);
+INSERT INTO `t_role_menu` VALUES (94, '2023-12-16 13:21:28', 1, '2023-12-16 13:21:28', 0, 0, 2, 8);
+INSERT INTO `t_role_menu` VALUES (93, '2023-12-16 13:21:28', 1, '2023-12-16 13:21:28', 0, 0, 2, 2);
 
 -- ----------------------------
 -- Table structure for t_roles
@@ -564,7 +562,7 @@ CREATE TABLE `t_roles`  (
 -- Records of t_roles
 -- ----------------------------
 INSERT INTO `t_roles` VALUES (1, '2022-11-13 02:44:13', 0, '2022-11-13 02:44:13', 0, 0, 'admin', '超级管理员', 1, 0);
-INSERT INTO `t_roles` VALUES (2, '2022-11-13 02:46:33', 0, '2023-12-16 12:36:07', 1, 0, 'general', '一般用户', 2, 0);
+INSERT INTO `t_roles` VALUES (2, '2022-11-13 02:46:33', 0, '2023-12-16 13:21:28', 1, 0, 'general', '一般用户', 2, 0);
 INSERT INTO `t_roles` VALUES (3, '2022-11-22 00:55:04', 1, '2022-11-22 00:55:04', 0, 0, 'Operation', '管理员', 3, 0);
 
 -- ----------------------------
@@ -627,6 +625,6 @@ CREATE TABLE `t_users`  (
 INSERT INTO `t_users` VALUES (1, '2022-11-13 02:58:19', 0, '2023-12-07 22:14:30', 1, 0, 'admin', '超级管理员', 0, '12345678910', 'admin@beginner2020.top', '$2b$12$nlyWZAzu4C9cgbHV/FE1X.nwBKiGemATgCxikPQEQVznMqBCrDw/e', 'images/avatar/5ce5f4fa-ff60-47c0-9414-d332b12b99b3.', 0, 1, 1);
 INSERT INTO `t_users` VALUES (2, '2022-11-22 00:48:34', 0, '2022-11-22 00:55:57', 1, 0, 'opt', 'opt', 0, '12345678911', 'opt@beginner2020.top', '$2b$12$EbJD0X5U0LwAvf5EVvYxZO20Jyv2xLKU1quekOyX3SwhdVepz1RFu', NULL, 0, 1, 0);
 INSERT INTO `t_users` VALUES (3, '2022-11-22 00:50:26', 0, '2023-12-09 16:47:45', 1, 0, 'user', '', 0, '12345678912', 'user@beginner2020.top', '$2b$12$Wov4niPCoLOeBcRNgGDNhekSZBgB/GAhYs25CLHfJG.me1KbFP0am', NULL, 0, 1, 0);
-INSERT INTO `t_users` VALUES (4, '2023-12-02 15:36:42', 1, '2023-12-16 11:36:42', 1, 0, 'hjdhnx', '道长', 2, '13154671296', '434857005@qq.com', '$2b$12$X3LQ2VXThey.YB/WGlwYq.35CKOeKkBgmA6TTR91q/VYe6hGDAWRO', 'images/avatar/f84e9577-9047-470e-bcde-16173ca1811c.jpg', 0, 1, 0);
+INSERT INTO `t_users` VALUES (4, '2023-12-02 15:36:42', 1, '2023-12-16 13:16:49', 4, 0, 'hjdhnx', '道长', 2, '13154671296', '434857005@qq.com', '$2b$12$X3LQ2VXThey.YB/WGlwYq.35CKOeKkBgmA6TTR91q/VYe6hGDAWRO', 'images/avatar/f84e9577-9047-470e-bcde-16173ca1811c.jpg', 0, 1, 0);
 
 SET FOREIGN_KEY_CHECKS = 1;

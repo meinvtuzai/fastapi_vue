@@ -99,7 +99,7 @@ async def setPassword(*,
 async def setIsActive(*,
                       user_id: int,
                       db: Session = Depends(deps.get_db),
-                      u: Users = Depends(deps.user_perm(["perm:user:get"])),
+                      u: Users = Depends(deps.user_perm(["perm:user:put"])),
                       obj: UserIsActiveSchema
                       ):
     curd_user.setUserIsActive(db, user_id=user_id, is_active=obj.is_active, modifier_id=u['id'])
