@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form ref="mainForm" :model="form" :inline="true" label-width="68px">
       <el-form-item>
-        <el-button :loading="loading" type="primary" icon="el-icon-upload" size="mini" @click="dialogVisible = true">
+        <el-button :loading="loading" type="primary" icon="el-icon-upload" size="mini" @click="dialogVisible = true" v-hasRole="['admin','opts']">
           升级数据库
         </el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="handleRefresh">刷新</el-button>
@@ -13,6 +13,7 @@
           type="primary"
           icon="el-icon-upload2"
           size="mini"
+          v-hasPermi="['monitor:job:post']"
           @click="handleImport"
         >上传定时任务脚本
         </el-button>

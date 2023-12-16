@@ -33,6 +33,7 @@
           type="primary"
           icon="el-icon-plus"
           size="mini"
+          v-hasPermi="['monitor:pip:post']"
           @click="handleAdd"
         >新增
         </el-button>
@@ -42,6 +43,7 @@
           type="success"
           icon="el-icon-edit"
           size="mini"
+          v-hasPermi="['monitor:pip:put']"
           :disabled="single"
           @click="handleUpdate"
         >修改
@@ -52,6 +54,7 @@
           type="danger"
           icon="el-icon-delete"
           size="mini"
+          v-hasRole="['admin','opts']"
           :disabled="multiple"
           @click="handleDelete"
         >卸载
@@ -76,6 +79,7 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
+            v-hasPermi="['monitor:pip:put']"
             @click="handleUpdate(scope.row)"
           >修改
           </el-button>
@@ -83,6 +87,7 @@
             size="mini"
             type="text"
             icon="el-icon-delete"
+            v-hasRole="['admin','opts']"
             @click="handleDelete(scope.row)"
           >卸载
           </el-button>

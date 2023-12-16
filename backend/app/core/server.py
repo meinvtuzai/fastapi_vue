@@ -12,6 +12,7 @@ from starlette.middleware.cors import CORSMiddleware
 from common.exceptions import customExceptions
 from .config import settings
 from .middleware import middleware
+# from common.middleware import RequestsLoggerMiddleware
 from db.cache import registerRedis
 # from tasks.timer import scheduler # 这个是没固化数据库的。scheduler.start() 启动
 from common.task_apscheduler import scheduler_register, scheduler  # 固化数据库,scheduler.init_scheduler() 初始化
@@ -63,6 +64,8 @@ class InitializeApp(object):
         app.include_router(api_router, prefix="/api/v1")
         # 网页API
         app.include_router(web_router, prefix="")
+
+        # app.middleware("http")(RequestsLoggerMiddleware())  # http请求请求记录中间件  不需要可以注释掉，使用了可能会影响一点请求速度
 
     @staticmethod
     def event_init(app: FastAPI) -> None:

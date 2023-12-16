@@ -1,10 +1,11 @@
 import json
+import traceback
 from typing import Optional, Dict, Any
 from fastapi import FastAPI, status, HTTPException
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi.exceptions import RequestValidationError
-from .error_code import ErrorBase, ERROR_USER_TOKEN_FAILURE, ERROR_PARAMETER_ERROR, ERROR_NOT_FOUND, \
-    ERROR_USER_PREM_ERROR
+from .error_code import *
+from core.config import settings
 from .resp import respErrorJson
 from starlette.requests import Request
 
@@ -21,6 +22,19 @@ def customExceptions(app: FastAPI):
     async def http_exception_handle(request: Request, exec: RequestValidationError):
         err = ERROR_PARAMETER_ERROR
         return respErrorJson(error=err, status_code=err.code, data={'errors': json.loads(exec.json())})
+
+    # 重写所有错误返回项目需要的格式错误 需要的时候可以用作错误消息推送
+    @app.exception_handler(Exception)
+    async def unhandled_exception_handler(request: Request, exc: Exception):
+        # 处理未被捕获的其他异常
+        err = ERROR_INTERNAL
+        err_msg = traceback.format_exc()
+        data = {'error_type': str(type(exc)), 'error_msg': str(exc), 'error_detail': err_msg}
+        # # 使用MongoDB存放错误记录
+        # mongo = app.mongo # type: pymongo.database.Database
+        # if mongo:
+        #     mongo['request_exceptions'].insert_one(data)
+        return respErrorJson(error=err, status_code=err.code, data=data if settings.DEBUG else {})
 
 
 class CustomErrorBase(HTTPException):

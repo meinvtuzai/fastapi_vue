@@ -78,8 +78,8 @@ Vue.component('ImagePreview', ImagePreview)
 Vue.component('ImagePreview', ImagePreview)
 
 // 按钮级别权限配置
-// import button_permission from './directive/button_permission'
-// Vue.use(button_permission)
+import button_permission from './directive/button_permission'
+Vue.use(button_permission)
 Vue.use(plugins)
 
 Vue.use(Element, {

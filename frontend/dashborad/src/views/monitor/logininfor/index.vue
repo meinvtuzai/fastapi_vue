@@ -58,6 +58,7 @@
           type="danger"
           icon="el-icon-delete"
           size="mini"
+          v-hasRole="['admin','opts']"
           :disabled="multiple"
           @click="handleDelete"
         >删除
@@ -70,6 +71,7 @@
           plain
           icon="el-icon-delete"
           size="mini"
+          v-hasRole="['admin','opts']"
           @click="handleClean"
         >清空
         </el-button>
@@ -90,6 +92,7 @@
           plain
           icon="el-icon-download"
           size="mini"
+          v-has-permi="['report:excel_generate:export']"
           @click="handleExport"
         >导出
         </el-button>
@@ -126,6 +129,7 @@
             size="mini"
             type="text"
             icon="el-icon-delete"
+            v-hasRole="['admin','opts']"
             @click="handleDelete(scope.row)"
           >删除
           </el-button>

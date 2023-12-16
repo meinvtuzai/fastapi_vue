@@ -42,6 +42,7 @@
           plain
           icon="el-icon-plus"
           size="mini"
+          v-hasPermi="['monitor:job:post']"
           @click="handleAdd"
 
         >新增
@@ -53,6 +54,7 @@
           plain
           icon="el-icon-edit"
           size="mini"
+          v-hasPermi="['monitor:job:put']"
           :disabled="single"
           @click="handleUpdate"
 
@@ -65,6 +67,7 @@
           plain
           icon="el-icon-delete"
           size="mini"
+          v-hasRole="['admin','opts']"
           :disabled="multiple"
           @click="handleDelete"
 
@@ -77,6 +80,7 @@
           plain
           icon="el-icon-download"
           size="mini"
+          v-has-permi="['report:excel_generate:export']"
           @click="handleExport"
 
         >导出
@@ -133,6 +137,7 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
+            v-hasPermi="['monitor:job:put']"
             @click="handleUpdate(scope.row)"
           >修改
           </el-button>
@@ -140,13 +145,14 @@
             size="mini"
             type="text"
             icon="el-icon-delete"
+            v-hasRole="['admin','opts']"
             @click="handleDelete(scope.row)"
           >删除
           </el-button>
           <el-dropdown size="mini" @command="(command) => handleCommand(command, scope.row)">
             <el-button size="mini" type="text" icon="el-icon-d-arrow-right">更多</el-button>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="handleRun" icon="el-icon-caret-right"
+              <el-dropdown-item command="handleRun" icon="el-icon-caret-right" v-hasRole="['admin','opts']"
               >执行一次
               </el-dropdown-item>
               <el-dropdown-item command="handleView" icon="el-icon-view"

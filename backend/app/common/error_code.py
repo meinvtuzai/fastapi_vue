@@ -10,7 +10,8 @@ class ErrorBase(BaseModel):
         self.msg = msg
         return self
 
-
+# 报错
+ERROR_INTERNAL = ErrorBase(code=500, msg="内部错误")
 # 找不到路径
 ERROR_NOT_FOUND = ErrorBase(code=404, msg="api 路径错误")
 # 参数错误

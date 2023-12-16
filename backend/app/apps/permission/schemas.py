@@ -1,4 +1,4 @@
-from typing import Union, List
+from typing import Union, List, Optional
 from pydantic import BaseModel, AnyHttpUrl, conint
 
 
@@ -50,6 +50,6 @@ class RoleMenuSchema(BaseModel):
 
 class PremLabelSchema(BaseModel):
     label: str
-    remark: str = ""
+    remark: Optional[str] = None
     status: int = 0
     roles: List[int] = []

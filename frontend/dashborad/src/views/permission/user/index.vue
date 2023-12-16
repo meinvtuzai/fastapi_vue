@@ -76,10 +76,10 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
+        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd" v-hasPermi="['perm:user:post']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改
+        <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate" v-hasPermi="['perm:user:put']">修改
         </el-button>
       </el-col>
       <el-col :span="1.5">
@@ -87,6 +87,7 @@
           type="danger"
           icon="el-icon-delete"
           size="mini"
+          v-hasRole="['admin','opts']"
           :disabled="multiple"
           @click="handleDelete"
         >删除
@@ -98,6 +99,7 @@
           plain
           icon="el-icon-upload2"
           size="mini"
+          v-hasPermi="['perm:user:post']"
           @click="handleImport"
         >导入
         </el-button>
@@ -108,6 +110,7 @@
           plain
           icon="el-icon-download"
           size="mini"
+          v-has-permi="['report:excel_generate:export']"
           @click="handleExport"
         >导出
         </el-button>
@@ -139,9 +142,9 @@
       <!--      </el-table-column>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
-          <el-button size="mini" type="text" icon="el-icon-key" @click="handleResetPwd(scope.row)">重置</el-button>
+          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['perm:user:put']">修改</el-button>
+          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasRole="['admin','opts']">删除</el-button>
+          <el-button size="mini" type="text" icon="el-icon-key" @click="handleResetPwd(scope.row)" v-hasRole="['admin','opts']">重置</el-button>
         </template>
       </el-table-column>
     </el-table>
