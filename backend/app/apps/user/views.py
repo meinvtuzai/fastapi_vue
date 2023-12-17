@@ -38,10 +38,11 @@ router = APIRouter()
 async def login(*,
                 db: Session = Depends(deps.get_db),
                 redis: Redis = Depends(deps.get_redis),
+                client_ip: str = Depends(deps.get_ipaddress),
                 user_info: user_info_schemas.LoginUserInfoSchema,
                 req: Request
                 ):
-    ip = req.client.host
+    ip = client_ip or req.client.host
     user_agent = user_agents.parse(req.headers["User-Agent"])
     ubrowser = user_agent.browser.family + ' ' + user_agent.browser.version_string
     uos = user_agent.os.family + ' ' + user_agent.os.version_string

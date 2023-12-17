@@ -2,6 +2,7 @@ from cgitb import reset
 import email
 from email.policy import default
 from typing import Optional, Union, Any, Generator, List, Tuple, Iterable
+
 try:
     from redis.asyncio import Redis
 except ImportError:
@@ -51,11 +52,11 @@ def get_db_connect() -> Generator:
 
 def get_redis(request: Request) -> Optional[Redis]:
     redis = request.app.state.redis
-    if redis: 
-    # if redis := request.app.state.redis:   # python3.8+
+    if redis:
+        # if redis := request.app.state.redis:   # python3.8+
         return redis
     return None
-    
+
 
 def get_email_sender() -> Optional[EmailSender]:
     if not settings.SMTP_HOST:
@@ -63,7 +64,7 @@ def get_email_sender() -> Optional[EmailSender]:
     email_sender = EmailSender(settings.SMTP_HOST, settings.SMTP_USER, settings.SMTP_PASSWORD,
                                settings.EMAIL_FROM_EMAIL, settings.SMTP_PORT, settings.SMTP_TLS)
     email_sender.template_path = settings.EMAIL_TEMPLATES_DIR
-    return email_sender 
+    return email_sender
 
 
 async def check_jwt_token(redis: Redis = Depends(get_redis), token: Optional[str] = Header(None)) -> Union[str, Any]:
@@ -95,7 +96,7 @@ async def get_current_user(db: Session = Depends(get_db), token_data=Depends(che
     """
     user = curd_user.get(db, _id=token_data.sub)
     if not user:
-        raise exceptions.UserTokenError() 
+        raise exceptions.UserTokenError()
     return user
 
 
@@ -108,16 +109,23 @@ def user_perm(perm_labels: Union[str, Tuple[str], List[str]] = None):
     perm_labels = (perm_labels,) if isinstance(perm_labels, str) else tuple(perm_labels)
 
     async def check_perm(db: Session = Depends(get_db), redis: Redis = Depends(get_redis),
-                   user=Depends(get_current_user)):
+                         user=Depends(get_current_user), request: Request = None,
+                         _excel_name: str = None):
         """
         是否有某权限
         """
+        export_label = None
         if settings.AUTO_ADD_PERM_LABEL:
             for label in perm_labels:
                 curd_perm_label.create(db, obj_in={'label': label})
+            if _excel_name:
+                export_label = _excel_name.replace('_', ':') + ':export'
+                curd_perm_label.create(db, obj_in={'label': export_label})
+
         if user['is_superuser']:
             return user
-        role_ids = set(await curd_perm_label.getLabelsRoleIds(db, labels=perm_labels, redis=redis))
+        labels = perm_labels + (export_label,) if export_label else perm_labels
+        role_ids = set(await curd_perm_label.getLabelsRoleIds(db, labels=labels, redis=redis))
         if not role_ids:
             raise exceptions.UserPermError()
         user_roles_ids = set([r.id for r in curd_user.getRoles(db, user['id'])])

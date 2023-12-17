@@ -92,7 +92,7 @@
           plain
           icon="el-icon-download"
           size="mini"
-          v-has-permi="['report:excel_generate:export']"
+          v-has-permi="['report:excel_generate:export','monitor:logininfor:export']"
           @click="handleExport"
         >导出
         </el-button>
@@ -263,7 +263,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('logininfor', {
+      this.download('monitor_logininfor', {
         ...this.queryParams, ...{template: '0'}
       }, `登录日志_${parseTime(new Date().getTime())}.xlsx`)
     },

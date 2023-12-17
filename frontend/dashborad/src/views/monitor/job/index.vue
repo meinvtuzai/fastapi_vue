@@ -80,7 +80,7 @@
           plain
           icon="el-icon-download"
           size="mini"
-          v-has-permi="['report:excel_generate:export']"
+          v-has-permi="['report:excel_generate:export','monitor:job:export']"
           @click="handleExport"
 
         >导出
@@ -666,7 +666,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('job', {
+      this.download('monitor_job', {
         ...this.queryParams, ...{template: '0'}
       }, `定时任务_${parseTime(new Date().getTime())}.xlsx`)
     }

@@ -110,7 +110,7 @@
           plain
           icon="el-icon-download"
           size="mini"
-          v-has-permi="['report:excel_generate:export']"
+          v-has-permi="['report:excel_generate:export','perm:user:export']"
           @click="handleExport"
         >导出
         </el-button>
@@ -585,7 +585,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system_user', {
+      this.download('perm_user', {
         ...this.queryParams, ...{template: '0'}
       }, `用户信息_${parseTime(new Date().getTime())}.xlsx`)
     },
