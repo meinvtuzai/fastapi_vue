@@ -65,12 +65,14 @@ class respJsonBase(BaseModel):
 
 def respSuccessJson(data: Union[list, dict, str] = None, msg: str = "Success"):
     """ 接口成功返回 """
+    if not data and not isinstance(data, list) and not isinstance(data, dict):
+        data = {}
     return MyJSONResponse(
         status_code=status.HTTP_200_OK,
         content={
             'code': 0,
             'msg': msg,
-            'data': data or {}
+            'data': data
             # 'data': json.dumps(data or {}, cls=DateEncoder)
         }
     )

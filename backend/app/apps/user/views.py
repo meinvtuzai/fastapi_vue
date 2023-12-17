@@ -81,6 +81,12 @@ async def login(*,
     await redis.setex(constants.REDIS_KEY_LOGIN_TOKEN_KEY_PREFIX + token,
                       timedelta(minutes=constants.ACCESS_TOKEN_EXPIRE_MINUTES),
                       user.id)
+
+    # hash表没法单独对里面的键值设置过期
+    # await redis.hset(constants.REDIS_KEY_LOGIN_TOKEN_KEY_PREFIX, token, user.id)
+    # await redis.expire(constants.REDIS_KEY_LOGIN_TOKEN_KEY_PREFIX,timedelta(minutes=constants.ACCESS_TOKEN_EXPIRE_MINUTES))
+    # remain_time = await redis.ttl(constants.REDIS_KEY_LOGIN_TOKEN_KEY_PREFIX)
+    # print('constants.REDIS_KEY_LOGIN_TOKEN_KEY_PREFIX',remain_time)
     obj_in.update({'msg': '登录成功', 'status': '0'})
     curd_logininfor.create(db, obj_in=obj_in)
     return respSuccessJson(data={"token": token})

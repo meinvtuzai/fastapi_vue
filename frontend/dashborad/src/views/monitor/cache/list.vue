@@ -51,6 +51,7 @@
                   size="mini"
                   type="text"
                   icon="el-icon-delete"
+                  v-hasRole="['admin','opts']"
                   @click="handleClearCacheName(scope.row)"
                 ></el-button>
               </template>
@@ -101,6 +102,7 @@
                   size="mini"
                   type="text"
                   icon="el-icon-delete"
+                  v-hasRole="['admin','opts']"
                   @click="handleClearCacheKey(scope.row)"
                 ></el-button>
               </template>
@@ -117,6 +119,7 @@
               style="float: right; padding: 3px 0"
               type="text"
               icon="el-icon-refresh-right"
+              v-hasRole="['admin','opts']"
               @click="handleClearCacheAll()"
               >清理全部</el-button
             >
