@@ -3,6 +3,8 @@ import os
 from db.session import SessionLocal, engine
 from core.config import settings
 
+if not 'mysql' in settings.SQLALCHEMY_ENGINE:
+    exit('导出数据功能不适用于非mysql数据库')
 db = SessionLocal()
 database_name = settings.SQL_DATABASE
 sql = f"""
