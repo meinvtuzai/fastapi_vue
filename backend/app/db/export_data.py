@@ -19,6 +19,6 @@ for table in rows:
     df = pd.read_sql(sql, con=engine)
     dir_path = os.path.join(os.path.dirname(__file__), "init_data")
     os.makedirs(dir_path, exist_ok=True)
-    file_path = os.path.join(dir_path, f"{table_name}.csv")
+    file_path = os.path.join(dir_path, f"{table_name.replace(settings.SQL_TABLE_PREFIX, '', 1)}.csv")
     print(file_path)
     df.to_csv(file_path, index=0)

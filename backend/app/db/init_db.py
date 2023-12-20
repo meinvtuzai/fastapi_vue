@@ -127,13 +127,11 @@ def init_table_data_form_csv(db: Session) -> None:
     从本地csv文件初始化数据到数据库
     """
     init_data_path = os.path.join(os.path.dirname(__file__), "init_data")
-    files = ['config_settings.csv', 'dict_data.csv', 'dict_details.csv', 'hiker_developer.csv',
-             'hiker_rule.csv', 'hiker_rule_type.csv',
-             'menus.csv', 'perm_label.csv', 'perm_label_role.csv', 'role_menu.csv', 'roles.csv',
-             'user_role.csv', 'users.csv']
-    files.append('login_infor.csv')
+    files = ['config_settings.csv', 'dict_data.csv', 'dict_details.csv', 'hiker_developer.csv', 'hiker_rule.csv',
+             'hiker_rule_type.csv', 'menus.csv', 'perm_label.csv', 'perm_label_role.csv', 'role_menu.csv', 'roles.csv',
+             'user_role.csv', 'users.csv', 'login_infor.csv', 'job.csv']
     for file in files:
-        file_path = os.path.join(init_data_path, settings.SQL_TABLE_PREFIX + file)
+        file_path = os.path.join(init_data_path, file)
         df = pd.read_csv(file_path, sep=",")
         if file == "menus.csv":
             df['component'] = df['component'].apply(lambda x: '' if pd.isnull(x) else x)
@@ -142,9 +140,21 @@ def init_table_data_form_csv(db: Session) -> None:
         table_name = settings.SQL_TABLE_PREFIX + file.replace(".csv", "")
         df.to_sql(table_name, engine, if_exists="append", index=False)
         print(df)
-        sql = f"ALTER TABLE {table_name} AUTO_INCREMENT = {max(df['id']) + 1 if not df.empty else 1}"
-        logger.info(sql)
-        db.execute(sql)
+        if 'mysql' in settings.SQLALCHEMY_ENGINE:
+            sql = f"ALTER TABLE {table_name} AUTO_INCREMENT = {max(df['id']) + 1 if not df.empty else 1}"
+            logger.info(sql)
+            db.execute(sql)
+        elif 'sqlite' in settings.SQLALCHEMY_ENGINE:
+            try:
+                sql = f"UPDATE sqlite_sequence SET seq = {max(df['id']) + 1 if not df.empty else 1} WHERE name = '{table_name}';"
+                logger.info(sql)
+                db.execute(sql)
+            except:
+                print('sqlite执行列自增序号修改失败')
+        elif 'postgresql' in settings.SQLALCHEMY_ENGINE:
+            sql = f"select setval('{table_name}_id_seq', {max(df['id']) + 1 if not df.empty else 1}) from {table_name};"
+            logger.info(sql)
+            db.execute(sql)
     db.commit()
     db.close()
 

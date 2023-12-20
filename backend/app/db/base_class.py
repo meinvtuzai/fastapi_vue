@@ -1,6 +1,6 @@
 from datetime import datetime
- 
-from sqlalchemy import Column, Integer, DateTime, modifier
+
+from sqlalchemy import Column, Integer, DateTime, modifier, cast
 from sqlalchemy.orm import InstrumentedAttribute, properties
 from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import as_declarative, declared_attr
@@ -32,16 +32,26 @@ class Base:
         :param column:  type: Column    需要转换的数据库日期字段
         :param label:   type: string    转后时间戳的的字段名(相当于 sql 中的 AS )
         """
-        # ts = func.strftime('%%s', column)  # sqlite
-        # ts = cast(func.date_part('EPOCH', column), Integer) # pgsql
-        ts = func.unix_timestamp(column) # mysql
+        if 'sqlite' in settings.SQLALCHEMY_ENGINE:
+            ts = func.strftime('%%s', column)  # sqlite
+        elif 'postgresql' in settings.SQLALCHEMY_ENGINE:
+            ts = cast(func.date_part('EPOCH', column), Integer)  # pgsql
+        elif 'mysql' in settings.SQLALCHEMY_ENGINE:
+            ts = func.unix_timestamp(column)  # mysql
+        else:
+            return column
         return ts.label(label) if label else ts
 
     @staticmethod
     def ts2dt(column: Column, label: str = ""):
-        # dt = func.datetime(column,'unixepoch')  # sqlite
-        # dt = func.to_timestamp(column)    # pgsql
-        dt = func.from_unixtime(column)  # mysql
+        if 'sqlite' in settings.SQLALCHEMY_ENGINE:
+            dt = func.datetime(column, 'unixepoch')  # sqlite
+        elif 'postgresql' in settings.SQLALCHEMY_ENGINE:
+            dt = func.to_timestamp(column)  # pgsql
+        elif 'mysql' in settings.SQLALCHEMY_ENGINE:
+            dt = func.from_unixtime(column)  # mysql
+        else:
+            return column
         return dt.label(label) if label else dt
 
     @classmethod
@@ -49,7 +59,7 @@ class Base:
         """
         列出所有字段
         """
-        return [getattr(cls, i) for i in dir(cls) if isinstance(getattr(cls, i), InstrumentedAttribute) 
+        return [getattr(cls, i) for i in dir(cls) if isinstance(getattr(cls, i), InstrumentedAttribute)
                 and isinstance(getattr(cls, i).comparator, properties.ColumnProperty.Comparator)]
 
     def dict(self):
@@ -57,6 +67,3 @@ class Base:
 
     def list(self):
         return [getattr(self, c.name, None) for c in self.__table__.columns]
-
-
-

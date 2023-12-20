@@ -8,7 +8,7 @@ from db.base_class import Base
 class Users(Base):
     """用户表"""
     username = Column(String(32), unique=True, index=True, nullable=False, comment="用户名")
-    nickname = Column(String(32), default='', server_default="", nullable=False, comment="姓名")
+    nickname = Column(String(32), default='', server_default="", comment="姓名")
     sex = Column(Integer, default=0, server_default='0', comment="性别")  # 0: 未知， 1: 男， 2: 女
     phone = Column(String(32), nullable=False, comment="手机号")
     email = Column(String(256), nullable=False, comment="邮箱")

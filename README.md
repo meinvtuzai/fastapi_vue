@@ -165,7 +165,26 @@ cd ./fastAPI-vue/frontend/dashborad   # 进入项目目录
 
 npm i  # 安装包
 ```
+注意 npm 更换国内镜像源之后，将无法再使用 npm search命令，需要恢复为官方源才可以使用。
+如果恢复官方源后还不可使用，运行删除注册表命令后重试即可。  
+可能用到的npm换源命令
+```shell
+// 查询源
+npm config get registry
 
+// 更换国内源
+npm config set registry https://registry.npmmirror.com
+
+// 恢复官方源
+npm config set registry https://registry.npmjs.org
+
+// 删除注册表
+npm config delete registry
+
+npm install -g cnpm --registry=https://registry.npmmirror.com
+cnpm install [name]
+
+```
 3. 开发环境配置
 ```shell
 cp .env.development.example .env.development  # 复制配置文件

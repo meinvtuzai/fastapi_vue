@@ -143,20 +143,23 @@ def get_server_info():
 
     # 添加磁盘信息到表格
     for partition in disk_stats:
-        disk_usage = psutil.disk_usage(partition.mountpoint)
-        sysFiles.append({
-            # 盘符路径
-            "dirName": partition.device,
-            # 文件系统
-            "sysTypeName": partition.fstype,
-            # 盘符类型
-            "typeName": partition.opts,
-            "total": str(round(disk_usage.total / (1024.0 * 1024.0 * 1024.0), 2)) + " GB",
-            "free": str(round(disk_usage.free / (1024.0 * 1024.0 * 1024.0), 2)) + " GB",
-            "used": str(round(disk_usage.used / (1024.0 * 1024.0 * 1024.0), 2)) + " GB",
-            # 已用百分比
-            "usage": disk_usage.percent,
-        })
+        try:
+            disk_usage = psutil.disk_usage(partition.mountpoint)
+            sysFiles.append({
+                # 盘符路径
+                "dirName": partition.device,
+                # 文件系统
+                "sysTypeName": partition.fstype,
+                # 盘符类型
+                "typeName": partition.opts,
+                "total": str(round(disk_usage.total / (1024.0 * 1024.0 * 1024.0), 2)) + " GB",
+                "free": str(round(disk_usage.free / (1024.0 * 1024.0 * 1024.0), 2)) + " GB",
+                "used": str(round(disk_usage.used / (1024.0 * 1024.0 * 1024.0), 2)) + " GB",
+                # 已用百分比
+                "usage": disk_usage.percent,
+            })
+        except Exception as e:
+            print(f'读取磁盘发生了错误:{e}')
 
     data['cpu'] = cpu
     data['mem'] = mem

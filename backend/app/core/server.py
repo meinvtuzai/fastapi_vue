@@ -10,8 +10,8 @@ from fastapi.staticfiles import StaticFiles
 from apps import api_router, web_router
 from starlette.middleware.cors import CORSMiddleware
 from common.exceptions import customExceptions
-from .config import settings
-from .middleware import middleware
+from core.config import settings
+from core.middleware import middleware
 # from common.middleware import RequestsLoggerMiddleware
 from db.cache import registerRedis
 # from tasks.timer import scheduler # 这个是没固化数据库的。scheduler.start() 启动

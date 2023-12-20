@@ -25,7 +25,7 @@ def today():
 
 
 def text(any):
-    if type(any) == bool:
+    if type(any) == bool and ('mysql' in settings.SQLALCHEMY_ENGINE or 'sqlite' in settings.SQLALCHEMY_ENGINE):
         any_str = str(int(any))
     else:
         any_str = str(any)
@@ -70,7 +70,7 @@ def Date(string: str, default=NONE, required=False, index=False):
     primary_key = index
     if required and default == NONE:
         return Column(sql.Date, nullable=False, comment=string, primary_key=primary_key)
-    return Column(sql.Date, default=default, server_default=text(default), nullable=not required, comment=string,
+    return Column(sql.Date, default=default, server_default=default, nullable=not required, comment=string,
                   primary_key=primary_key)
 
 
@@ -78,7 +78,7 @@ def Datetime(string: str, default=NONE, required=False, index=False):
     primary_key = index
     if required and default == NONE:
         return Column(sql.Date, nullable=False, comment=string, primary_key=primary_key)
-    return Column(sql.DateTime, default=default, server_default=text(default), nullable=not required, comment=string,
+    return Column(sql.DateTime, default=default, server_default=default, nullable=not required, comment=string,
                   primary_key=primary_key)
 
 

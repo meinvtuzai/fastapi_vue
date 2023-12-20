@@ -1,6 +1,6 @@
 import time
-from .logger import logger
-from .config import settings
+from core.logger import logger
+from core.config import settings
 from fastapi import Request
 from common import error_code
 from common.resp import respSuccessJson, respErrorJson

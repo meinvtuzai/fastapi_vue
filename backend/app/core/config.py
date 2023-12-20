@@ -3,7 +3,7 @@ import secrets
 import argparse
 import click
 from typing import Any, Dict, List, Optional, Union
-from . import constants
+from core import constants
 from pydantic import AnyHttpUrl, BaseSettings, IPvAnyAddress, BaseModel, FilePath
 from pydantic.env_settings import env_file_sentinel
 # from pymongo import MongoClient
@@ -46,8 +46,11 @@ class Settings(BaseSettings):
         """
         获取sqlachemy的连接语句， 如SQLite(sqlite))这类数据库可能不一样，请重写。
         """
-        user = f"{self.SQL_USERNAME}:{self.SQL_PASSWORD}" if self.SQL_PASSWORD else self.SQL_USERNAME
-        return f"{self.SQLALCHEMY_ENGINE}://{user}@{self.SQL_HOST}:{self.SQL_PORT}/{self.SQL_DATABASE}"
+        if self.SQLALCHEMY_ENGINE == 'sqlite':
+            return f'{self.SQLALCHEMY_ENGINE}:///./db/{self.SQL_DATABASE}.db?charset=utf8&check_same_thread=False'
+        else:
+            user = f"{self.SQL_USERNAME}:{self.SQL_PASSWORD}" if self.SQL_PASSWORD else self.SQL_USERNAME
+            return f"{self.SQLALCHEMY_ENGINE}://{user}@{self.SQL_HOST}:{self.SQL_PORT}/{self.SQL_DATABASE}"
 
     # redis
     REDIS_HOST: str  # Redis Host地址
