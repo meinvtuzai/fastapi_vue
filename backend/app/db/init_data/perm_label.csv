@@ -51,3 +51,5 @@ id,created_time,creator_id,modified_time,modifier_id,is_deleted,label,remark,sta
 50,2023-12-17 14:44:57,0,2023-12-17 14:44:57,0,0,perm:label:delete,,0
 51,2023-12-17 14:47:51,0,2023-12-17 14:53:44,1,0,monitor:logininfor:export,,0
 52,2023-12-17 14:47:58,0,2023-12-17 14:52:03,1,0,monitor:job:export,,0
+53,2023-12-17 16:00:22,0,2023-12-17 16:00:22,0,0,monitor:cache:get,,0
+54,2023-12-17 16:47:58,0,2023-12-17 16:47:58,0,0,monitor:cache:delete,,0
