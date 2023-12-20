@@ -70,6 +70,8 @@ def Date(string: str, default=NONE, required=False, index=False):
     primary_key = index
     if required and default == NONE:
         return Column(sql.Date, nullable=False, comment=string, primary_key=primary_key)
+    if default == NONE:
+        default = None
     return Column(sql.Date, default=default, server_default=default, nullable=not required, comment=string,
                   primary_key=primary_key)
 
@@ -78,6 +80,8 @@ def Datetime(string: str, default=NONE, required=False, index=False):
     primary_key = index
     if required and default == NONE:
         return Column(sql.Date, nullable=False, comment=string, primary_key=primary_key)
+    if default == NONE:
+        default = None
     return Column(sql.DateTime, default=default, server_default=default, nullable=not required, comment=string,
                   primary_key=primary_key)
 

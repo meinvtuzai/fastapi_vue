@@ -5,31 +5,17 @@
  Source Server Type    : MySQL
  Source Server Version : 100318
  Source Host           : localhost:3306
- Source Schema         : fastapi_vue
+ Source Schema         : hipy
 
  Target Server Type    : MySQL
  Target Server Version : 100318
  File Encoding         : 65001
 
- Date: 16/12/2023 13:22:08
+ Date: 21/12/2023 00:35:56
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
-
--- ----------------------------
--- Table structure for alembic_version
--- ----------------------------
-DROP TABLE IF EXISTS `alembic_version`;
-CREATE TABLE `alembic_version`  (
-  `version_num` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  PRIMARY KEY (`version_num`) USING BTREE
-) ENGINE = MyISAM CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of alembic_version
--- ----------------------------
-INSERT INTO `alembic_version` VALUES ('42be8af30e5a');
 
 -- ----------------------------
 -- Table structure for t_config_settings
@@ -42,16 +28,16 @@ CREATE TABLE `t_config_settings`  (
   `modified_time` datetime(0) NULL DEFAULT current_timestamp(0) COMMENT '更新时间',
   `modifier_id` int(11) NULL DEFAULT 0 COMMENT '修改人id',
   `is_deleted` int(11) NULL DEFAULT 0 COMMENT '逻辑删除:0=未删除,1=删除',
-  `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '参数名称',
-  `key` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '参数键名',
-  `value` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '参数键值',
-  `remark` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '备注',
+  `name` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '' COMMENT '参数名称',
+  `key` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '参数键名',
+  `value` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '参数键值',
+  `remark` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT '' COMMENT '备注',
   `status` int(11) NULL DEFAULT 0 COMMENT '状态 0: 正常  1:停用',
   `order_num` int(11) NULL DEFAULT 0 COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `ix_t_config_settings_name`(`name`) USING BTREE,
   INDEX `ix_t_config_settings_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 14 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_config_settings
@@ -73,15 +59,15 @@ CREATE TABLE `t_dict_data`  (
   `modified_time` datetime(0) NULL DEFAULT current_timestamp(0) COMMENT '更新时间',
   `modifier_id` int(11) NULL DEFAULT 0 COMMENT '修改人id',
   `is_deleted` int(11) NULL DEFAULT 0 COMMENT '逻辑删除:0=未删除,1=删除',
-  `dict_type` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '字典类型',
-  `dict_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '字典名称',
-  `remark` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '备注',
+  `dict_type` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '字典类型',
+  `dict_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT '' COMMENT '字典名称',
+  `remark` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT '' COMMENT '备注',
   `status` int(11) NULL DEFAULT 0 COMMENT '状态 0: 正常  1:停用',
   `order_num` int(11) NULL DEFAULT 0 COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `ix_t_dict_data_dict_type`(`dict_type`) USING BTREE,
   INDEX `ix_t_dict_data_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_dict_data
@@ -90,8 +76,8 @@ INSERT INTO `t_dict_data` VALUES (1, '2022-11-13 02:49:40', 0, '2022-11-13 02:49
 INSERT INTO `t_dict_data` VALUES (2, '2022-11-13 02:49:40', 0, '2022-11-13 02:49:40', 0, 0, 'com_default_status', '通用状态字典', '(0: 正常; 1: 停用)', 0, 2);
 INSERT INTO `t_dict_data` VALUES (3, '2022-11-13 02:49:40', 0, '2023-12-02 15:40:02', 1, 0, 'permission_user_status', '用户状态', NULL, 0, 1);
 INSERT INTO `t_dict_data` VALUES (4, '2023-12-04 19:53:00', 1, '2023-12-04 19:57:21', 1, 0, 'hiker_rule_data_type', '海阔视界规则数据类型', '[(\'home_rule_url\', \'首页云规则\'), (\'publish\', \'提交云仓库\'), (\'js_url\', \'网页插件\'),(\'html\',\'静态页面\'),(\'config\',\'主页配置\')]', 0, 3);
-INSERT INTO `t_dict_data` VALUES (5, '2023-12-10 16:20:45', 1, '2023-12-10 16:20:45', 0, 0, 'sys_job_group', '定时任务分组', '', 0, 4);
-INSERT INTO `t_dict_data` VALUES (6, '2023-12-10 16:21:01', 1, '2023-12-10 16:21:01', 0, 0, 'sys_job_status', '定时任务运行状态', '', 0, 5);
+INSERT INTO `t_dict_data` VALUES (5, '2023-12-10 16:20:45', 1, '2023-12-10 16:20:45', 0, 0, 'sys_job_group', '定时任务分组', NULL, 0, 4);
+INSERT INTO `t_dict_data` VALUES (6, '2023-12-10 16:21:01', 1, '2023-12-10 16:21:01', 0, 0, 'sys_job_status', '定时任务运行状态', NULL, 0, 5);
 
 -- ----------------------------
 -- Table structure for t_dict_details
@@ -104,18 +90,18 @@ CREATE TABLE `t_dict_details`  (
   `modified_time` datetime(0) NULL DEFAULT current_timestamp(0) COMMENT '更新时间',
   `modifier_id` int(11) NULL DEFAULT 0 COMMENT '修改人id',
   `is_deleted` int(11) NULL DEFAULT 0 COMMENT '逻辑删除:0=未删除,1=删除',
-  `dict_label` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '字典标签',
+  `dict_label` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '字典标签',
   `dict_disabled` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否禁用',
-  `dict_value` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '字典键值',
-  `remark` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '备注',
+  `dict_value` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '字典键值',
+  `remark` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT '' COMMENT '备注',
   `is_default` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否默认值',
   `status` int(11) NULL DEFAULT 0 COMMENT '状态 0: 正常  1:停用',
   `order_num` int(11) NULL DEFAULT 0 COMMENT '排序',
   `dict_data_id` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `ix_t_dict_details_id`(`id`) USING BTREE,
-  INDEX `dict_data_id`(`dict_data_id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+  INDEX `dict_data_id`(`dict_data_id`) USING BTREE,
+  INDEX `ix_t_dict_details_id`(`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 18 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_dict_details
@@ -133,10 +119,10 @@ INSERT INTO `t_dict_details` VALUES (10, '2023-12-04 19:53:56', 1, '2023-12-04 1
 INSERT INTO `t_dict_details` VALUES (11, '2023-12-04 19:54:20', 1, '2023-12-04 19:54:20', 0, 0, '网页插件', 0, 'js_url', NULL, 0, 0, 3, 4);
 INSERT INTO `t_dict_details` VALUES (12, '2023-12-04 19:54:35', 1, '2023-12-04 19:54:35', 0, 0, '静态页面', 0, 'html', NULL, 0, 0, 4, 4);
 INSERT INTO `t_dict_details` VALUES (13, '2023-12-04 19:54:53', 1, '2023-12-04 19:54:53', 0, 0, '主页配置', 0, 'config', NULL, 0, 0, 5, 4);
-INSERT INTO `t_dict_details` VALUES (14, '2023-12-10 16:21:16', 1, '2023-12-10 16:21:29', 1, 0, '暂停', 0, '0', '', 1, 0, 1, 6);
-INSERT INTO `t_dict_details` VALUES (15, '2023-12-10 16:21:22', 1, '2023-12-10 16:21:22', 0, 0, '启动', 0, '1', '', 0, 0, 2, 6);
-INSERT INTO `t_dict_details` VALUES (16, '2023-12-10 16:22:10', 1, '2023-12-10 16:22:43', 1, 0, '单次', 0, 'setTimeout', '', 0, 0, 1, 5);
-INSERT INTO `t_dict_details` VALUES (17, '2023-12-10 16:22:31', 1, '2023-12-10 16:22:58', 1, 0, '循环', 0, 'setInterval', '', 1, 0, 2, 5);
+INSERT INTO `t_dict_details` VALUES (14, '2023-12-10 16:21:16', 1, '2023-12-10 16:21:29', 1, 0, '暂停', 0, '0', NULL, 1, 0, 1, 6);
+INSERT INTO `t_dict_details` VALUES (15, '2023-12-10 16:21:22', 1, '2023-12-10 16:21:22', 0, 0, '启动', 0, '1', NULL, 0, 0, 2, 6);
+INSERT INTO `t_dict_details` VALUES (16, '2023-12-10 16:22:10', 1, '2023-12-10 16:22:43', 1, 0, '单次', 0, 'setTimeout', NULL, 0, 0, 1, 5);
+INSERT INTO `t_dict_details` VALUES (17, '2023-12-10 16:22:31', 1, '2023-12-10 16:22:58', 1, 0, '循环', 0, 'setInterval', NULL, 1, 0, 2, 5);
 
 -- ----------------------------
 -- Table structure for t_hiker_developer
@@ -149,16 +135,16 @@ CREATE TABLE `t_hiker_developer`  (
   `modified_time` datetime(0) NULL DEFAULT current_timestamp(0) COMMENT '更新时间',
   `modifier_id` int(11) NULL DEFAULT 0 COMMENT '修改人id',
   `is_deleted` int(11) NULL DEFAULT 0 COMMENT '逻辑删除:0=未删除,1=删除',
-  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '开发者账号',
-  `qq` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'QQ号',
-  `password` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '123456' COMMENT '开发者密码',
+  `name` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '开发者账号',
+  `qq` varchar(11) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'QQ号',
+  `password` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '123456' COMMENT '开发者密码',
   `status` int(11) NULL DEFAULT 0 COMMENT '状态',
   `is_manager` tinyint(1) NULL DEFAULT 0 COMMENT '是否超管',
   `active` tinyint(1) NULL DEFAULT 1 COMMENT '是否启用',
-  `test` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '测试字段',
+  `test` varchar(10) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '测试字段',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `ix_t_hiker_developer_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_hiker_developer
@@ -176,45 +162,45 @@ CREATE TABLE `t_hiker_rule`  (
   `modified_time` datetime(0) NULL DEFAULT current_timestamp(0) COMMENT '更新时间',
   `modifier_id` int(11) NULL DEFAULT 0 COMMENT '修改人id',
   `is_deleted` int(11) NULL DEFAULT 0 COMMENT '逻辑删除:0=未删除,1=删除',
-  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '规则名称',
+  `name` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '规则名称',
   `type_id` int(11) NULL DEFAULT NULL COMMENT '规则类型',
   `dev_id` int(11) NULL DEFAULT NULL COMMENT '开发者',
-  `value` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL COMMENT '规则Json',
-  `url` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '地址',
+  `value` text CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT '规则Json',
+  `url` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '地址',
   `state` int(11) NULL DEFAULT 0 COMMENT '状态',
-  `auth` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '私有密码',
+  `auth` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '私有密码',
   `auth_date_time` datetime(0) NULL DEFAULT current_timestamp(0) COMMENT '私有密码过期时间',
   `time_over` tinyint(1) NULL DEFAULT 0 COMMENT '私有规则过期',
-  `b64_value` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL COMMENT '64编码',
-  `home_url` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '规则主页链接',
-  `pic_url` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '网站图标链接',
+  `b64_value` text CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT '64编码',
+  `home_url` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '规则主页链接',
+  `pic_url` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '网站图标链接',
   `is_json` tinyint(1) NULL DEFAULT 1 COMMENT '是否json值',
   `is_redirect` tinyint(1) NULL DEFAULT 0 COMMENT '是否为后端重定向',
   `is_tap` tinyint(1) NULL DEFAULT 0 COMMENT '是否为仓库跳转规则',
   `can_discuss` tinyint(1) NULL DEFAULT 1 COMMENT '是否可以互动',
   `is_json_list` tinyint(1) NULL DEFAULT 0 COMMENT '是否json列表',
-  `data_type` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT 'home_rule_url' COMMENT '数据类型',
-  `version` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '0' COMMENT '版本号',
-  `author` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '作者',
-  `note` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL COMMENT '说明',
+  `data_type` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT 'home_rule_url' COMMENT '数据类型',
+  `version` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT '0' COMMENT '版本号',
+  `author` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '作者',
+  `note` text CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT '说明',
   `good_num` int(11) NULL DEFAULT 0 COMMENT '点赞数',
   `bad_num` int(11) NULL DEFAULT 0 COMMENT '踩数',
   `reply_num` int(11) NULL DEFAULT 0 COMMENT '回复数',
   `is_safe` tinyint(1) NULL DEFAULT 1 COMMENT '是否安全',
   `is_good` tinyint(1) NULL DEFAULT 0 COMMENT '是否优质',
   `is_white` tinyint(1) NULL DEFAULT 0 COMMENT '是否白名单',
-  `not_safe_note` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL COMMENT '风险描述',
+  `not_safe_note` text CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT '风险描述',
   `last_active` datetime(0) NULL DEFAULT current_timestamp(0) COMMENT '开发者上次提交时间',
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `ix_t_hiker_rule_id`(`id`) USING BTREE,
   INDEX `type_id`(`type_id`) USING BTREE,
-  INDEX `dev_id`(`dev_id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+  INDEX `dev_id`(`dev_id`) USING BTREE,
+  INDEX `ix_t_hiker_rule_id`(`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_hiker_rule
 -- ----------------------------
-INSERT INTO `t_hiker_rule` VALUES (1, '2023-12-04 20:00:34', 1, '2023-12-09 16:54:53', 1, 0, '道德经', 1, 2, '\"{\\\"name\\\":\\\"道德经\\\"}\"', 'hiker://empty#', 1, NULL, '2023-12-04 20:00:34', 0, NULL, NULL, NULL, 1, 0, 0, 1, 0, 'home_rule_url', '1', '道长', NULL, 1, 1, 1, 1, 1, 1, NULL, '2023-12-04 20:00:34');
+INSERT INTO `t_hiker_rule` VALUES (1, '2023-12-04 20:00:34', 1, '2023-12-09 16:54:53', 1, 0, '道德经', 1, 1, '\"{\\\"name\\\":\\\"道德经\\\"}\"', 'hiker://empty#', 1, NULL, '2023-12-04 20:00:34', 0, NULL, NULL, NULL, 1, 0, 0, 1, 0, 'home_rule_url', '1', '道长', NULL, 1, 1, 1, 1, 1, 1, NULL, '2023-12-04 20:00:34');
 
 -- ----------------------------
 -- Table structure for t_hiker_rule_type
@@ -227,12 +213,12 @@ CREATE TABLE `t_hiker_rule_type`  (
   `modified_time` datetime(0) NULL DEFAULT current_timestamp(0) COMMENT '更新时间',
   `modifier_id` int(11) NULL DEFAULT 0 COMMENT '修改人id',
   `is_deleted` int(11) NULL DEFAULT 0 COMMENT '逻辑删除:0=未删除,1=删除',
-  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '分类名称',
+  `name` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '分类名称',
   `count_num` int(11) NULL DEFAULT 0 COMMENT '数目',
   `active` tinyint(1) NULL DEFAULT 1 COMMENT '是否启用',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `ix_t_hiker_rule_type_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_hiker_rule_type
@@ -251,29 +237,29 @@ CREATE TABLE `t_job`  (
   `modified_time` datetime(0) NULL DEFAULT current_timestamp(0) COMMENT '更新时间',
   `modifier_id` int(11) NULL DEFAULT 0 COMMENT '修改人id',
   `is_deleted` int(11) NULL DEFAULT 0 COMMENT '逻辑删除:0=未删除,1=删除',
-  `job_id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '任务代号',
-  `job_name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '任务名称',
-  `job_group` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '任务组名',
-  `cron_expression` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT 'cron执行表达式',
-  `status` int(11) NULL DEFAULT 0 COMMENT '任务状态',
-  `func_name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '调用目标字符串',
-  `func_args` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '传入位置参数',
-  `cron_model` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '执行模式',
-  `coalesce` int(11) NULL DEFAULT NULL COMMENT '是否并发',
+  `job_id` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '任务代号',
+  `job_name` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '任务名称',
+  `job_group` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '任务组名',
+  `func_name` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '调用目标字符串',
+  `func_args` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '传入位置参数',
+  `func_kwargs` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '传入字典参数',
+  `cron_model` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '执行模式',
+  `coalesce` int(11) NULL DEFAULT 0 COMMENT '是否并发',
   `next_run` datetime(0) NULL DEFAULT NULL COMMENT '下次执行时间',
+  `cron_expression` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT 'cron执行表达式',
+  `status` int(11) NULL DEFAULT 0 COMMENT '任务状态',
   `misfire_policy` int(11) NULL DEFAULT 0 COMMENT '执行策略',
   `active` tinyint(1) NULL DEFAULT 1 COMMENT '是否启用',
-  `func_kwargs` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '传入字典参数',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `ix_t_job_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_job
 -- ----------------------------
-INSERT INTO `t_job` VALUES (1, '2023-12-10 21:31:19', 1, '2023-12-16 13:18:15', 1, 0, 'demo', '测试', 'setInterval', '30 20 * * * ?', 1, 'tasks.demo_task.demo', '[\'hello world\']', 'cron', 0, '2023-12-16 13:18:25', 1, 1, '{\'a\':\'1\',\'b\':\'2\'}');
-INSERT INTO `t_job` VALUES (14, '2023-12-13 00:26:59', 1, '2023-12-16 13:18:15', 1, 0, 'demo2', '测试2', 'setInterval', '30 10 * * * ?', 1, 'tasks.demo_task.demo', '[\'哈哈哈哈哈\']', 'cron', 0, '2023-12-16 13:18:25', 1, 1, '{\'key\':\'你好吗\'}');
-INSERT INTO `t_job` VALUES (15, '2023-12-13 00:53:05', 1, '2023-12-16 13:18:15', 1, 0, 'kzz', '可转债打新查询', 'setInterval', '0 0 8 1/1 * ?', 1, 'tasks.kzz_spider.get_now_kzz', '', 'cron', 0, '2023-12-16 13:18:25', 1, 1, '{\'dayeExtra\':8}');
+INSERT INTO `t_job` VALUES (1, '2023-12-10 21:31:19', 1, '2023-12-20 22:09:45', 1, 0, 'demo', '测试', 'setInterval', 'tasks.demo_task.demo', '[\'hello world\']', '{\'a\':\'1\',\'b\':\'2\'}', 'cron', 0, '2023-12-20 22:09:55', '30 20 * * * ?', 1, 1, 1);
+INSERT INTO `t_job` VALUES (14, '2023-12-13 00:26:59', 1, '2023-12-20 22:09:45', 1, 0, 'demo2', '测试2', 'setInterval', 'tasks.demo_task.demo', '[\'哈哈哈哈哈\']', '{\'key\':\'你好吗\'}', 'cron', 0, '2023-12-20 22:09:55', '30 10 * * * ?', 1, 1, 1);
+INSERT INTO `t_job` VALUES (15, '2023-12-13 00:53:05', 1, '2023-12-20 22:09:45', 1, 0, 'kzz', '可转债打新查询', 'setInterval', 'tasks.kzz_spider.get_now_kzz', NULL, '{\'dayeExtra\':8}', 'cron', 0, '2023-12-20 22:09:55', '0 0 8 1/1 * ?', 1, 1, 1);
 
 -- ----------------------------
 -- Table structure for t_login_infor
@@ -286,17 +272,17 @@ CREATE TABLE `t_login_infor`  (
   `modified_time` datetime(0) NULL DEFAULT current_timestamp(0) COMMENT '更新时间',
   `modifier_id` int(11) NULL DEFAULT 0 COMMENT '修改人id',
   `is_deleted` int(11) NULL DEFAULT 0 COMMENT '逻辑删除:0=未删除,1=删除',
-  `user_name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '用户名称',
-  `ipaddr` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '登录地址',
-  `login_location` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '登录地点',
-  `browser` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '浏览器',
-  `os` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '操作系统',
+  `user_name` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '用户名称',
+  `ipaddr` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '登录地址',
+  `login_location` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '登录地点',
+  `browser` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '浏览器',
+  `os` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '操作系统',
   `status` int(11) NULL DEFAULT 0 COMMENT '登录状态',
-  `msg` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '操作信息',
+  `msg` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '操作信息',
   `login_time` datetime(0) NULL DEFAULT current_timestamp(0) COMMENT '登录日期',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `ix_t_login_infor_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 96 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 114 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_login_infor
@@ -324,6 +310,24 @@ INSERT INTO `t_login_infor` VALUES (92, '2023-12-16 11:36:29', 0, '2023-12-16 11
 INSERT INTO `t_login_infor` VALUES (93, '2023-12-16 11:36:47', 0, '2023-12-16 11:36:47', 0, 0, 'hjdhnx', '127.0.0.1', NULL, 'Edge 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-16 11:36:47');
 INSERT INTO `t_login_infor` VALUES (94, '2023-12-16 12:47:42', 0, '2023-12-16 12:47:42', 0, 0, 'admin', '127.0.0.1', NULL, 'Edge 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-16 12:47:42');
 INSERT INTO `t_login_infor` VALUES (95, '2023-12-16 12:50:11', 0, '2023-12-16 12:50:11', 0, 0, 'hjdhnx', '127.0.0.1', NULL, 'Edge 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-16 12:50:11');
+INSERT INTO `t_login_infor` VALUES (96, '2023-12-17 13:49:34', 0, '2023-12-17 13:49:34', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-17 13:49:34');
+INSERT INTO `t_login_infor` VALUES (97, '2023-12-17 13:49:42', 0, '2023-12-17 13:49:42', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-17 13:49:42');
+INSERT INTO `t_login_infor` VALUES (98, '2023-12-17 14:11:13', 0, '2023-12-17 14:11:13', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-17 14:11:13');
+INSERT INTO `t_login_infor` VALUES (99, '2023-12-17 14:51:31', 0, '2023-12-17 14:51:31', 0, 0, 'hjdhnx', '127.0.0.1', NULL, 'Edge 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-17 14:51:31');
+INSERT INTO `t_login_infor` VALUES (100, '2023-12-17 14:58:45', 0, '2023-12-17 14:58:45', 0, 0, 'hjdhnx', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-17 14:58:45');
+INSERT INTO `t_login_infor` VALUES (101, '2023-12-17 15:33:10', 0, '2023-12-17 15:33:10', 0, 0, 'hjdhnx', '127.0.0.1', NULL, 'Edge 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-17 15:33:10');
+INSERT INTO `t_login_infor` VALUES (102, '2023-12-17 15:37:34', 0, '2023-12-17 15:37:34', 0, 0, 'hjdhnx', '127.0.0.1', NULL, 'Edge 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-17 15:37:34');
+INSERT INTO `t_login_infor` VALUES (103, '2023-12-17 15:47:12', 0, '2023-12-17 15:47:12', 0, 0, 'hjdhnx', '127.0.0.1', NULL, 'Edge 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-17 15:47:12');
+INSERT INTO `t_login_infor` VALUES (104, '2023-12-17 16:49:11', 0, '2023-12-17 16:49:11', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-17 16:49:11');
+INSERT INTO `t_login_infor` VALUES (105, '2023-12-17 16:49:27', 0, '2023-12-17 16:49:27', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-17 16:49:27');
+INSERT INTO `t_login_infor` VALUES (106, '2023-12-17 16:53:08', 0, '2023-12-17 16:53:08', 0, 0, 'hjdhnx', '127.0.0.1', NULL, 'Edge 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-17 16:53:08');
+INSERT INTO `t_login_infor` VALUES (107, '2023-12-17 16:55:32', 0, '2023-12-17 16:55:32', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-17 16:55:32');
+INSERT INTO `t_login_infor` VALUES (108, '2023-12-17 17:01:24', 0, '2023-12-17 17:01:24', 0, 0, 'hjdhnx', '127.0.0.1', NULL, 'Edge 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-17 17:01:24');
+INSERT INTO `t_login_infor` VALUES (109, '2023-12-17 17:01:45', 0, '2023-12-17 17:01:45', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-17 17:01:45');
+INSERT INTO `t_login_infor` VALUES (110, '2023-12-17 17:01:54', 0, '2023-12-17 17:01:54', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-17 17:01:54');
+INSERT INTO `t_login_infor` VALUES (111, '2023-12-17 17:05:01', 0, '2023-12-17 17:05:01', 0, 0, 'hjdhnx', '127.0.0.1', NULL, 'Edge 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-17 17:05:01');
+INSERT INTO `t_login_infor` VALUES (112, '2023-12-20 19:51:10', 0, '2023-12-20 19:51:10', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-20 19:51:10');
+INSERT INTO `t_login_infor` VALUES (113, '2023-12-20 22:09:51', 0, '2023-12-20 22:09:51', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-20 22:09:51');
 
 -- ----------------------------
 -- Table structure for t_menus
@@ -336,20 +340,20 @@ CREATE TABLE `t_menus`  (
   `modified_time` datetime(0) NULL DEFAULT current_timestamp(0) COMMENT '更新时间',
   `modifier_id` int(11) NULL DEFAULT 0 COMMENT '修改人id',
   `is_deleted` int(11) NULL DEFAULT 0 COMMENT '逻辑删除:0=未删除,1=删除',
-  `path` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '路由',
-  `component` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '组件',
+  `path` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT '' COMMENT '路由',
+  `component` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT '' COMMENT '组件',
   `is_frame` tinyint(1) NULL DEFAULT 0 COMMENT '是否外链',
   `hidden` tinyint(1) NULL DEFAULT 0 COMMENT '是否隐藏',
   `status` int(11) NULL DEFAULT 0 COMMENT '菜单状态',
   `order_num` int(11) NULL DEFAULT 0 COMMENT '显示排序',
-  `name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '唯一标识用于页面缓存，否则keep-alive会出问题',
-  `title` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '标题',
-  `icon` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '图标',
+  `name` varchar(32) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT '' COMMENT '唯一标识用于页面缓存，否则keep-alive会出问题',
+  `title` varchar(32) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT '' COMMENT '标题',
+  `icon` varchar(32) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT '' COMMENT '图标',
   `no_cache` tinyint(1) NULL DEFAULT 0 COMMENT '是否缓存',
   `parent_id` int(11) NULL DEFAULT 0 COMMENT '上级菜单',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `ix_t_menus_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 33 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 33 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_menus
@@ -398,12 +402,12 @@ CREATE TABLE `t_perm_label`  (
   `modified_time` datetime(0) NULL DEFAULT current_timestamp(0) COMMENT '更新时间',
   `modifier_id` int(11) NULL DEFAULT 0 COMMENT '修改人id',
   `is_deleted` int(11) NULL DEFAULT 0 COMMENT '逻辑删除:0=未删除,1=删除',
-  `label` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '标签',
-  `remark` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '备注',
+  `label` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT '' COMMENT '标签',
+  `remark` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT '' COMMENT '备注',
   `status` int(11) NULL DEFAULT 0 COMMENT '状态',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `ix_t_perm_label_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 47 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 55 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_perm_label
@@ -436,24 +440,32 @@ INSERT INTO `t_perm_label` VALUES (25, '2023-12-05 19:44:23', 0, '2023-12-05 19:
 INSERT INTO `t_perm_label` VALUES (26, '2023-12-05 20:08:50', 0, '2023-12-16 11:59:31', 1, 0, 'monitor:server:get', NULL, 0);
 INSERT INTO `t_perm_label` VALUES (27, '2023-12-05 22:52:40', 0, '2023-12-05 22:52:40', 0, 0, 'hiker:rule_type:put', NULL, 0);
 INSERT INTO `t_perm_label` VALUES (28, '2023-12-05 22:52:46', 0, '2023-12-05 22:52:46', 0, 0, 'hiker:rule_type:delete', NULL, 0);
-INSERT INTO `t_perm_label` VALUES (29, '2023-12-07 00:00:33', 0, '2023-12-07 00:00:33', 0, 0, 'perm:user:delete', '', 0);
-INSERT INTO `t_perm_label` VALUES (30, '2023-12-07 19:50:07', 0, '2023-12-07 19:50:07', 0, 0, 'report:excel_generate:get', '', 0);
-INSERT INTO `t_perm_label` VALUES (31, '2023-12-07 21:39:27', 0, '2023-12-07 21:39:27', 0, 0, 'report:excel_generate:post', '', 0);
-INSERT INTO `t_perm_label` VALUES (32, '2023-12-09 02:27:25', 0, '2023-12-09 02:27:25', 0, 0, 'system:config_setting:delete', '', 0);
-INSERT INTO `t_perm_label` VALUES (33, '2023-12-09 16:20:03', 0, '2023-12-09 16:20:03', 0, 0, 'monitor:logininfor:delete', '', 0);
-INSERT INTO `t_perm_label` VALUES (34, '2023-12-09 16:50:10', 0, '2023-12-09 16:50:10', 0, 0, 'hiker:developer:delete', '', 0);
-INSERT INTO `t_perm_label` VALUES (35, '2023-12-09 16:54:11', 0, '2023-12-09 16:54:11', 0, 0, 'hiker:rule:delete', '', 0);
-INSERT INTO `t_perm_label` VALUES (36, '2023-12-10 17:41:10', 0, '2023-12-10 17:41:10', 0, 0, 'monitor:job:post', '', 0);
-INSERT INTO `t_perm_label` VALUES (37, '2023-12-10 18:16:32', 0, '2023-12-10 18:16:32', 0, 0, 'monitor:job:put', '', 0);
-INSERT INTO `t_perm_label` VALUES (38, '2023-12-10 18:25:10', 0, '2023-12-10 18:25:10', 0, 0, 'monitor:job:delete', '', 0);
-INSERT INTO `t_perm_label` VALUES (39, '2023-12-11 20:42:25', 0, '2023-12-11 20:42:25', 0, 0, 'perm:menu:delete', '', 0);
-INSERT INTO `t_perm_label` VALUES (40, '2023-12-13 22:29:05', 0, '2023-12-16 11:59:41', 1, 0, 'monitor:pip:get', '', 0);
-INSERT INTO `t_perm_label` VALUES (41, '2023-12-13 23:12:13', 0, '2023-12-13 23:12:13', 0, 0, 'monitor:pip:put', '', 0);
-INSERT INTO `t_perm_label` VALUES (42, '2023-12-13 23:21:20', 0, '2023-12-13 23:21:20', 0, 0, 'monitor:pip:delete', '', 0);
-INSERT INTO `t_perm_label` VALUES (43, '2023-12-13 23:28:11', 0, '2023-12-13 23:28:11', 0, 0, 'monitor:pip:post', '', 0);
-INSERT INTO `t_perm_label` VALUES (44, '2023-12-16 11:36:07', 0, '2023-12-16 11:36:07', 0, 0, 'perm:role:put', '', 0);
-INSERT INTO `t_perm_label` VALUES (45, '2023-12-16 11:38:40', 0, '2023-12-16 11:38:40', 0, 0, 'perm:label:put', '', 0);
-INSERT INTO `t_perm_label` VALUES (46, '2023-12-16 12:28:44', 0, '2023-12-16 12:28:44', 0, 0, 'report:excel_generate:export', '', 0);
+INSERT INTO `t_perm_label` VALUES (29, '2023-12-07 00:00:33', 0, '2023-12-07 00:00:33', 0, 0, 'perm:user:delete', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (30, '2023-12-07 19:50:07', 0, '2023-12-07 19:50:07', 0, 0, 'report:excel_generate:get', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (31, '2023-12-07 21:39:27', 0, '2023-12-07 21:39:27', 0, 0, 'report:excel_generate:post', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (32, '2023-12-09 02:27:25', 0, '2023-12-09 02:27:25', 0, 0, 'system:config_setting:delete', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (33, '2023-12-09 16:20:03', 0, '2023-12-09 16:20:03', 0, 0, 'monitor:logininfor:delete', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (34, '2023-12-09 16:50:10', 0, '2023-12-09 16:50:10', 0, 0, 'hiker:developer:delete', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (35, '2023-12-09 16:54:11', 0, '2023-12-09 16:54:11', 0, 0, 'hiker:rule:delete', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (36, '2023-12-10 17:41:10', 0, '2023-12-10 17:41:10', 0, 0, 'monitor:job:post', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (37, '2023-12-10 18:16:32', 0, '2023-12-10 18:16:32', 0, 0, 'monitor:job:put', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (38, '2023-12-10 18:25:10', 0, '2023-12-10 18:25:10', 0, 0, 'monitor:job:delete', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (39, '2023-12-11 20:42:25', 0, '2023-12-11 20:42:25', 0, 0, 'perm:menu:delete', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (40, '2023-12-13 22:29:05', 0, '2023-12-16 11:59:41', 1, 0, 'monitor:pip:get', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (41, '2023-12-13 23:12:13', 0, '2023-12-13 23:12:13', 0, 0, 'monitor:pip:put', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (42, '2023-12-13 23:21:20', 0, '2023-12-13 23:21:20', 0, 0, 'monitor:pip:delete', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (43, '2023-12-13 23:28:11', 0, '2023-12-13 23:28:11', 0, 0, 'monitor:pip:post', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (44, '2023-12-16 11:36:07', 0, '2023-12-16 11:36:07', 0, 0, 'perm:role:put', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (45, '2023-12-16 11:38:40', 0, '2023-12-16 11:38:40', 0, 0, 'perm:label:put', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (46, '2023-12-16 12:28:44', 0, '2023-12-16 12:28:44', 0, 0, 'report:excel_generate:export', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (47, '2023-12-17 14:13:25', 0, '2023-12-17 14:45:14', 1, 1, 'report:excel_generate:exports', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (48, '2023-12-17 14:38:50', 0, '2023-12-17 14:44:57', 1, 1, 'system_user:export', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (49, '2023-12-17 14:44:45', 0, '2023-12-17 14:44:45', 0, 0, 'perm:user:export', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (50, '2023-12-17 14:44:57', 0, '2023-12-17 14:44:57', 0, 0, 'perm:label:delete', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (51, '2023-12-17 14:47:51', 0, '2023-12-17 14:53:44', 1, 0, 'monitor:logininfor:export', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (52, '2023-12-17 14:47:58', 0, '2023-12-17 14:52:03', 1, 0, 'monitor:job:export', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (53, '2023-12-17 16:00:22', 0, '2023-12-17 16:00:22', 0, 0, 'monitor:cache:get', NULL, 0);
+INSERT INTO `t_perm_label` VALUES (54, '2023-12-17 16:47:58', 0, '2023-12-17 16:47:58', 0, 0, 'monitor:cache:delete', NULL, 0);
 
 -- ----------------------------
 -- Table structure for t_perm_label_role
@@ -469,10 +481,10 @@ CREATE TABLE `t_perm_label_role`  (
   `label_id` int(11) NULL DEFAULT NULL,
   `role_id` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `ix_t_perm_label_role_id`(`id`) USING BTREE,
   INDEX `label_id`(`label_id`) USING BTREE,
-  INDEX `role_id`(`role_id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Fixed;
+  INDEX `role_id`(`role_id`) USING BTREE,
+  INDEX `ix_t_perm_label_role_id`(`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 21 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Fixed;
 
 -- ----------------------------
 -- Records of t_perm_label_role
@@ -488,6 +500,8 @@ INSERT INTO `t_perm_label_role` VALUES (10, '2023-12-16 11:59:31', 1, '2023-12-1
 INSERT INTO `t_perm_label_role` VALUES (11, '2023-12-16 11:59:41', 1, '2023-12-16 11:59:41', 0, 0, 40, 2);
 INSERT INTO `t_perm_label_role` VALUES (16, '2023-12-16 12:50:23', 1, '2023-12-16 12:50:23', 0, 0, 6, 2);
 INSERT INTO `t_perm_label_role` VALUES (15, '2023-12-16 12:46:21', 1, '2023-12-16 12:46:21', 0, 0, 16, 2);
+INSERT INTO `t_perm_label_role` VALUES (19, '2023-12-17 14:52:03', 1, '2023-12-17 14:52:03', 0, 0, 52, 2);
+INSERT INTO `t_perm_label_role` VALUES (20, '2023-12-17 14:53:44', 1, '2023-12-17 14:53:44', 0, 0, 51, 2);
 
 -- ----------------------------
 -- Table structure for t_role_menu
@@ -503,10 +517,10 @@ CREATE TABLE `t_role_menu`  (
   `role_id` int(11) NULL DEFAULT NULL,
   `menu_id` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `ix_t_role_menu_id`(`id`) USING BTREE,
+  INDEX `role_id`(`role_id`) USING BTREE,
   INDEX `menu_id`(`menu_id`) USING BTREE,
-  INDEX `role_id`(`role_id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 115 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Fixed;
+  INDEX `ix_t_role_menu_id`(`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 115 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Fixed;
 
 -- ----------------------------
 -- Records of t_role_menu
@@ -549,14 +563,14 @@ CREATE TABLE `t_roles`  (
   `modified_time` datetime(0) NULL DEFAULT current_timestamp(0) COMMENT '更新时间',
   `modifier_id` int(11) NULL DEFAULT 0 COMMENT '修改人id',
   `is_deleted` int(11) NULL DEFAULT 0 COMMENT '逻辑删除:0=未删除,1=删除',
-  `key` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '权限标识',
-  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '权限名称',
+  `key` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '权限标识',
+  `name` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT '' COMMENT '权限名称',
   `order_num` int(11) NULL DEFAULT 0 COMMENT '顺序',
   `status` int(11) NULL DEFAULT 0 COMMENT '状态(0: 正常, 1: 停用)',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `ix_t_roles_key`(`key`) USING BTREE,
   INDEX `ix_t_roles_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_roles
@@ -579,10 +593,10 @@ CREATE TABLE `t_user_role`  (
   `user_id` int(11) NULL DEFAULT NULL,
   `role_id` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `ix_t_user_role_id`(`id`) USING BTREE,
+  INDEX `user_id`(`user_id`) USING BTREE,
   INDEX `role_id`(`role_id`) USING BTREE,
-  INDEX `user_id`(`user_id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Fixed;
+  INDEX `ix_t_user_role_id`(`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Fixed;
 
 -- ----------------------------
 -- Records of t_user_role
@@ -591,7 +605,7 @@ INSERT INTO `t_user_role` VALUES (1, '2022-11-13 02:58:19', 0, '2022-11-13 02:58
 INSERT INTO `t_user_role` VALUES (3, '2022-11-22 00:50:26', 0, '2022-11-22 00:50:26', 0, 0, 3, 2);
 INSERT INTO `t_user_role` VALUES (4, '2022-11-22 00:55:57', 1, '2022-11-22 00:55:57', 0, 0, 2, 3);
 INSERT INTO `t_user_role` VALUES (10, '2023-12-16 11:35:26', 1, '2023-12-16 11:35:26', 0, 0, 4, 2);
-INSERT INTO `t_user_role` VALUES (6, '2023-12-06 13:18:51', 0, '2023-12-06 13:18:51', 0, 0, 5, 2);
+INSERT INTO `t_user_role` VALUES (6, '2023-12-06 13:18:51', 0, '2023-12-06 13:18:51', 0, 0, 4, 2);
 
 -- ----------------------------
 -- Table structure for t_users
@@ -604,27 +618,27 @@ CREATE TABLE `t_users`  (
   `modified_time` datetime(0) NULL DEFAULT current_timestamp(0) COMMENT '更新时间',
   `modifier_id` int(11) NULL DEFAULT 0 COMMENT '修改人id',
   `is_deleted` int(11) NULL DEFAULT 0 COMMENT '逻辑删除:0=未删除,1=删除',
-  `username` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '用户名',
-  `nickname` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '姓名',
+  `username` varchar(32) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '用户名',
+  `nickname` varchar(32) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT '' COMMENT '姓名',
   `sex` int(11) NULL DEFAULT 0 COMMENT '性别',
-  `phone` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '手机号',
-  `email` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '邮箱',
-  `hashed_password` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '密码',
-  `avatar` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '头像',
+  `phone` varchar(32) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '手机号',
+  `email` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '邮箱',
+  `hashed_password` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '密码',
+  `avatar` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT '' COMMENT '头像',
   `status` int(11) NOT NULL DEFAULT 0 COMMENT '状态',
   `is_active` tinyint(1) NULL DEFAULT 0 COMMENT '是否已经验证用户',
   `is_superuser` tinyint(1) NULL DEFAULT 0 COMMENT '是否超级管理员',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `ix_t_users_username`(`username`) USING BTREE,
   INDEX `ix_t_users_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_users
 -- ----------------------------
 INSERT INTO `t_users` VALUES (1, '2022-11-13 02:58:19', 0, '2023-12-07 22:14:30', 1, 0, 'admin', '超级管理员', 0, '12345678910', 'admin@beginner2020.top', '$2b$12$nlyWZAzu4C9cgbHV/FE1X.nwBKiGemATgCxikPQEQVznMqBCrDw/e', 'images/avatar/5ce5f4fa-ff60-47c0-9414-d332b12b99b3.', 0, 1, 1);
 INSERT INTO `t_users` VALUES (2, '2022-11-22 00:48:34', 0, '2022-11-22 00:55:57', 1, 0, 'opt', 'opt', 0, '12345678911', 'opt@beginner2020.top', '$2b$12$EbJD0X5U0LwAvf5EVvYxZO20Jyv2xLKU1quekOyX3SwhdVepz1RFu', NULL, 0, 1, 0);
-INSERT INTO `t_users` VALUES (3, '2022-11-22 00:50:26', 0, '2023-12-09 16:47:45', 1, 0, 'user', '', 0, '12345678912', 'user@beginner2020.top', '$2b$12$Wov4niPCoLOeBcRNgGDNhekSZBgB/GAhYs25CLHfJG.me1KbFP0am', NULL, 0, 1, 0);
+INSERT INTO `t_users` VALUES (3, '2022-11-22 00:50:26', 0, '2023-12-09 16:47:45', 1, 0, 'user', NULL, 0, '12345678912', 'user@beginner2020.top', '$2b$12$Wov4niPCoLOeBcRNgGDNhekSZBgB/GAhYs25CLHfJG.me1KbFP0am', NULL, 0, 1, 0);
 INSERT INTO `t_users` VALUES (4, '2023-12-02 15:36:42', 1, '2023-12-16 13:16:49', 4, 0, 'hjdhnx', '道长', 2, '13154671296', '434857005@qq.com', '$2b$12$X3LQ2VXThey.YB/WGlwYq.35CKOeKkBgmA6TTR91q/VYe6hGDAWRO', 'images/avatar/f84e9577-9047-470e-bcde-16173ca1811c.jpg', 0, 1, 0);
 
 SET FOREIGN_KEY_CHECKS = 1;

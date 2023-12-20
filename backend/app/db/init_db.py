@@ -7,6 +7,7 @@
 import logging
 import os
 
+import numpy as np
 from sqlalchemy.orm import Session
 from apps.user.curd.curd_user import curd_user
 from apps.system.curd.curd_config_setting import curd_config_setting
@@ -126,18 +127,22 @@ def init_table_data_form_csv(db: Session) -> None:
     """
     从本地csv文件初始化数据到数据库
     """
+    converters = get_converters()
     init_data_path = os.path.join(os.path.dirname(__file__), "init_data")
-    files = ['config_settings.csv', 'dict_data.csv', 'dict_details.csv', 'hiker_developer.csv', 'hiker_rule.csv',
-             'hiker_rule_type.csv', 'menus.csv', 'perm_label.csv', 'perm_label_role.csv', 'role_menu.csv', 'roles.csv',
-             'user_role.csv', 'users.csv', 'login_infor.csv', 'job.csv']
+    files = ['config_settings.csv', 'dict_data.csv', 'dict_details.csv', 'hiker_rule_type.csv', 'hiker_developer.csv',
+             'hiker_rule.csv',
+             'menus.csv', 'roles.csv', 'role_menu.csv', 'perm_label.csv', 'perm_label_role.csv',
+             'users.csv', 'user_role.csv', 'login_infor.csv', 'job.csv']
     for file in files:
         file_path = os.path.join(init_data_path, file)
-        df = pd.read_csv(file_path, sep=",")
+        df = pd.read_csv(file_path, sep=",", converters=converters)
         if file == "menus.csv":
             df['component'] = df['component'].apply(lambda x: '' if pd.isnull(x) else x)
             df['name'] = df['name'].apply(lambda x: '' if pd.isnull(x) else x)
         logger.info(f"{file}  load successed")
-        table_name = settings.SQL_TABLE_PREFIX + file.replace(".csv", "")
+        file_tb_name = file.replace(".csv", "")
+        table_name = settings.SQL_TABLE_PREFIX + file_tb_name
+        deal_df(df, file_tb_name)
         df.to_sql(table_name, engine, if_exists="append", index=False)
         print(df)
         if 'mysql' in settings.SQLALCHEMY_ENGINE:
@@ -157,6 +162,39 @@ def init_table_data_form_csv(db: Session) -> None:
             db.execute(sql)
     db.commit()
     db.close()
+
+
+def deal_df(df, file_tb_name):
+    if file_tb_name in ['dict_details']:
+        if 'dict_disabled' in df.all():
+            print(df.dict_disabled)
+
+
+def get_converters():
+    if 'postgresql' in settings.SQLALCHEMY_ENGINE:
+        return {
+            'dict_disabled': lambda x: str(int(x) == 1),
+            'is_default': lambda x: str(int(x) == 1),
+            'is_manager': lambda x: str(int(x) == 1),
+            'active': lambda x: str(int(x) == 1),
+            'is_safe': lambda x: str(int(x) == 1),
+            'is_white': lambda x: str(int(x) == 1),
+            'is_good': lambda x: str(int(x) == 1),
+            'is_json_list': lambda x: str(int(x) == 1),
+            'can_discuss': lambda x: str(int(x) == 1),
+            'is_tap': lambda x: str(int(x) == 1),
+            'is_json': lambda x: str(int(x) == 1),
+            'is_redirect': lambda x: str(int(x) == 1),
+            'time_over': lambda x: str(int(x) == 1),
+            'is_frame': lambda x: str(int(x) == 1),
+            'hidden': lambda x: str(int(x) == 1),
+            'no_cache': lambda x: str(int(x) == 1),
+            'is_active': lambda x: str(int(x) == 1),
+            'is_superuser': lambda x: str(int(x) == 1),
+            # 'dict_disabled': lambda x: np.where(x==1,True,False)
+        }
+    else:
+        return {}
 
 
 def init_db(session: Session) -> None:

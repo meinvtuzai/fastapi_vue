@@ -35,8 +35,8 @@ class JobSchema(BaseModel):
     func_name: str
     cron_expression: str
     next_run: Optional[str] = None
-    func_args: str = ''
-    func_kwargs: str = ''
+    func_args: Optional[str] = None
+    func_kwargs: Optional[str] = None
     job_group: str = 'setInterval'
     cron_model: str = 'cron'
     coalesce: int = 0
