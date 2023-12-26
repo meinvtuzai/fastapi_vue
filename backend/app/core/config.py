@@ -8,6 +8,7 @@ from pydantic import AnyHttpUrl, BaseSettings, IPvAnyAddress, BaseModel, FilePat
 from pydantic.env_settings import env_file_sentinel
 # from pymongo import MongoClient
 from urllib.parse import quote_plus
+from pathlib import Path
 
 
 class Settings(BaseSettings):
@@ -47,7 +48,9 @@ class Settings(BaseSettings):
         获取sqlachemy的连接语句， 如SQLite(sqlite))这类数据库可能不一样，请重写。
         """
         if self.SQLALCHEMY_ENGINE == 'sqlite':
-            return f'{self.SQLALCHEMY_ENGINE}:///./db/{self.SQL_DATABASE}.db?charset=utf8&check_same_thread=False'
+            db_path = os.path.join(constants.BASE_DIR, f'db/{self.SQL_DATABASE}.db')
+            db_path = Path(db_path).as_posix()
+            return f'{self.SQLALCHEMY_ENGINE}:///{db_path}?charset=utf8&check_same_thread=False'
         else:
             user = f"{self.SQL_USERNAME}:{self.SQL_PASSWORD}" if self.SQL_PASSWORD else self.SQL_USERNAME
             return f"{self.SQLALCHEMY_ENGINE}://{user}@{self.SQL_HOST}:{self.SQL_PORT}/{self.SQL_DATABASE}"
@@ -135,6 +138,7 @@ class Settings(BaseSettings):
     IP_AGENTS = [""]
     # pip依赖代理
     PIP_PROXY = "https://mirrors.cloud.tencent.com/pypi/simple"
+
     # PIP_PROXY = "https://pypi.douban.com/simple/"
 
     class Config:
