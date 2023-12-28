@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine,inspect
 from sqlalchemy.orm import sessionmaker
 
 from core.config import settings
@@ -10,3 +10,4 @@ engine = create_engine(settings.getSqlalchemyURL(), pool_pre_ping=True, echo=set
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Base.metadata.create_all(engine)
+insp = inspect(engine)

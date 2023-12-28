@@ -1,11 +1,11 @@
 import pandas as pd
 import os
-from db.session import SessionLocal, engine
+from db.session import SessionLocal, engine, insp
 from core.config import settings
 
 db = SessionLocal()
 database_name = settings.SQL_DATABASE
-database_types = ['mysql', 'sqlite']
+database_types = ['mysql', 'sqlite', 'postgresql']
 check_ok = False
 for database_type in database_types:
     if database_type in settings.SQLALCHEMY_ENGINE:
@@ -41,6 +41,23 @@ elif 'sqlite' in settings.SQLALCHEMY_ENGINE:
     print(len(rows), rows)
     for table in rows:
         table_name = table[0]
+        sql = f"""
+                SELECT * FROM {table_name}
+                """
+
+        df = pd.read_sql(sql, con=engine)
+        dir_path = os.path.join(os.path.dirname(__file__), "init_data")
+        os.makedirs(dir_path, exist_ok=True)
+        file_path = os.path.join(dir_path, f"{table_name.replace(settings.SQL_TABLE_PREFIX, '', 1)}.csv")
+        print(file_path)
+        df.to_csv(file_path, index=0)
+
+elif 'postgresql' in settings.SQLALCHEMY_ENGINE:
+    rows = [row for row in insp.get_table_names(schema='public') if row != 'alembic_version']
+    print(len(rows), rows)
+    # print(int('True'),int('False'))
+    for table in rows:
+        table_name = table
         sql = f"""
                 SELECT * FROM {table_name}
                 """

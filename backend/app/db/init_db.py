@@ -19,7 +19,8 @@ from apps.system.models import ConfigSettings
 from apps.user.schemas.user_info_schemas import UserCreateSchema
 from apps.permission.schemas import RoleSchema
 from utils.tools import get_md5
-from db.session import engine
+from db.session import engine, insp
+from sqlalchemy.sql.sqltypes import BOOLEAN
 import pandas as pd
 
 logger = logging.getLogger(__name__)
@@ -127,7 +128,8 @@ def init_table_data_form_csv(db: Session) -> None:
     """
     从本地csv文件初始化数据到数据库
     """
-    converters = get_converters()
+    # converters = get_converters()
+    converters = get_converters_auto()
     init_data_path = os.path.join(os.path.dirname(__file__), "init_data")
     files = ['config_settings.csv', 'dict_data.csv', 'dict_details.csv', 'hiker_rule_type.csv', 'hiker_developer.csv',
              'hiker_rule.csv',
@@ -171,6 +173,10 @@ def deal_df(df, file_tb_name):
 
 
 def get_converters():
+    """
+    手动获取pandas sql装饰函数
+    处理postgresql导入数据时bool字段不能识别数字0,1的问题
+    """
     if 'postgresql' in settings.SQLALCHEMY_ENGINE:
         return {
             'dict_disabled': lambda x: str(int(x) == 1),
@@ -197,8 +203,47 @@ def get_converters():
         return {}
 
 
+def get_converters_auto():
+    """
+    自动获取pandas sql装饰函数
+    """
+    db_name = None
+    converters = {}
+    if 'sqlite' in settings.SQLALCHEMY_ENGINE:
+        db_name = 'main'
+        # return converters
+    elif 'postgresql' in settings.SQLALCHEMY_ENGINE:
+        db_name = 'public'
+    elif 'mysql' in settings.SQLALCHEMY_ENGINE:
+        db_name = settings.SQL_DATABASE
+        # return converters
+
+    # 获取数据库名
+    print(insp.get_schema_names())
+
+    if db_name:
+        cls = []
+        tables = insp.get_table_names(schema=db_name)
+        print(f'数据库结构:{db_name}里的所有表:', tables)
+        for table in tables:
+            columns = insp.get_columns(table, schema=db_name)
+            # print(f'数据库结构:{db_name}里的表{table}里所有列:', columns)
+            cl = [c for c in columns if isinstance(c['type'], BOOLEAN)]
+            if cl:
+                cls.extend(cl)
+            for c in cl:
+                converters.update({
+                    c['name']: lambda x: x if x in ['True', 'False'] else str(int(x) == 1)
+                })
+        # print('cls:', len(cls), cls)
+        # print('converters:', len(converters.keys()), converters)
+
+    return converters
+
+
 def init_db(session: Session) -> None:
     db = session
     # init_users_and_roles(db) # 纯净模式啥也没有
     # init_params(db)  # 初始化系统参数
     init_table_data_form_csv(db)  # demo模式，有数据
+    # print(get_converters_auto())
