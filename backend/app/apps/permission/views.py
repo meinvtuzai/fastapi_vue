@@ -1,10 +1,15 @@
 import os
-
-from fastapi import APIRouter, Depends, Query, File, UploadFile
+import pandas as pd
+from fastapi import APIRouter, Request, Depends, Query, File, UploadFile
 from sqlalchemy.orm import Session
 from utils.encrypt import get_uuid
 from .models import Users
 from .schemas import *
+from apps.user.schemas.user_info_schemas import UserCreateSchema
+from apps.system.models import ConfigSettings
+from apps.permission.models.role import Roles
+from apps.system.curd.curd_config_setting import curd_config_setting
+from utils.tools import get_md5
 from .curd.curd_user import curd_user
 from .curd.curd_role import curd_role
 from .curd.curd_menu import curd_menu
@@ -72,16 +77,75 @@ async def uploadAvatar(img: UploadFile):
 
 @router.post("/user/file/importData", summary="上传导入数据")
 async def uploadImportData(*,
+                           db: Session = Depends(deps.get_db),
+                           request: Request,
                            file: UploadFile,
                            u: Users = Depends(deps.user_perm(["perm:user:post"])),
                            ):
+    updateSupport = request.query_params.get("updateSupport", "true") == 'true'
+    print('updateSupport:', updateSupport)
     up_data = file.file.read()
     up_name = file.filename  # type: str
     new_img_name = f"{get_uuid()}.{up_name.split('.')[-1]}"
     path = constants.MEDIA_EXCEL_BASE_DIR + new_img_name
-    with open(os.path.join(constants.MEDIA_BASE_PATH, path), 'wb') as f:
+    file_path = os.path.join(constants.MEDIA_BASE_PATH, path)
+    with open(file_path, 'wb') as f:
         f.write(up_data)
-    return respSuccessJson(data={'path': path},msg='导入成功')
+    names = ['id', 'username', 'nickname', 'email', 'phone', 'sex', 'status', 'created_time']
+    data = pd.read_excel(file_path, sheet_name=0, names=names)
+    records = data.to_dict(orient='records')
+    print(records)
+
+    # 设置初始角色为id=2的普通用户
+    roles = [2]
+    # 查询系统参数表的用户初始角色
+    init_roles = db.query(ConfigSettings.value).filter(
+        ConfigSettings.key == 'user_init_roles', ConfigSettings.is_deleted == 0, ConfigSettings.status == 0
+    ).first()
+    # 如果查到了值，就拿值按逗号分割后去查询对应的数据库角色对象。列表推导式将对象的id拿出来重新赋值给roles
+    if init_roles:
+        init_roles_key = init_roles.value.split(',')
+        user_role = db.query(Roles).filter(Roles.key.in_(init_roles_key), Roles.is_deleted == 0).all()
+        roles = [role.id for role in user_role]
+
+    # 获取初始密码
+    default_password = curd_config_setting.getByKey(db, key='default_password').get('value') or '123456'
+    for record in records:
+        user = curd_user.getByUserName(db, username=record['username'])
+        obj_in = {
+            'username': record['username'],
+            'nickname': record['nickname'],
+            'password': get_md5(default_password),
+            'email': record['email'],
+            'phone': record['phone'],
+            'sex': record['sex'],
+            'status': record['status'],
+            'roles': roles,
+            'is_active': True,
+        }
+        if not user:
+            # user_in = UserCreateSchema(
+            #     username=obj_in['username'],
+            #     nickname=obj_in['nickname'],
+            #     password=get_md5('123456'),
+            #     is_superuser=False,
+            #     email=obj_in['email'],
+            #     phone=obj_in['phone'],
+            #     sex=obj_in['sex'],
+            #     status=obj_in['status'],
+            # )
+            # user = curd_user.create(db=db, obj_in=user_in)
+            user = curd_user.create(db=db, obj_in=obj_in)
+            print('新建用户ID:', user.id)
+        else:
+            if updateSupport:
+                curd_user.update(db=db, _id=user.id, obj_in=obj_in)
+                print('更新用户ID:', user.id)
+            else:
+                print('跳过更新用户ID:', user.id)
+
+    os.remove(file_path)
+    return respSuccessJson(data={'path': path, 'file_path': file_path}, msg='导入成功')
 
 
 @router.put("/user/{user_id}/password", summary="修改指定用户的密码")

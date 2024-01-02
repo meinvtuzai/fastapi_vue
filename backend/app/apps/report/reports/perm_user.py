@@ -5,7 +5,7 @@ from utils.tools import list_to_tree
 
 class Query(BaseQuery):
     def report_config(self):
-        self.header = ["编号", "用户名" "昵称", "邮箱", "手机号码", "性别", "状态", "创建时间"]
+        self.header = ["编号", "用户名", "昵称", "邮箱", "手机号码", "性别", "状态", "创建时间"]
         self.file_name = "用户信息"
 
     def instance_data(self):
@@ -32,6 +32,7 @@ class Query(BaseQuery):
         data = []
         for row in rows:
             data_row = [
+                row.id,
                 row.username,
                 row.nickname,
                 row.email,

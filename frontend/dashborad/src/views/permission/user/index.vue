@@ -340,7 +340,7 @@ export default {
         // 是否禁用上传
         isUploading: false,
         // 是否更新已经存在的用户数据
-        updateSupport: 0,
+        updateSupport: true,
         // 设置上传的请求头部
         headers: {Token: getToken()},
         // 上传的地址
@@ -596,7 +596,7 @@ export default {
     },
     /** 下载模板操作 */
     importTemplate() {
-      this.download('system_user', {
+      this.download('perm_user', {
         ...this.queryParams, ...{template: '1'}
       }, `user_template_${parseTime(new Date().getTime())}.xlsx`)
     },

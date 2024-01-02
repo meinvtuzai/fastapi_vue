@@ -47,9 +47,9 @@ def init_users_and_roles(db: Session) -> None:
     if not user:
         user_in = UserCreateSchema(
             username=settings.SECOND_SUPERUSER,
-            password=get_md5(settings.SECOND_SUPERUSER_EMAIL),
+            password=get_md5(settings.SECOND_SUPERUSER_PASSWORD),
             is_superuser=True,
-            email=settings.SECOND_SUPERUSER_PASSWORD
+            email=settings.SECOND_SUPERUSER_EMAIL
         )
         user = curd_user.create(db=db, obj_in=user_in)
     users.append(user)

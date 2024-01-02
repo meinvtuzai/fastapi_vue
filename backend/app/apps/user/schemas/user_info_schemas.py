@@ -12,6 +12,7 @@ class UserCreateSchema(BaseModel):
     is_superuser: bool
     is_active: bool = True
     password: str
+    roles: list = [2]
 
 
 class LoginUserInfoSchema(BaseModel):
