@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 本地pg
+ Source Server         : 本地postgresql
  Source Server Type    : PostgreSQL
  Source Server Version : 120000
  Source Host           : localhost:5432
@@ -12,7 +12,7 @@
  Target Server Version : 120000
  File Encoding         : 65001
 
- Date: 21/12/2023 00:31:29
+ Date: 04/01/2024 16:42:33
 */
 
 
@@ -218,8 +218,9 @@ COMMENT ON COLUMN "public"."t_config_settings"."order_num" IS '排序';
 INSERT INTO "public"."t_config_settings" VALUES (1, '2022-11-13 02:47:53', 0, '2022-11-13 02:47:53', 0, 0, '用户初始角色', 'user_init_roles', 'general', '0', 0, 1);
 INSERT INTO "public"."t_config_settings" VALUES (2, '2023-12-04 22:13:09', 1, '2023-12-09 12:29:32', 1, 0, '数据库升级密码', 'database_update_auth', 'hjdhnx', '默认密码hjdhnx', 0, 2);
 INSERT INTO "public"."t_config_settings" VALUES (3, '2023-12-04 23:04:31', 1, '2023-12-11 22:28:56', 1, 0, '登录需要验证码', 'login_with_captcha', 'no', 'yes 开启 no 关闭', 0, 3);
-INSERT INTO "public"."t_config_settings" VALUES (4, '2023-12-09 12:53:44', 0, '2023-12-09 12:53:44', 0, 0, '登录日志记录验证码错误', 'log_captcha_error', '0', '0/false不记录 1/true记录', 0, 11);
-INSERT INTO "public"."t_config_settings" VALUES (13, '2023-12-10 16:19:44', 1, '2023-12-10 16:20:17', 1, 1, '定时任务启动状态', 'sys_job_status', '0', '0 暂停 1 运行', 0, 12);
+INSERT INTO "public"."t_config_settings" VALUES (4, '2023-12-09 12:53:44', 0, '2024-01-02 22:14:43', 1, 0, '登录日志记录验证码错误', 'log_captcha_error', '0', '0/false不记录 1/true记录', 0, 4);
+INSERT INTO "public"."t_config_settings" VALUES (5, '2023-12-10 16:19:44', 1, '2023-12-10 16:20:17', 1, 1, '定时任务启动状态', 'sys_job_status', '0', '0 暂停 1 运行', 0, 12);
+INSERT INTO "public"."t_config_settings" VALUES (6, '2024-01-02 22:10:13', 1, '2024-01-02 22:14:30', 1, 0, '用户初始密码', 'default_password', '123456', '用户表导入的时候按这个密码创建用户记录', 0, 1);
 
 -- ----------------------------
 -- Table structure for t_dict_data
@@ -514,9 +515,9 @@ COMMENT ON COLUMN "public"."t_job"."active" IS '是否启用';
 -- ----------------------------
 -- Records of t_job
 -- ----------------------------
-INSERT INTO "public"."t_job" VALUES (1, '2023-12-10 21:31:19', 1, '2023-12-20 22:09:45', 1, 0, 'demo', '测试', 'setInterval', 'tasks.demo_task.demo', '[''hello world'']', '{''a'':''1'',''b'':''2''}', 'cron', 0, '2023-12-20 22:09:55', '30 20 * * * ?', 1, 1, 't');
-INSERT INTO "public"."t_job" VALUES (14, '2023-12-13 00:26:59', 1, '2023-12-20 22:09:45', 1, 0, 'demo2', '测试2', 'setInterval', 'tasks.demo_task.demo', '[''哈哈哈哈哈'']', '{''key'':''你好吗''}', 'cron', 0, '2023-12-20 22:09:55', '30 10 * * * ?', 1, 1, 't');
-INSERT INTO "public"."t_job" VALUES (15, '2023-12-13 00:53:05', 1, '2023-12-20 22:09:45', 1, 0, 'kzz', '可转债打新查询', 'setInterval', 'tasks.kzz_spider.get_now_kzz', NULL, '{''dayeExtra'':8}', 'cron', 0, '2023-12-20 22:09:55', '0 0 8 1/1 * ?', 1, 1, 't');
+INSERT INTO "public"."t_job" VALUES (1, '2023-12-10 21:31:19', 1, '2024-01-04 16:40:23.346868', 1, 0, 'demo', '测试', 'setInterval', 'tasks.demo_task.demo', '[''hello world'']', '{''a'':''1'',''b'':''2''}', 'cron', 0, '2024-01-04 16:40:33.34634', '30 20 * * * ?', 1, 1, 't');
+INSERT INTO "public"."t_job" VALUES (14, '2023-12-13 00:26:59', 1, '2024-01-04 16:40:23.346868', 1, 0, 'demo2', '测试2', 'setInterval', 'tasks.demo_task.demo', '[''哈哈哈哈哈'']', '{''key'':''你好吗''}', 'cron', 0, '2024-01-04 16:40:33.349756', '30 10 * * * ?', 1, 1, 't');
+INSERT INTO "public"."t_job" VALUES (15, '2023-12-13 00:53:05', 1, '2024-01-04 16:40:23.346868', 1, 0, 'kzz', '可转债打新查询', 'setInterval', 'tasks.kzz_spider.get_now_kzz', NULL, '{''dayeExtra'':8}', 'cron', 0, '2024-01-04 16:40:33.350752', '0 0 8 1/1 * ?', 1, 1, 't');
 
 -- ----------------------------
 -- Table structure for t_login_infor
@@ -597,6 +598,13 @@ INSERT INTO "public"."t_login_infor" VALUES (110, '2023-12-17 17:01:54', 0, '202
 INSERT INTO "public"."t_login_infor" VALUES (111, '2023-12-17 17:05:01', 0, '2023-12-17 17:05:01', 0, 0, 'hjdhnx', '127.0.0.1', NULL, 'Edge 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-17 17:05:01');
 INSERT INTO "public"."t_login_infor" VALUES (112, '2023-12-20 19:51:10', 0, '2023-12-20 19:51:10', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-20 19:51:10');
 INSERT INTO "public"."t_login_infor" VALUES (113, '2023-12-20 22:09:51', 0, '2023-12-20 22:09:51', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-20 22:09:51');
+INSERT INTO "public"."t_login_infor" VALUES (114, '2023-12-28 21:23:12', 0, '2023-12-28 21:23:12', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2023-12-28 21:23:12');
+INSERT INTO "public"."t_login_infor" VALUES (115, '2024-01-02 20:24:17', 0, '2024-01-02 20:24:17', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2024-01-02 20:24:17');
+INSERT INTO "public"."t_login_infor" VALUES (116, '2024-01-02 21:48:03', 0, '2024-01-02 21:48:03', 0, 0, 'admin2', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2024-01-02 21:48:03');
+INSERT INTO "public"."t_login_infor" VALUES (117, '2024-01-02 22:12:01', 0, '2024-01-02 22:12:01', 0, 0, 'admin1', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2024-01-02 22:12:01');
+INSERT INTO "public"."t_login_infor" VALUES (118, '2024-01-02 22:12:13', 0, '2024-01-02 22:12:13', 0, 0, 'admin2', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 1, '密码错误', '2024-01-02 22:12:13');
+INSERT INTO "public"."t_login_infor" VALUES (119, '2024-01-02 22:12:17', 0, '2024-01-02 22:12:17', 0, 0, 'admin2', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2024-01-02 22:12:17');
+INSERT INTO "public"."t_login_infor" VALUES (121, '2024-01-04 16:40:34.861284', 0, '2024-01-04 16:40:34.861284', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2024-01-04 16:40:34.861284');
 
 -- ----------------------------
 -- Table structure for t_menus
@@ -757,6 +765,7 @@ INSERT INTO "public"."t_perm_label" VALUES (51, '2023-12-17 14:47:51', 0, '2023-
 INSERT INTO "public"."t_perm_label" VALUES (52, '2023-12-17 14:47:58', 0, '2023-12-17 14:52:03', 1, 0, 'monitor:job:export', NULL, 0);
 INSERT INTO "public"."t_perm_label" VALUES (53, '2023-12-17 16:00:22', 0, '2023-12-17 16:00:22', 0, 0, 'monitor:cache:get', NULL, 0);
 INSERT INTO "public"."t_perm_label" VALUES (54, '2023-12-17 16:47:58', 0, '2023-12-17 16:47:58', 0, 0, 'monitor:cache:delete', NULL, 0);
+INSERT INTO "public"."t_perm_label" VALUES (55, '2024-01-02 20:24:36', 0, '2024-01-02 20:24:36', 0, 0, 'system:user:export', NULL, 0);
 
 -- ----------------------------
 -- Table structure for t_perm_label_role
@@ -909,7 +918,8 @@ INSERT INTO "public"."t_user_role" VALUES (1, '2022-11-13 02:58:19', 0, '2022-11
 INSERT INTO "public"."t_user_role" VALUES (3, '2022-11-22 00:50:26', 0, '2022-11-22 00:50:26', 0, 0, 3, 2);
 INSERT INTO "public"."t_user_role" VALUES (4, '2022-11-22 00:55:57', 1, '2022-11-22 00:55:57', 0, 0, 2, 3);
 INSERT INTO "public"."t_user_role" VALUES (10, '2023-12-16 11:35:26', 1, '2023-12-16 11:35:26', 0, 0, 4, 2);
-INSERT INTO "public"."t_user_role" VALUES (6, '2023-12-06 13:18:51', 0, '2023-12-06 13:18:51', 0, 0, 4, 2);
+INSERT INTO "public"."t_user_role" VALUES (6, '2023-12-06 13:18:51', 0, '2023-12-06 13:18:51', 0, 0, 5, 2);
+INSERT INTO "public"."t_user_role" VALUES (12, '2024-01-02 21:38:43', 0, '2024-01-02 21:38:43', 0, 0, 6, 2);
 
 -- ----------------------------
 -- Table structure for t_users
@@ -957,13 +967,15 @@ INSERT INTO "public"."t_users" VALUES (1, '2022-11-13 02:58:19', 0, '2023-12-07 
 INSERT INTO "public"."t_users" VALUES (2, '2022-11-22 00:48:34', 0, '2022-11-22 00:55:57', 1, 0, 'opt', 'opt', 0, '12345678911', 'opt@beginner2020.top', '$2b$12$EbJD0X5U0LwAvf5EVvYxZO20Jyv2xLKU1quekOyX3SwhdVepz1RFu', NULL, 0, 't', 'f');
 INSERT INTO "public"."t_users" VALUES (3, '2022-11-22 00:50:26', 0, '2023-12-09 16:47:45', 1, 0, 'user', NULL, 0, '12345678912', 'user@beginner2020.top', '$2b$12$Wov4niPCoLOeBcRNgGDNhekSZBgB/GAhYs25CLHfJG.me1KbFP0am', NULL, 0, 't', 'f');
 INSERT INTO "public"."t_users" VALUES (4, '2023-12-02 15:36:42', 1, '2023-12-16 13:16:49', 4, 0, 'hjdhnx', '道长', 2, '13154671296', '434857005@qq.com', '$2b$12$X3LQ2VXThey.YB/WGlwYq.35CKOeKkBgmA6TTR91q/VYe6hGDAWRO', 'images/avatar/f84e9577-9047-470e-bcde-16173ca1811c.jpg', 0, 't', 'f');
+INSERT INTO "public"."t_users" VALUES (5, '2024-01-02 21:35:02', 0, '2024-01-02 21:38:43', 0, 0, 'admin1', '超级管理员1', 0, '12345678910', 'admin1@beginner2020.top', '$2b$12$s1WlihU/PaMhW0T2H360Me8IswCyKtep8p.kQcV3z9QVdS7natYL.', NULL, 0, 't', 'f');
+INSERT INTO "public"."t_users" VALUES (6, '2024-01-02 21:41:41', 0, '2024-01-02 22:11:34', 0, 0, 'admin2', '超级管理员2', 0, '12345678910', 'admin2@beginner2020.top', '$2b$12$dAdnY31ydiUP0xRdsqusu.NHv0alOKrzrGbLFQn3W8PVVefYF2G8C', NULL, 0, 't', 'f');
 
 -- ----------------------------
 -- Alter sequences owned by
 -- ----------------------------
 ALTER SEQUENCE "public"."t_config_settings_id_seq"
 OWNED BY "public"."t_config_settings"."id";
-SELECT setval('"public"."t_config_settings_id_seq"', 15, true);
+SELECT setval('"public"."t_config_settings_id_seq"', 8, true);
 
 -- ----------------------------
 -- Alter sequences owned by
@@ -1012,7 +1024,7 @@ SELECT setval('"public"."t_job_id_seq"', 17, true);
 -- ----------------------------
 ALTER SEQUENCE "public"."t_login_infor_id_seq"
 OWNED BY "public"."t_login_infor"."id";
-SELECT setval('"public"."t_login_infor_id_seq"', 115, true);
+SELECT setval('"public"."t_login_infor_id_seq"', 122, true);
 
 -- ----------------------------
 -- Alter sequences owned by
@@ -1026,7 +1038,7 @@ SELECT setval('"public"."t_menus_id_seq"', 34, true);
 -- ----------------------------
 ALTER SEQUENCE "public"."t_perm_label_id_seq"
 OWNED BY "public"."t_perm_label"."id";
-SELECT setval('"public"."t_perm_label_id_seq"', 56, true);
+SELECT setval('"public"."t_perm_label_id_seq"', 57, true);
 
 -- ----------------------------
 -- Alter sequences owned by
@@ -1054,14 +1066,14 @@ SELECT setval('"public"."t_roles_id_seq"', 5, true);
 -- ----------------------------
 ALTER SEQUENCE "public"."t_user_role_id_seq"
 OWNED BY "public"."t_user_role"."id";
-SELECT setval('"public"."t_user_role_id_seq"', 12, true);
+SELECT setval('"public"."t_user_role_id_seq"', 14, true);
 
 -- ----------------------------
 -- Alter sequences owned by
 -- ----------------------------
 ALTER SEQUENCE "public"."t_users_id_seq"
 OWNED BY "public"."t_users"."id";
-SELECT setval('"public"."t_users_id_seq"', 6, true);
+SELECT setval('"public"."t_users_id_seq"', 8, true);
 
 -- ----------------------------
 -- Indexes structure for table t_config_settings

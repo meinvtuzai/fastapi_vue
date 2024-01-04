@@ -235,7 +235,8 @@ def get_converters_auto():
                 cls.extend(cl)
             for c in cl:
                 converters.update({
-                    c['name']: lambda x: x if x in ['True', 'False'] else str(int(x) == 1)
+                    # c['name']: lambda x: x if x in ['True', 'False'] else str(int(x) == 1)
+                    c['name']: lambda x: x == 'True' if x in ['True', 'False'] else int(x) == 1
                 })
         # print('cls:', len(cls), cls)
         # print('converters:', len(converters.keys()), converters)
