@@ -25,6 +25,7 @@ api_url = '/jobLog'
 async def searchRecords(*,
                         db: Session = Depends(deps.get_db),
                         run_status: int = Query(None),
+                        job_id: str = Query(None),
                         job_name: str = Query(None),
                         run_time: str = Query(None),
                         job_group: str = Query(None),
@@ -32,7 +33,8 @@ async def searchRecords(*,
                         page_size: int = Query(20, gt=0),
                         ):
     order_bys = [desc(JobLog.run_time)]
-    res = curd.search(db, run_status=run_status, job_name=job_name, job_group=job_group, run_time=run_time, page=page,
+    res = curd.search(db, run_status=run_status, job_id=job_id, job_name=job_name, job_group=job_group,
+                      run_time=run_time, page=page,
                       page_size=page_size, order_bys=order_bys)
     return respSuccessJson(res)
 

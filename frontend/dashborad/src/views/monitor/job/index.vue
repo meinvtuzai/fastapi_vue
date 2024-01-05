@@ -170,8 +170,8 @@
     <pagination
       v-show="total>0"
       :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
+      :page.sync="queryParams.page"
+      :limit.sync="queryParams.page_size"
       @pagination="getList"
     />
 
@@ -422,8 +422,8 @@ export default {
       groupOptions: [], defaultGroupValue: undefined,
       // 查询参数
       queryParams: {
-        pageNum: 1,
-        pageSize: 10,
+        page: 1,
+        page_size: 10,
         job_name: undefined,
         job_id: undefined,
         job_group: undefined,
@@ -533,7 +533,7 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
+      this.queryParams.page = 1;
       this.getList();
     },
     /** 重置按钮操作 */

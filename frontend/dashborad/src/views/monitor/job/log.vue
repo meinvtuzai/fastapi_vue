@@ -1,18 +1,28 @@
 <template>
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :model="queryParams" size="small" :inline="true" label-width="68px">
-      <el-form-item label="任务名称" prop="jobName">
+      <el-form-item label="任务代号" prop="job_id">
         <el-input
-          v-model="queryParams.jobName"
+          v-model="queryParams.job_id"
+          placeholder="请输入任务代号"
+          clearable
+          style="width: 240px"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+
+      <el-form-item label="任务名称" prop="job_name">
+        <el-input
+          v-model="queryParams.job_name"
           placeholder="请输入任务名称"
           clearable
           style="width: 240px"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="任务组名" prop="jobGroup">
+      <el-form-item label="任务组名" prop="job_group">
         <el-select
-          v-model="queryParams.jobGroup"
+          v-model="queryParams.job_group"
           placeholder="请选择任务组名"
           clearable
           style="width: 240px"
@@ -104,10 +114,10 @@
     <el-table v-loading="loading" :data="jobLogList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="日志编号" width="80" align="center" prop="jobLogId" />
-      <el-table-column label="任务名称" align="center" prop="jobName" :show-overflow-tooltip="true" />
-      <el-table-column label="任务组名" align="center" prop="jobGroup" :show-overflow-tooltip="true">
+      <el-table-column label="任务名称" align="center" prop="job_name" :show-overflow-tooltip="true" />
+      <el-table-column label="任务组名" align="center" prop="job_group" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <dict-tag :options="groupOptions" :value="scope.row.jobGroup" />
+          <dict-tag :options="groupOptions" :value="scope.row.job_group" />
         </template>
       </el-table-column>
       <el-table-column label="调用目标字符串" align="center" prop="invokeTarget" :show-overflow-tooltip="true" />
@@ -138,8 +148,8 @@
     <pagination
       v-show="total>0"
       :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
+      :page.sync="queryParams.page"
+      :limit.sync="queryParams.page_size"
       @pagination="getList"
     />
 
@@ -149,10 +159,10 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="日志序号：">{{ form.jobLogId }}</el-form-item>
-            <el-form-item label="任务名称：">{{ form.jobName }}</el-form-item>
+            <el-form-item label="任务名称：">{{ form.job_name }}</el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="任务分组：">{{ form.jobGroup }}</el-form-item>
+            <el-form-item label="任务分组：">{{ form.job_group }}</el-form-item>
             <el-form-item label="执行时间：">{{ form.createTime }}</el-form-item>
           </el-col>
           <el-col :span="24">
@@ -213,20 +223,22 @@ export default {
       groupOptions: [],
       // 查询参数
       queryParams: {
-        pageNum: 1,
-        pageSize: 10,
-        jobName: undefined,
-        jobGroup: undefined,
+        page: 1,
+        page_size: 10,
+        job_id: undefined,
+        job_name: undefined,
+        job_group: undefined,
         status: undefined
       }
     }
   },
   created() {
-    const jobId = this.$route.params && this.$route.params.jobId
+    const jobId = this.$route.params && this.$route.params.id
     if (jobId !== undefined && jobId != 0) {
       getJob(jobId).then(response => {
-        this.queryParams.jobName = response.data.jobName
-        this.queryParams.jobGroup = response.data.jobGroup
+        this.queryParams.job_id = response.data.job_id
+        this.queryParams.job_name = response.data.job_name
+        this.queryParams.job_group = response.data.job_group
         this.getList()
       })
     } else {
@@ -259,7 +271,7 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1
+      this.queryParams.page = 1
       this.getList()
     },
     /** 重置按钮操作 */
