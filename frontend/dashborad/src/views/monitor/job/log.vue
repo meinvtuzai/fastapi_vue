@@ -99,38 +99,43 @@
           @click="handleExport"
         >导出</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-close"
-          size="mini"
-          @click="handleClose"
-        >关闭</el-button>
-      </el-col>
-      <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-close"-->
+<!--          size="mini"-->
+<!--          @click="handleClose"-->
+<!--        >关闭</el-button>-->
+<!--      </el-col>-->
+<!--      <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />-->
     </el-row>
 
     <el-table v-loading="loading" :data="jobLogList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="日志编号" width="80" align="center" prop="jobLogId" />
+      <el-table-column label="日志编号" width="80" align="center" prop="id" />
+      <el-table-column label="任务代号" align="center" prop="job_id" :show-overflow-tooltip="true" />
       <el-table-column label="任务名称" align="center" prop="job_name" :show-overflow-tooltip="true" />
       <el-table-column label="任务组名" align="center" prop="job_group" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <dict-tag :options="groupOptions" :value="scope.row.job_group" />
         </template>
       </el-table-column>
-      <el-table-column label="调用目标字符串" align="center" prop="invokeTarget" :show-overflow-tooltip="true" />
-      <el-table-column label="日志信息" align="center" prop="jobMessage" :show-overflow-tooltip="true" />
-      <el-table-column label="执行状态" align="center" prop="status">
+      <el-table-column label="调用目标字符串" align="center" prop="func_name" :show-overflow-tooltip="true" />
+      <el-table-column label="传入位置参数" align="center" prop="func_args" :show-overflow-tooltip="true" />
+      <el-table-column label="传入字典参数" align="center" prop="func_kwargs" :show-overflow-tooltip="true" />
+      <el-table-column label="日志信息" align="center" prop="run_info" :show-overflow-tooltip="true" />
+      <el-table-column label="执行状态" align="center" prop="run_status">
         <template slot-scope="scope">
-          <dict-tag :options="statusOptions" :value="scope.row.status" />
+          <dict-tag :options="statusOptions" :value="scope.row.run_status" />
         </template>
       </el-table-column>
-      <el-table-column label="执行时间" align="center" prop="createTime" width="180">
+      <el-table-column label="创建时间" align="center" prop="created_ts" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
+          <span>{{ parseTime(scope.row.created_ts) }}</span>
         </template>
+      </el-table-column>
+      <el-table-column label="执行时间" align="center" prop="run_time" width="180">
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -158,27 +163,27 @@
       <el-form ref="form" :model="form" label-width="100px" size="mini">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="日志序号：">{{ form.jobLogId }}</el-form-item>
+            <el-form-item label="日志代号：">{{ form.job_id }}</el-form-item>
             <el-form-item label="任务名称：">{{ form.job_name }}</el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="任务分组：">{{ form.job_group }}</el-form-item>
-            <el-form-item label="执行时间：">{{ form.createTime }}</el-form-item>
+            <el-form-item label="执行时间：">{{ form.run_time }}</el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="调用方法：">{{ form.invokeTarget }}</el-form-item>
+            <el-form-item label="调用方法：">{{ form.func_name }}</el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="日志信息：">{{ form.jobMessage }}</el-form-item>
+            <el-form-item label="日志信息：">{{ form.run_info }}</el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="执行状态：">
-              <div v-if="form.status == 0">正常</div>
-              <div v-else-if="form.status == 1">失败</div>
+              <div v-if="form.run_status == 0">正常</div>
+              <div v-else-if="form.run_status == 1">失败</div>
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item v-if="form.status == 1" label="异常信息：">{{ form.exceptionInfo }}</el-form-item>
+            <el-form-item v-if="form.run_status == 1" label="异常信息：">{{ form.run_info }}</el-form-item>
           </el-col>
         </el-row>
       </el-form>
@@ -282,7 +287,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.jobLogId)
+      this.ids = selection.map(item => item.id)
       this.multiple = !selection.length
     },
     /** 详细按钮操作 */

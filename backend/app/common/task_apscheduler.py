@@ -16,22 +16,59 @@ from .sys_schedule import scheduler
 from .deps import get_db
 from core.logger import logger
 from apps.monitor.models.job import Job
+from apps.monitor.curd.curd_job_log import curd_job_log
 from numpy import safe_eval
 
 
 def job_listener(Event):
     job = scheduler.get_job(Event.job_id)
+    db = next(get_db())  # type: SessionLocal
+    db_job_val = {}
     if job:
+        db_job = db.query(Job).filter(Job.job_name == job.name).first()
+        db_job_val = {
+            'job_id': db_job.job_id,
+            'job_name': db_job.job_name,
+            'job_group': db_job.job_group,
+            'func_name': db_job.func_name,
+            'func_args': db_job.func_args,
+            'func_kwargs': db_job.func_kwargs,
+        }
         if not Event.exception:
             logger.info("jobname=%s|jobtrigger=%s|jobtime=%s|retval=%s", job.name, job.trigger,
                         Event.scheduled_run_time, Event.retval)
+            obj_in = {'job_name': job.name, 'run_time': Event.scheduled_run_time, 'run_status': 1,
+                      'run_info': f'{Event.retval}'}
+            obj_in.update(db_job_val)
+            curd_job_log.create(db, obj_in=obj_in)
         else:
             logger.error("jobname=%s|jobtrigger=%s|errcode=%s|exception=[%s]|traceback=[%s]|scheduled_time=%s",
                          job.name,
                          job.trigger, Event.code,
                          Event.exception, Event.traceback, Event.scheduled_run_time)
+            obj_in = {'job_name': job.name, 'run_time': Event.scheduled_run_time, 'run_status': 0,
+                      'run_info': f'{Event.traceback}'}
+            obj_in.update(db_job_val)
+            curd_job_log.create(db, obj_in=obj_in)
     else:
-        logger.info("任务执行一次后已自动清除:job_id=%s|jobtime=%s|retval=%s", Event.job_id, Event.scheduled_run_time, Event.retval)
+        # print(Event.job_id)
+        db_job = db.query(Job).filter(Job.job_id == Event.job_id.replace('temp_', '', 1)).first()
+        if db_job:
+            db_job_val = {
+                'job_id': db_job.job_id,
+                'job_name': db_job.job_name,
+                'job_group': db_job.job_group,
+                'func_name': db_job.func_name,
+                'func_args': db_job.func_args,
+                'func_kwargs': db_job.func_kwargs,
+            }
+        logger.info("任务执行一次后已自动清除:job_id=%s|jobtime=%s|retval=%s", Event.job_id, Event.scheduled_run_time,
+                    Event.retval)
+        obj_in = {'job_id': Event.job_id, 'run_time': Event.scheduled_run_time, 'run_status': 1,
+                  'run_info': f'{Event.retval}'}
+        obj_in.update(db_job_val)
+        print(obj_in)
+        curd_job_log.create(db, obj_in=obj_in)
 
 
 # 注册scheduler
@@ -321,6 +358,9 @@ class JobInit:
             self._automatic_task()
         except Exception as e:
             logger.info(f'_automatic_task执行错误,请升级数据库:{e}')
+
+        self.db.close()
+        logger.info('init_jobs_pause函数执行完毕，相关数据库连接已关闭')
 
     def query_started_job(self):
         return self.db.query(Job).filter(Job.status == 1)
