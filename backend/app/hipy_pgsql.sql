@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 本地postgresql
+ Source Server         : 本地pg
  Source Server Type    : PostgreSQL
  Source Server Version : 120000
  Source Host           : localhost:5432
@@ -12,7 +12,7 @@
  Target Server Version : 120000
  File Encoding         : 65001
 
- Date: 04/01/2024 16:42:33
+ Date: 06/01/2024 14:19:58
 */
 
 
@@ -87,6 +87,17 @@ CACHE 1;
 -- ----------------------------
 DROP SEQUENCE IF EXISTS "public"."t_job_id_seq";
 CREATE SEQUENCE "public"."t_job_id_seq" 
+INCREMENT 1
+MINVALUE  1
+MAXVALUE 2147483647
+START 1
+CACHE 1;
+
+-- ----------------------------
+-- Sequence structure for t_job_log_id_seq
+-- ----------------------------
+DROP SEQUENCE IF EXISTS "public"."t_job_log_id_seq";
+CREATE SEQUENCE "public"."t_job_log_id_seq" 
 INCREMENT 1
 MINVALUE  1
 MAXVALUE 2147483647
@@ -260,6 +271,7 @@ INSERT INTO "public"."t_dict_data" VALUES (3, '2022-11-13 02:49:40', 0, '2023-12
 INSERT INTO "public"."t_dict_data" VALUES (4, '2023-12-04 19:53:00', 1, '2023-12-04 19:57:21', 1, 0, 'hiker_rule_data_type', '海阔视界规则数据类型', '[(''home_rule_url'', ''首页云规则''), (''publish'', ''提交云仓库''), (''js_url'', ''网页插件''),(''html'',''静态页面''),(''config'',''主页配置'')]', 0, 3);
 INSERT INTO "public"."t_dict_data" VALUES (5, '2023-12-10 16:20:45', 1, '2023-12-10 16:20:45', 0, 0, 'sys_job_group', '定时任务分组', NULL, 0, 4);
 INSERT INTO "public"."t_dict_data" VALUES (6, '2023-12-10 16:21:01', 1, '2023-12-10 16:21:01', 0, 0, 'sys_job_status', '定时任务运行状态', NULL, 0, 5);
+INSERT INTO "public"."t_dict_data" VALUES (7, '2024-01-06 12:05:26', 1, '2024-01-06 12:05:26', 0, 0, 'sys_job_run_status', '定时任务调度状态', '1 正常 0 失败', 0, 7);
 
 -- ----------------------------
 -- Table structure for t_dict_details
@@ -315,6 +327,8 @@ INSERT INTO "public"."t_dict_details" VALUES (14, '2023-12-10 16:21:16', 1, '202
 INSERT INTO "public"."t_dict_details" VALUES (15, '2023-12-10 16:21:22', 1, '2023-12-10 16:21:22', 0, 0, '启动', 'f', '1', NULL, 'f', 0, 2, 6);
 INSERT INTO "public"."t_dict_details" VALUES (16, '2023-12-10 16:22:10', 1, '2023-12-10 16:22:43', 1, 0, '单次', 'f', 'setTimeout', NULL, 'f', 0, 1, 5);
 INSERT INTO "public"."t_dict_details" VALUES (17, '2023-12-10 16:22:31', 1, '2023-12-10 16:22:58', 1, 0, '循环', 'f', 'setInterval', NULL, 't', 0, 2, 5);
+INSERT INTO "public"."t_dict_details" VALUES (18, '2024-01-06 12:05:43', 1, '2024-01-06 12:05:43', 0, 0, '失败', 'f', '0', NULL, 'f', 0, 1, 7);
+INSERT INTO "public"."t_dict_details" VALUES (19, '2024-01-06 12:05:52', 1, '2024-01-06 12:05:52', 0, 0, '正常', 'f', '1', NULL, 't', 0, 2, 7);
 
 -- ----------------------------
 -- Table structure for t_hiker_developer
@@ -515,9 +529,55 @@ COMMENT ON COLUMN "public"."t_job"."active" IS '是否启用';
 -- ----------------------------
 -- Records of t_job
 -- ----------------------------
-INSERT INTO "public"."t_job" VALUES (1, '2023-12-10 21:31:19', 1, '2024-01-04 16:40:23.346868', 1, 0, 'demo', '测试', 'setInterval', 'tasks.demo_task.demo', '[''hello world'']', '{''a'':''1'',''b'':''2''}', 'cron', 0, '2024-01-04 16:40:33.34634', '30 20 * * * ?', 1, 1, 't');
-INSERT INTO "public"."t_job" VALUES (14, '2023-12-13 00:26:59', 1, '2024-01-04 16:40:23.346868', 1, 0, 'demo2', '测试2', 'setInterval', 'tasks.demo_task.demo', '[''哈哈哈哈哈'']', '{''key'':''你好吗''}', 'cron', 0, '2024-01-04 16:40:33.349756', '30 10 * * * ?', 1, 1, 't');
-INSERT INTO "public"."t_job" VALUES (15, '2023-12-13 00:53:05', 1, '2024-01-04 16:40:23.346868', 1, 0, 'kzz', '可转债打新查询', 'setInterval', 'tasks.kzz_spider.get_now_kzz', NULL, '{''dayeExtra'':8}', 'cron', 0, '2024-01-04 16:40:33.350752', '0 0 8 1/1 * ?', 1, 1, 't');
+INSERT INTO "public"."t_job" VALUES (14, '2023-12-13 00:26:59', 1, '2024-01-06 06:19:22.497404', 1, 0, 'demo2', '测试2', 'setInterval', 'tasks.demo_task.demo', '[''哈哈哈哈哈'']', '{''key'':''你好吗''}', 'cron', 0, '2024-01-06 14:19:32.520366', '30 10 * * * ?', 1, 1, 't');
+INSERT INTO "public"."t_job" VALUES (15, '2023-12-13 00:53:05', 1, '2024-01-06 06:19:22.497404', 1, 0, 'kzz', '可转债打新查询', 'setInterval', 'tasks.kzz_spider.get_now_kzz', NULL, '{''dayeExtra'':8}', 'cron', 0, '2024-01-06 14:19:32.522994', '0 0 8 1/1 * ?', 1, 1, 't');
+INSERT INTO "public"."t_job" VALUES (1, '2023-12-10 21:31:19', 1, '2024-01-06 06:19:22.497404', 1, 0, 'demo', '测试', 'setInterval', 'tasks.demo_task.demo', '[''hello world'']', '{''a'':''1'',''b'':''2''}', 'cron', 0, '2024-01-06 14:19:32.49851', '30 20 * * * ?', 1, 1, 't');
+
+-- ----------------------------
+-- Table structure for t_job_log
+-- ----------------------------
+DROP TABLE IF EXISTS "public"."t_job_log";
+CREATE TABLE "public"."t_job_log" (
+  "id" int4 NOT NULL DEFAULT nextval('t_job_log_id_seq'::regclass),
+  "created_time" timestamp(6) DEFAULT now(),
+  "creator_id" int4 DEFAULT 0,
+  "modified_time" timestamp(6) DEFAULT now(),
+  "modifier_id" int4 DEFAULT 0,
+  "is_deleted" int4 DEFAULT 0,
+  "job_id" varchar(256) COLLATE "pg_catalog"."default",
+  "job_name" varchar(256) COLLATE "pg_catalog"."default" NOT NULL,
+  "job_group" varchar(256) COLLATE "pg_catalog"."default",
+  "func_name" varchar(256) COLLATE "pg_catalog"."default",
+  "func_args" varchar(256) COLLATE "pg_catalog"."default",
+  "func_kwargs" varchar(256) COLLATE "pg_catalog"."default",
+  "run_info" text COLLATE "pg_catalog"."default",
+  "run_except_info" text COLLATE "pg_catalog"."default",
+  "run_status" int4 DEFAULT 0,
+  "run_time" timestamp(6)
+)
+;
+COMMENT ON COLUMN "public"."t_job_log"."created_time" IS '创建时间';
+COMMENT ON COLUMN "public"."t_job_log"."creator_id" IS '创建人id';
+COMMENT ON COLUMN "public"."t_job_log"."modified_time" IS '更新时间';
+COMMENT ON COLUMN "public"."t_job_log"."modifier_id" IS '修改人id';
+COMMENT ON COLUMN "public"."t_job_log"."is_deleted" IS '逻辑删除:0=未删除,1=删除';
+COMMENT ON COLUMN "public"."t_job_log"."job_id" IS '任务代号';
+COMMENT ON COLUMN "public"."t_job_log"."job_name" IS '任务名称';
+COMMENT ON COLUMN "public"."t_job_log"."job_group" IS '任务组名';
+COMMENT ON COLUMN "public"."t_job_log"."func_name" IS '调用目标字符串';
+COMMENT ON COLUMN "public"."t_job_log"."func_args" IS '传入位置参数';
+COMMENT ON COLUMN "public"."t_job_log"."func_kwargs" IS '传入字典参数';
+COMMENT ON COLUMN "public"."t_job_log"."run_info" IS '正常日志信息';
+COMMENT ON COLUMN "public"."t_job_log"."run_except_info" IS '异常日志信息';
+COMMENT ON COLUMN "public"."t_job_log"."run_status" IS '执行状态';
+COMMENT ON COLUMN "public"."t_job_log"."run_time" IS '执行时间';
+
+-- ----------------------------
+-- Records of t_job_log
+-- ----------------------------
+INSERT INTO "public"."t_job_log" VALUES (34, '2024-01-06 13:43:41', 0, '2024-01-06 13:43:41', 0, 0, 'demo2', '测试2', 'setInterval', 'tasks.demo_task.demo', '[''哈哈哈哈哈'']', '{''key'':''你好吗''}', '----------------task_id:demo2,args:(''哈哈哈哈哈'',),kwargs:{''key'': ''你好吗''}----------------', NULL, 1, '2024-01-06 13:43:41');
+INSERT INTO "public"."t_job_log" VALUES (35, '2024-01-06 13:43:45', 0, '2024-01-06 13:43:45', 0, 0, 'demo', '测试', 'setInterval', 'tasks.demo_task.demo', '[''hello world'']', '{''a'':''1'',''b'':''2''}', '----------------task_id:demo,args:(''hello world'',),kwargs:{''a'': ''1'', ''b'': ''2''}----------------', NULL, 1, '2024-01-06 13:43:45');
+INSERT INTO "public"."t_job_log" VALUES (36, '2024-01-06 13:43:48', 0, '2024-01-06 13:43:48', 0, 0, 'kzz', '可转债打新查询', 'setInterval', 'tasks.kzz_spider.get_now_kzz', NULL, '{''dayeExtra'':8}', '[]', NULL, 1, '2024-01-06 13:43:48');
 
 -- ----------------------------
 -- Table structure for t_login_infor
@@ -604,7 +664,7 @@ INSERT INTO "public"."t_login_infor" VALUES (116, '2024-01-02 21:48:03', 0, '202
 INSERT INTO "public"."t_login_infor" VALUES (117, '2024-01-02 22:12:01', 0, '2024-01-02 22:12:01', 0, 0, 'admin1', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2024-01-02 22:12:01');
 INSERT INTO "public"."t_login_infor" VALUES (118, '2024-01-02 22:12:13', 0, '2024-01-02 22:12:13', 0, 0, 'admin2', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 1, '密码错误', '2024-01-02 22:12:13');
 INSERT INTO "public"."t_login_infor" VALUES (119, '2024-01-02 22:12:17', 0, '2024-01-02 22:12:17', 0, 0, 'admin2', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2024-01-02 22:12:17');
-INSERT INTO "public"."t_login_infor" VALUES (121, '2024-01-04 16:40:34.861284', 0, '2024-01-04 16:40:34.861284', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2024-01-04 16:40:34.861284');
+INSERT INTO "public"."t_login_infor" VALUES (120, '2024-01-06 11:14:03', 0, '2024-01-06 11:14:03', 0, 0, 'admin', '127.0.0.1', NULL, 'Chrome 120.0.0', 'Windows 10', 0, '登录成功', '2024-01-06 11:14:03');
 
 -- ----------------------------
 -- Table structure for t_menus
@@ -766,6 +826,9 @@ INSERT INTO "public"."t_perm_label" VALUES (52, '2023-12-17 14:47:58', 0, '2023-
 INSERT INTO "public"."t_perm_label" VALUES (53, '2023-12-17 16:00:22', 0, '2023-12-17 16:00:22', 0, 0, 'monitor:cache:get', NULL, 0);
 INSERT INTO "public"."t_perm_label" VALUES (54, '2023-12-17 16:47:58', 0, '2023-12-17 16:47:58', 0, 0, 'monitor:cache:delete', NULL, 0);
 INSERT INTO "public"."t_perm_label" VALUES (55, '2024-01-02 20:24:36', 0, '2024-01-02 20:24:36', 0, 0, 'system:user:export', NULL, 0);
+INSERT INTO "public"."t_perm_label" VALUES (56, '2024-01-06 12:37:09', 0, '2024-01-06 12:37:09', 0, 0, 'monitor:job-log:delete', NULL, 0);
+INSERT INTO "public"."t_perm_label" VALUES (57, '2024-01-06 13:24:14', 0, '2024-01-06 13:24:14', 0, 0, '/monitor/jobLog/export:export', NULL, 0);
+INSERT INTO "public"."t_perm_label" VALUES (58, '2024-01-06 13:36:05', 0, '2024-01-06 13:36:05', 0, 0, 'monitor:job:log:export', NULL, 0);
 
 -- ----------------------------
 -- Table structure for t_perm_label_role
@@ -919,7 +982,7 @@ INSERT INTO "public"."t_user_role" VALUES (3, '2022-11-22 00:50:26', 0, '2022-11
 INSERT INTO "public"."t_user_role" VALUES (4, '2022-11-22 00:55:57', 1, '2022-11-22 00:55:57', 0, 0, 2, 3);
 INSERT INTO "public"."t_user_role" VALUES (10, '2023-12-16 11:35:26', 1, '2023-12-16 11:35:26', 0, 0, 4, 2);
 INSERT INTO "public"."t_user_role" VALUES (6, '2023-12-06 13:18:51', 0, '2023-12-06 13:18:51', 0, 0, 5, 2);
-INSERT INTO "public"."t_user_role" VALUES (12, '2024-01-02 21:38:43', 0, '2024-01-02 21:38:43', 0, 0, 6, 2);
+INSERT INTO "public"."t_user_role" VALUES (28, '2024-01-02 22:29:54', 0, '2024-01-02 22:29:54', 0, 0, 6, 2);
 
 -- ----------------------------
 -- Table structure for t_users
@@ -968,7 +1031,7 @@ INSERT INTO "public"."t_users" VALUES (2, '2022-11-22 00:48:34', 0, '2022-11-22 
 INSERT INTO "public"."t_users" VALUES (3, '2022-11-22 00:50:26', 0, '2023-12-09 16:47:45', 1, 0, 'user', NULL, 0, '12345678912', 'user@beginner2020.top', '$2b$12$Wov4niPCoLOeBcRNgGDNhekSZBgB/GAhYs25CLHfJG.me1KbFP0am', NULL, 0, 't', 'f');
 INSERT INTO "public"."t_users" VALUES (4, '2023-12-02 15:36:42', 1, '2023-12-16 13:16:49', 4, 0, 'hjdhnx', '道长', 2, '13154671296', '434857005@qq.com', '$2b$12$X3LQ2VXThey.YB/WGlwYq.35CKOeKkBgmA6TTR91q/VYe6hGDAWRO', 'images/avatar/f84e9577-9047-470e-bcde-16173ca1811c.jpg', 0, 't', 'f');
 INSERT INTO "public"."t_users" VALUES (5, '2024-01-02 21:35:02', 0, '2024-01-02 21:38:43', 0, 0, 'admin1', '超级管理员1', 0, '12345678910', 'admin1@beginner2020.top', '$2b$12$s1WlihU/PaMhW0T2H360Me8IswCyKtep8p.kQcV3z9QVdS7natYL.', NULL, 0, 't', 'f');
-INSERT INTO "public"."t_users" VALUES (6, '2024-01-02 21:41:41', 0, '2024-01-02 22:11:34', 0, 0, 'admin2', '超级管理员2', 0, '12345678910', 'admin2@beginner2020.top', '$2b$12$dAdnY31ydiUP0xRdsqusu.NHv0alOKrzrGbLFQn3W8PVVefYF2G8C', NULL, 0, 't', 'f');
+INSERT INTO "public"."t_users" VALUES (6, '2024-01-02 21:41:41', 0, '2024-01-02 22:29:54', 0, 0, 'admin2', '超级管理员2', 0, '12345678910', 'admin2@beginner2020.top', '$2b$12$1JuTbUoZ4KkgNzCG1h6/9OzOLQ2NOU9g.fdPy5OHtrhFUBvBa31bO', NULL, 0, 't', 'f');
 
 -- ----------------------------
 -- Alter sequences owned by
@@ -982,14 +1045,14 @@ SELECT setval('"public"."t_config_settings_id_seq"', 8, true);
 -- ----------------------------
 ALTER SEQUENCE "public"."t_dict_data_id_seq"
 OWNED BY "public"."t_dict_data"."id";
-SELECT setval('"public"."t_dict_data_id_seq"', 8, true);
+SELECT setval('"public"."t_dict_data_id_seq"', 9, true);
 
 -- ----------------------------
 -- Alter sequences owned by
 -- ----------------------------
 ALTER SEQUENCE "public"."t_dict_details_id_seq"
 OWNED BY "public"."t_dict_details"."id";
-SELECT setval('"public"."t_dict_details_id_seq"', 19, true);
+SELECT setval('"public"."t_dict_details_id_seq"', 21, true);
 
 -- ----------------------------
 -- Alter sequences owned by
@@ -1022,6 +1085,13 @@ SELECT setval('"public"."t_job_id_seq"', 17, true);
 -- ----------------------------
 -- Alter sequences owned by
 -- ----------------------------
+ALTER SEQUENCE "public"."t_job_log_id_seq"
+OWNED BY "public"."t_job_log"."id";
+SELECT setval('"public"."t_job_log_id_seq"', 38, true);
+
+-- ----------------------------
+-- Alter sequences owned by
+-- ----------------------------
 ALTER SEQUENCE "public"."t_login_infor_id_seq"
 OWNED BY "public"."t_login_infor"."id";
 SELECT setval('"public"."t_login_infor_id_seq"', 122, true);
@@ -1038,7 +1108,7 @@ SELECT setval('"public"."t_menus_id_seq"', 34, true);
 -- ----------------------------
 ALTER SEQUENCE "public"."t_perm_label_id_seq"
 OWNED BY "public"."t_perm_label"."id";
-SELECT setval('"public"."t_perm_label_id_seq"', 57, true);
+SELECT setval('"public"."t_perm_label_id_seq"', 60, true);
 
 -- ----------------------------
 -- Alter sequences owned by
@@ -1066,7 +1136,7 @@ SELECT setval('"public"."t_roles_id_seq"', 5, true);
 -- ----------------------------
 ALTER SEQUENCE "public"."t_user_role_id_seq"
 OWNED BY "public"."t_user_role"."id";
-SELECT setval('"public"."t_user_role_id_seq"', 14, true);
+SELECT setval('"public"."t_user_role_id_seq"', 30, true);
 
 -- ----------------------------
 -- Alter sequences owned by
@@ -1164,6 +1234,18 @@ CREATE INDEX "ix_t_job_id" ON "public"."t_job" USING btree (
 -- Primary Key structure for table t_job
 -- ----------------------------
 ALTER TABLE "public"."t_job" ADD CONSTRAINT "t_job_pkey" PRIMARY KEY ("id");
+
+-- ----------------------------
+-- Indexes structure for table t_job_log
+-- ----------------------------
+CREATE INDEX "ix_t_job_log_id" ON "public"."t_job_log" USING btree (
+  "id" "pg_catalog"."int4_ops" ASC NULLS LAST
+);
+
+-- ----------------------------
+-- Primary Key structure for table t_job_log
+-- ----------------------------
+ALTER TABLE "public"."t_job_log" ADD CONSTRAINT "t_job_log_pkey" PRIMARY KEY ("id");
 
 -- ----------------------------
 -- Indexes structure for table t_login_infor
