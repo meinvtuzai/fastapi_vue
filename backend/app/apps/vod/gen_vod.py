@@ -11,7 +11,7 @@ import importlib
 class Vod:
     def __init__(self, api, query_params):
         self.api = api
-        self.module_url = "t4." + api
+        self.module_url = "t4.spiders." + api
         self.module = self.import_module(self.module_url).Spider(query_params=query_params)
 
     def import_module(self, module_url):
