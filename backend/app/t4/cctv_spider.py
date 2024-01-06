@@ -168,7 +168,12 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
                         self.config['filter'].update(ext_dict)
                     except Exception as e:
                         print(f'更新扩展筛选条件发生错误:{e}')
-        pass
+        elif extend.startswith('http'):
+            try:
+                r = self.fetch(extend)
+                self.config['filter'].update(r.json())
+            except Exception as e:
+                print(f'更新扩展筛选条件发生错误:{e}')
 
     def isVideoFormat(self, url):
         pass
