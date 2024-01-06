@@ -8,8 +8,11 @@ from abc import abstractmethod, ABCMeta
 from importlib.machinery import SourceFileLoader
 
 
-class Spider(metaclass=ABCMeta):  # 元类 默认的元类 type
+class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
     _instance = None
+
+    def __init__(self, query_params=None):
+        self.query_params = query_params or {}
 
     def __new__(cls, *args, **kwargs):
         if cls._instance:
@@ -22,6 +25,10 @@ class Spider(metaclass=ABCMeta):  # 元类 默认的元类 type
     # if not cls._instance:               
     #   cls._instance = super().__new__(cls)
     # return cls._instance
+
+    @abstractmethod
+    def init_api_ext_file(self):
+        pass
 
     @abstractmethod
     def init(self, extend=""):

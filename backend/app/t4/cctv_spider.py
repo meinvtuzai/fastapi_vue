@@ -1,25 +1,173 @@
 # coding=utf-8
 # !/usr/bin/python
+import os.path
 import sys
 
 sys.path.append('..')
-from t4.base.spider import Spider
+from t4.base.spider import BaseSpider
 import json
 import time
 import base64
 import re
 from urllib import request, parse
+from pathlib import Path
 import urllib
 import urllib.request
 import time
 
 
-class Spider(Spider):  # 元类 默认的元类 type
+class Spider(BaseSpider):  # 元类 默认的元类 type
     def getName(self):
         return "中央电视台"  # 可搜索
 
+    def init_api_ext_file(self):
+        ext_file = __file__.replace('.py', '.json')
+        print(f'ext_file:{ext_file}')
+        # 特别节目网页: https://tv.cctv.com/yxg/index.shtml?spm=C28340.PlFTqGe6Zk8M.E2PQtIunpEaz.65
+        # 特别节目分类筛选获取页面: https://tv.cctv.com/yxg/tbjm/index.shtml
+        # 纪录片网页: https://tv.cctv.com/yxg/index.shtml?spm=C28340.PlFTqGe6Zk8M.E2PQtIunpEaz.65
+        # 纪录片分类筛选获取页面:https://tv.cctv.com/yxg/jlp/index.shtml
+        # ==================== 获取特别节目的筛选条件 ======================
+        r = self.fetch('https://tv.cctv.com/yxg/tbjm/index.shtml')
+        html = r.text
+        # html = self.webReadFile(urlStr='https://tv.cctv.com/yxg/tbjm/index.shtml', header=self.header)
+        # print(html)
+        html = self.html(html)
+
+        filter_tbjm = []
+        lis = html.xpath('//*[@id="pindao"]/li')
+        li_value = []
+        for li in lis:
+            li_value.append({
+                'n': ''.join(li.xpath('./span//text()')),
+                'v': ''.join(li.xpath('@datacd')),
+            })
+        # print(li_value)
+        filter_tbjm.append({
+            "key": "datapd-channel",
+            "name": "频道",
+            "value": li_value
+        })
+
+        lis = html.xpath('//*[@id="fenlei"]/li')
+        li_value = []
+        for li in lis:
+            li_value.append({
+                'n': ''.join(li.xpath('./span//text()')),
+                'v': ''.join(li.xpath('@datalx')),
+            })
+        # print(li_value)
+        filter_tbjm.append({
+            "key": "datafl-sc",
+            "name": "类型",
+            "value": li_value
+        })
+
+        lis = html.xpath('//*[@id="zimu"]/li')
+        li_value = []
+        for li in lis:
+            li_value.append({
+                'n': ''.join(li.xpath('./span//text()')),
+                'v': ''.join(li.xpath('@datazm')),
+            })
+        # print(li_value)
+        filter_tbjm.append({
+            "key": "dataszm-letter",
+            "name": "首字母",
+            "value": li_value
+        })
+
+        print(filter_tbjm)
+
+        # ==================== 纪录片筛选获取 ======================
+        r = self.fetch('https://tv.cctv.com/yxg/jlp/index.shtml')
+        html = r.text
+        html = self.html(html)
+
+        filter_jlp = []
+        lis = html.xpath('//*[@id="pindao"]/li')
+        li_value = []
+        for li in lis:
+            li_value.append({
+                'n': ''.join(li.xpath('./span//text()')),
+                'v': ''.join(li.xpath('@datacd')),
+            })
+        # print(li_value)
+        filter_jlp.append({
+            "key": "datapd-channel",
+            "name": "频道",
+            "value": li_value
+        })
+
+        lis = html.xpath('//*[@id="fenlei"]/li')
+        li_value = []
+        for li in lis:
+            li_value.append({
+                'n': ''.join(li.xpath('./span//text()')),
+                'v': ''.join(li.xpath('@datalx')),
+            })
+        # print(li_value)
+        filter_jlp.append({
+            "key": "datafl-sc",
+            "name": "类型",
+            "value": li_value
+        })
+
+        lis = html.xpath('//*[@id="nianfen"]/li')
+        li_value = []
+        for li in lis:
+            li_value.append({
+                'n': ''.join(li.xpath('./span//text()')),
+                'v': ''.join(li.xpath('@datanf')),
+            })
+        # print(li_value)
+        filter_jlp.append({
+            "key": "datanf-year",
+            "name": "年份",
+            "value": li_value
+        })
+
+        lis = html.xpath('//*[@id="zimu"]/li')
+        li_value = []
+        for li in lis:
+            li_value.append({
+                'n': ''.join(li.xpath('./span//text()')),
+                'v': ''.join(li.xpath('@datazm')),
+            })
+        # print(li_value)
+        filter_jlp.append({
+            "key": "dataszm-letter",
+            "name": "首字母",
+            "value": li_value
+        })
+
+        print(filter_jlp)
+
+        ext_file_dict = {
+            "特别节目": filter_tbjm,
+            "纪录片": filter_jlp,
+        }
+
+        # print(json.dumps(ext_file_dict,ensure_ascii=False,indent=4))
+        with open(ext_file, mode='w+', encoding='utf-8') as f:
+            # f.write(json.dumps(ext_file_dict,ensure_ascii=False,indent=4))
+            f.write(json.dumps(ext_file_dict, ensure_ascii=False))
+
     def init(self, extend=""):
         print("============{0}============".format(extend))
+        if extend.startswith('./'):
+            ext_file = os.path.join(os.path.dirname(__file__), extend)
+            ext_file = Path(ext_file).as_posix()
+            # print(f'ext_file:{ext_file}')
+            if os.path.exists(ext_file):
+                # print('存在扩展文件')
+                with open(ext_file, mode='r', encoding='utf-8') as f:
+                    try:
+                        ext_dict = json.loads(f.read())
+                        # print(ext_dict)
+                        self.config['filter'].update(ext_dict)
+                    except Exception as e:
+                        print(f'更新扩展筛选条件发生错误:{e}')
         pass
 
     def isVideoFormat(self, url):
@@ -141,7 +289,7 @@ class Spider(Spider):  # 元类 默认的元类 type
 
     def detailContent(self, array):
         result = {}
-        aid = array[0].split('###')
+        aid = array[0].split('||')
         tid = aid[0]
         logo = aid[3]
         lastVideo = aid[2]
@@ -149,8 +297,8 @@ class Spider(Spider):  # 元类 默认的元类 type
         id = aid[4]
 
         vod_year = aid[5]
-        actors = aid[6]
-        brief = aid[7]
+        actors = aid[6] if len(aid) > 6 else ''
+        brief = aid[7] if len(aid) > 7 else ''  # get请求最长255，这个描述会有可能直接被干没了。
         fromId = 'CCTV'
         if tid == "栏目大全":
             lastUrl = 'https://api.cntv.cn/video/videoinfoByGuid?guid={0}&serviceId=tvcctv'.format(id)
@@ -267,6 +415,12 @@ class Spider(Spider):  # 元类 默认的元类 type
         result["header"] = headers
         return result
 
+    # 分类抓取地址:
+    # 栏目大全:https://tv.cctv.com/lm/index.shtml?spm=C28340.Pu9TN9YUsfNZ.E2PQtIunpEaz.24
+    # 电视剧:https://tv.cctv.com/yxg/index.shtml?spm=C28340.PlFTqGe6Zk8M.E2PQtIunpEaz.65#datacid=dsj&datafl=&datadq=&fc=%E7%94%B5%E8%A7%86%E5%89%A7&datanf=&dataszm=
+    # 动画片:https://tv.cctv.com/yxg/index.shtml?spm=C28340.PlFTqGe6Zk8M.E2PQtIunpEaz.65#datacid=dhp&datafl=&datadq=&fc=%E5%8A%A8%E7%94%BB%E7%89%87&dataszm=
+    # 记录片:https://tv.cctv.com/yxg/index.shtml?spm=C28340.PlFTqGe6Zk8M.E2PQtIunpEaz.65#datacid=jlp&datapd=&datafl=&fc=%E7%BA%AA%E5%BD%95%E7%89%87&datanf=&dataszm=
+    # 特别节目:https://tv.cctv.com/yxg/index.shtml?spm=C28340.PlFTqGe6Zk8M.E2PQtIunpEaz.65#datacid=tbjm&datapd=&datafl=&fc=%E7%89%B9%E5%88%AB%E8%8A%82%E7%9B%AE&datajr=&dataszm=
     config = {
         "player": {},
         "filter": {
@@ -569,7 +723,8 @@ class Spider(Spider):  # 元类 默认的元类 type
             year = vod['uploadtime']
             if len(url) == 0:
                 continue
-            guid = "{0}###{1}###{2}###{3}###{4}###{5}###{6}###{7}".format(tid, title, url, img, id, year, '', brief)
+            guids = [tid, title, url, img, id, year, '', brief]
+            guid = "||".join(guids)
             videos.append({
                 "vod_id": guid,
                 "vod_name": title,
@@ -587,6 +742,7 @@ class Spider(Spider):  # 元类 默认的元类 type
         jsonList = data['docs']
         for vod in jsonList:
             id = vod['lastVIDE']['videoSharedCode']
+            desc = vod['lastVIDE']['videoTitle']
             title = vod['column_name']
             url = vod['column_website']
             img = vod['column_logo']
@@ -595,13 +751,14 @@ class Spider(Spider):  # 元类 默认的元类 type
             actors = ''
             if len(url) == 0:
                 continue
-            guid = "{0}###{1}###{2}###{3}###{4}###{5}###{6}###{7}".format(tid, title, url, img, id, year, actors, brief)
+            guids = [tid, title, url, img, id, year, actors, brief]
+            guid = "||".join(guids)
             # print(vod_id)
             videos.append({
                 "vod_id": guid,
                 "vod_name": title,
                 "vod_pic": img,
-                "vod_remarks": ''
+                "vod_remarks": desc.split('》')[1].strip() if '》' in desc else desc.strip()
             })
         # print(videos)
         return videos
@@ -633,7 +790,8 @@ class Spider(Spider):  # 元类 默认的元类 type
                 actors = ''
             if len(url) == 0:
                 continue
-            guid = "{0}###{1}###{2}###{3}###{4}###{5}###{6}###{7}".format(tid, title, url, img, id, year, actors, brief)
+            guids = [tid, title, url, img, id, year, actors, brief]
+            guid = "||".join(guids)
             # print(vod_id)
             videos.append({
                 "vod_id": guid,
@@ -647,19 +805,21 @@ class Spider(Spider):  # 元类 默认的元类 type
 if __name__ == '__main__':
     spider = Spider()
     spider.init()
-    home_content = spider.homeContent(None)
-    print(home_content)
-    cate_content = spider.categoryContent('栏目大全', 1, {'cid': 'n'}, {})
-    print(cate_content)
-    vid = cate_content['list'][0]['vod_id']
-    print(vid)
-    detail_content = spider.detailContent([vid])
-    print(detail_content)
+    spider.init_api_ext_file()
 
-    vod_play_from = detail_content['list'][0]['vod_play_from']
-    vod_play_url = detail_content['list'][0]['vod_play_url']
-    print(vod_play_from, vod_play_url)
-    _url = vod_play_url.split('#')[0].split('$')[1]
-    print(_url)
-    play = spider.playerContent(vod_play_from, _url, None)
-    print(play)
+    # home_content = spider.homeContent(None)
+    # print(home_content)
+    # cate_content = spider.categoryContent('栏目大全', 1, {'cid': 'n'}, {})
+    # print(cate_content)
+    # vid = cate_content['list'][0]['vod_id']
+    # print(vid)
+    # detail_content = spider.detailContent([vid])
+    # print(detail_content)
+    #
+    # vod_play_from = detail_content['list'][0]['vod_play_from']
+    # vod_play_url = detail_content['list'][0]['vod_play_url']
+    # print(vod_play_from, vod_play_url)
+    # _url = vod_play_url.split('#')[0].split('$')[1]
+    # print(_url)
+    # play = spider.playerContent(vod_play_from, _url, None)
+    # print(play)
