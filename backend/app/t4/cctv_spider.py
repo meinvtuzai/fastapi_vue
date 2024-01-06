@@ -15,6 +15,19 @@ import urllib
 import urllib.request
 import time
 
+"""
+配置示例:
+
+{
+    "key":"hipy_cctv",
+    "name":"hipy_cctv",
+    "type":4,
+    "api":"http://192.168.31.49:5707/api/v1/vod/cctv_spider?api_ext=./cctv_spider.json",
+    "searchable":1,
+    "quickSearch":1,
+    "filterable":1,
+ }
+"""
 
 class Spider(BaseSpider):  # 元类 默认的元类 type
     def getName(self):
