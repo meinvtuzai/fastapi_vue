@@ -20,6 +20,7 @@ import time
 
 """
 配置示例:
+t4不支持ext,api里会自动含有ext参数是base64编码后的选中的筛选条件
 
 {
     "key":"hipy_cctv",
@@ -29,6 +30,7 @@ import time
     "searchable":1,
     "quickSearch":1,
     "filterable":1,
+    "ext":"./cctv_spider.json"
  }
  
  {
@@ -45,11 +47,11 @@ import time
     "key": "t3_hipy_cctv",
     "name": "t3_hipy_cctv",
     "type": 3,
-    "api": "http://192.168.31.49:5705/txt/hipy/cctv_spider.py",
+    "api": "{{host}}/txt/hipy/cctv_spider.py",
     "searchable": 1,
     "quickSearch": 1,
     "filterable": 1,
-    "ext": "./cctv_spider.json"
+    "ext": "{{host}}/txt/hipy/cctv_spider.json"
 }
 """
 
