@@ -53,7 +53,7 @@ def vod_generate(*, api: str = "", request: Request,
     filterable = getParams('filter')  # t4能否筛选
     wd = getParams('wd')
     quick = getParams('quick')
-    play_url = getParams('play_url') # 类型为t1的时候播放链接带这个进行解析
+    play_url = getParams('play_url')  # 类型为t1的时候播放链接带这个进行解析
     play = getParams('play')  # 类型为4的时候点击播放会带上来
     flag = getParams('flag')  # 类型为4的时候点击播放会带上来
     t = getParams('t')
@@ -64,6 +64,18 @@ def vod_generate(*, api: str = "", request: Request,
     extend = extend or api_ext
     if extend:
         vod.init(extend)
+
+    # 获取依赖项
+    depends = vod.getDependence()
+    for lib in depends:
+        try:
+            module = Vod(api=lib, query_params=request.query_params).module
+            # 依赖类加载成功就调用init方法进行装载模块列表
+            vod.init([module])
+            break
+        except Exception as e:
+            logger.info(f'装载依赖{lib}发生错误:{e}')
+            return respErrorJson(error_code.ERROR_INTERNAL.set_msg(f"内部服务器错误:{e}"))
 
     if ext and not ext.startswith('http'):
         try:
