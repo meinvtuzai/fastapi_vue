@@ -46,20 +46,20 @@ def vod_generate(*, api: str = "", request: Request,
 
     ac = getParams('ac')
     ids = getParams('ids')
-    filters = getParams('f')  # t1 筛选
+    filters = getParams('f')  # t1 筛选 {'cid':'1'}
     ext = getParams('ext')  # t4筛选传入base64加密的json字符串
     api_ext = getParams('api_ext')  # t4初始化api的扩展参数
     extend = getParams('extend')  # t4初始化配置里的ext参数
     filterable = getParams('filter')  # t4能否筛选
     wd = getParams('wd')
     quick = getParams('quick')
+    play_url = getParams('play_url') # 类型为t1的时候播放链接带这个进行解析
     play = getParams('play')  # 类型为4的时候点击播放会带上来
     flag = getParams('flag')  # 类型为4的时候点击播放会带上来
     t = getParams('t')
     pg = getParams('pg', '1')
     pg = int(pg)
     q = getParams('q')
-    play_url = getParams('play_url')
 
     extend = extend or api_ext
     if extend:
