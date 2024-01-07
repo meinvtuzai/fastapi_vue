@@ -49,6 +49,7 @@ def vod_generate(*, api: str = "", request: Request,
     filters = getParams('f')  # t1 筛选
     ext = getParams('ext')  # t4筛选传入base64加密的json字符串
     api_ext = getParams('api_ext')  # t4初始化api的扩展参数
+    extend = getParams('extend')  # t4初始化配置里的ext参数
     filterable = getParams('filter')  # t4能否筛选
     wd = getParams('wd')
     quick = getParams('quick')
@@ -60,8 +61,9 @@ def vod_generate(*, api: str = "", request: Request,
     q = getParams('q')
     play_url = getParams('play_url')
 
-    if api_ext:
-        vod.init(api_ext)
+    extend = extend or api_ext
+    if extend:
+        vod.init(extend)
 
     if ext and not ext.startswith('http'):
         try:
