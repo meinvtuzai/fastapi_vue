@@ -4,7 +4,10 @@ import os.path
 import sys
 
 sys.path.append('..')
-from t4.base.spider import BaseSpider
+try:
+    from base.spider import Spider as BaseSpider
+except ImportError:
+    from t4.base.spider import BaseSpider
 import json
 import time
 import base64
@@ -27,7 +30,19 @@ import time
     "quickSearch":1,
     "filterable":1,
  }
+ 
+ {
+    "key": "t3_hipy_cctv",
+    "name": "t3_hipy_cctv",
+    "type": 3,
+    "api": "http://192.168.31.49:5705/txt/hipy/cctv_spider.py",
+    "searchable": 1,
+    "quickSearch": 1,
+    "filterable": 1,
+    "ext": "./cctv_spider.json"
+}
 """
+
 
 class Spider(BaseSpider):  # 元类 默认的元类 type
     def getName(self):
