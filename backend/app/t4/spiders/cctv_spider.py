@@ -32,6 +32,16 @@ import time
  }
  
  {
+    "key":"hipy_cctv",
+    "name":"hipy_cctv",
+    "type":4,
+    "api":"http://192.168.31.49:5707/api/v1/vod/cctv_spider?api_ext={{host}}/txt/hipy/cctv_spider.json",
+    "searchable":1,
+    "quickSearch":1,
+    "filterable":1,
+ }
+ 
+ {
     "key": "t3_hipy_cctv",
     "name": "t3_hipy_cctv",
     "type": 3,
