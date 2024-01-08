@@ -45,6 +45,13 @@ def envkey(self, url: str):
     return url
 
 
+# 全局变量
+gParam = {
+    "HomeDict": {},
+    "TypeDict": {},
+}
+
+
 class Spider(BaseSpider):  # 元类 默认的元类 type
     api_qj: str = 'https://jihulab.com/qiaoji/open/-/raw/main/yinghua'
     private_key: str = 'MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDA+5YTt3w1q/0WGw+TWyCSHTAeYiwBqAqDWot1u/1hoeANpED8gtW1AxB1mYNDQ+9eR8Ml+JC13+ME6RHjEbN4+n9V9OP90c81G0qSjBQ/DKQiMIFjbTH97RjVMtswf96tqwe4Rs/DT2ym6MP4P7QvJcxrFz5VVQXyOtUxhpMc9oktWuk0XKE8Mozu1FM879RknlM6WmJL85Wl/BnZrd+/AQbzziceELGrBfjbc1UOFAxYq2kA10H3o+Z4oOIODxUtXeh4R2oH3vHb4Ynnw6reXED5KsE3u1EO5HMQZyN16TZMTIps32bPe+vQlAT6V5nGcqXGT9fntjqIxJB0T9G3AgMBAAECggEBAKP6Yuh4BZP5g0CwV8jHKuLc6FE469mwdtZsLooo5cF68c3Fnu6xIXQAmZDDk3SpmhCLe7edASF5jwZSIL/H/68xcteQEdZP2/htKy1g16dHT4Q5oQfh9hOkznACGZuZW5ZH+HRNvyZfK5ybtkEPqERTouHwSyfo6feMpDDD/+cf3h1//7JKXKA7JPEU420YucsjQwjMuu5xdPa0TPqEc5mIbOBj753Pzn4GCScM+FRqJWr2x8e+KDPcPY8CUDLBSWxGLsB0A7+bEq/EiAQkbx09QKTwwxRLgVXjBbvyPB8BOuJpPM9BHx+vFcm5WSbkJdRI4qVFtEdsN/gDfFkwcjkCgYEA8Z8i/fTFRnzyvp9Pp8E+bSaYlvpTLUZ1KYNStaDg/BqlYGgGK1Jh90qjvRbBoiIjeBQd3IFLT4pFdd7Z9drLFdvqB22SNeVQU57kir/B6NY5G7yOjXB4qN17F4S3GubYIEcjF0W1tG/uOqqzb8FxrLJTK8WiFudbBt2ioCO4pJsCgYEAzHd8MctmD1Z1eM/xusvX1yCwGpxBuHT+ymThzLXyI6Ej0Q50jOQlf3cTyY/FgGbvAMz+oBybkEwE80gu7CPi0WPs+yCpAIB4+Th7afsrRylQI1ZWoRovaRmsyjnkIw0Mnj06VYNYPtkzm/OViRIqf4ESTTGas24bDm5DuwM9gxUCgYBwg4BR7gdnWYvYRGtdXNlrDowD0jGlZaftWt/LAE2EWAwmpooo5kYEV9eDl/M3QtptckCti++77FGIH+wzVl03op6KMvXg7xXGurkF+2GawRb62YUwS+2EBQ7q1rxFZLXD4hxvG+EPUwgGfbLtGZGLr8aXHYLrU3TJ769pDvlOfQKBgAFlAzzXtU9/eHele3GZuFQoTeswi6Y1bhN1UrDxwMALdlITtinL2JGg/0qNp3wzt4ea3lW7PDhkvFfocyF7MS3ab6Ba3aw6NBkHEJhtdSMcHgbPrPGWWyJtYWdTs8GlciOWKVKx/aUYGCkFJUz1CcMq3zQVlYeJxbd4ew/Iet/tAoGBAMRfvG1iLQAlS3AGaQeRwVxnvpciDn+7/sUCf8DEOk8Bqg4/ytJDTDrWufCtwmpsXmp6AUQig9mNKj7z26wSNbwYdzPsncK+sGRlS7eLAzzcv1a+1pghOOGDuQNzwlFOcauhkrcqjeKmu7OiKD48pvh3ZICiIWS1YL7LuMfUwHRJ'
@@ -114,6 +121,7 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         # ret = self.decode_rsa(cipher_text[1:])
         # print(ret)
         # extend内容进行解密后可以获取key,iv,token等参数
+        # print('gParam:',gParam)
         if extend.startswith('http'):
             self.init_extend(extend)
         else:
@@ -148,23 +156,29 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         result = {}
         classes = []
         filters = {}
+        type_dict = {}
         for tp in data.get('get_type') or []:
             classes.append({
                 'type_name': tp['type_name'],
                 'type_id': tp['type_id']
             })
+            type_dict[str(tp['type_id'])] = tp['type_name']
             tp_filters = []
             for key, value in tp['type_extend'].items():
-                tp_filters.append({
-                    'key': key,
-                    'name': filter_names.get(key) or key,
-                    'value': [{'n': '全部', 'v': ''}] + [{'n': i, 'v': i} for i in value.split(',') if i]
-                })
+                if value:
+                    tp_filters.append({
+                        'key': key,
+                        'name': filter_names.get(key) or key,
+                        'value': [{'n': '全部', 'v': ''}] + [{'n': i, 'v': i} for i in value.split(',') if i]
+                    })
             filters[tp['type_id']] = tp_filters
 
         result['class'] = classes
         if filterable:
             result['filters'] = filters
+        global gParam
+        gParam['HomeDict'].update(result)
+        gParam['TypeDict'].update(type_dict)
         return result
 
     def homeVideoContent(self):
@@ -203,7 +217,7 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         page_count = 21  # 默认赋值一页列表21条数据
         fls = extend.keys()  # 哪些刷新数据
         # ?type_id=1&area=&lang=&year=&order=time&type_name=&page=1&pageSize=21
-        params = {'page': pg, 'pageSize': page_count, 'tid': tid, 'type_name': ''}
+        params = {'page': pg, 'pageSize': page_count, 'tid': tid, 'type_name': gParam['TypeDict'].get(str(tid)) or ''}
         for fl in fls:
             params[fl] = extend[fl]
         r = self.fetch(self.api_cate, data=params)
@@ -233,7 +247,7 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         print(r.url)
         ret = r.json()
         data = self.decode(ret['data'])
-        print(data)
+        # print(data)
 
         vod = {"vod_id": vod_id,
                "vod_name": data['vod_name'],
@@ -259,7 +273,7 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         result = {
             'list': [vod]
         }
-        print(vod)
+        # print(vod)
         return result
 
     def searchContent(self, wd, quick=False, pg=1):
@@ -301,7 +315,7 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
             params = {'play_url': _v[0], 'label': _v[2], 'key': _v[1]}
         else:
             params = {'play_url': id, 'label': '主线', 'key': 'mp4'}
-        print(params)
+        # print(params)
         r = self.postBinary(self.api_parse, data=params, boundary='--dio-boundary-1205762094', headers=headers)
         # print(r.request.body.decode())
         ret = r.json()
