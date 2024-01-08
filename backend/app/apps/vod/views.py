@@ -27,7 +27,8 @@ api_url = ''
 
 
 # u: Users = Depends(deps.user_perm([f"{access_name}:get"]))
-@router.get(api_url + "/{api}", summary="生成Vod")
+# @router.get(api_url + "/{api:path}", summary="生成Vod")
+@router.api_route(methods=['GET', 'POST'], path=api_url + "/{api:path}", summary="生成Vod")
 def vod_generate(*, api: str = "", request: Request,
                  db: Session = Depends(deps.get_db),
                  ) -> Any:
@@ -51,6 +52,8 @@ def vod_generate(*, api: str = "", request: Request,
     api_ext = getParams('api_ext')  # t4初始化api的扩展参数
     extend = getParams('extend')  # t4初始化配置里的ext参数
     filterable = getParams('filter')  # t4能否筛选
+    if request.method.lower() == 'POST'.lower():  # t4 ext网络数据太长会自动post,此时强制可筛选
+        filterable = True
     wd = getParams('wd')
     quick = getParams('quick')
     play_url = getParams('play_url')  # 类型为t1的时候播放链接带这个进行解析
@@ -121,7 +124,7 @@ def vod_generate(*, api: str = "", request: Request,
         data = vod.detailContent(id_list)
         return respVodJson(data)
     if wd:  # 搜索
-        data = vod.searchContent(wd, quick)
+        data = vod.searchContent(wd, quick, pg)
         return respVodJson(data)
 
     home_data = vod.homeContent(filterable)

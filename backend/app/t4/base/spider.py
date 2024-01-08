@@ -3,9 +3,11 @@
 import re
 import json
 import requests
+import time
 from lxml import etree
 from abc import abstractmethod, ABCMeta
 from importlib.machinery import SourceFileLoader
+from urllib3 import encode_multipart_formdata
 
 
 class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
@@ -51,7 +53,7 @@ class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
         pass
 
     @abstractmethod
-    def searchContent(self, key, quick):
+    def searchContent(self, key, quick, pg=1):
         pass
 
     @abstractmethod
@@ -97,8 +99,10 @@ class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
                        src)
         return clean
 
-    def fetch(self, url, headers={}, cookies=""):
-        rsp = requests.get(url, headers=headers, cookies=cookies)
+    def fetch(self, url, data=None, headers={}, cookies=""):
+        if data is None:
+            data = {}
+        rsp = requests.get(url, params=data, headers=headers, cookies=cookies)
         rsp.encoding = 'utf-8'
         return rsp
 
@@ -109,6 +113,20 @@ class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
 
     def postJson(self, url, json, headers={}, cookies={}):
         rsp = requests.post(url, json=json, headers=headers, cookies=cookies)
+        rsp.encoding = 'utf-8'
+        return rsp
+
+    def postBinary(self, url, data: dict, boundary=None, headers={}, cookies={}):
+        if boundary is None:
+            boundary = f'--dio-boundary-{int(time.time())}'
+        headers['Content-Type'] = f'multipart/form-data; boundary={boundary}'
+        # print(headers)
+        fields = []
+        for key, value in data.items():
+            fields.append((key, (None, value, None)))
+        m = encode_multipart_formdata(fields, boundary=boundary)
+        data = m[0]
+        rsp = requests.post(url, data=data, headers=headers, cookies=cookies)
         rsp.encoding = 'utf-8'
         return rsp
 
