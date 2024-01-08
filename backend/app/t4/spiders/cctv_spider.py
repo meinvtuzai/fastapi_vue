@@ -444,7 +444,7 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
             returnTxt.append(value)
         return returnTxt
 
-    def searchContent(self, key, quick):
+    def searchContent(self, key, quick, pg=1):
         key = urllib.parse.quote(key)
         Url = 'https://search.cctv.com/ifsearch.php?page=1&qtext={0}&sort=relevance&pageSize=20&type=video&vtime=-1&datepid=1&channel=&pageflag=0&qtext_str={0}'.format(
             key)

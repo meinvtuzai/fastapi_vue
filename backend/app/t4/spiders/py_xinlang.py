@@ -175,7 +175,7 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
             result = {'list': []}
         return result
 
-    def searchContent(self, key, quick):
+    def searchContent(self, key, quick, pg=1):
         Url = 'https://api.xinlangapi.com/xinlangapi.php/provide/vod/from/xlyun/at/xml/?ac=list&wd={0}&pg={1}'.format(
             urllib.parse.quote(key), '1')
         xmlTxt = self.custom_webReadFile(urlStr=Url)
