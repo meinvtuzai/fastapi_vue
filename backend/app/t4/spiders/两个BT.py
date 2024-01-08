@@ -32,7 +32,7 @@ api里会自动含有ext参数是base64编码后的选中的筛选条件
     "key":"hipy_t4_两个BT",
     "name":"两个BT(hipy_t4)",
     "type":4,
-    "api":"http://192.168.31.49:5707/api/v1/vod/两个BT",
+    "api":"http://192.168.31.49:5707/api/v1/vod/两个BT?api_ext={{host}}/txt/hipy/两个BT.json",
     "searchable":1,
     "quickSearch":0,
     "filterable":1,
