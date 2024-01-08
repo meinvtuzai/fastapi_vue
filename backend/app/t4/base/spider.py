@@ -3,11 +3,16 @@
 import re
 import json
 import requests
+import warnings
 import time
 from lxml import etree
 from abc import abstractmethod, ABCMeta
 from importlib.machinery import SourceFileLoader
 from urllib3 import encode_multipart_formdata
+
+# 关闭警告
+warnings.filterwarnings("ignore")
+requests.packages.urllib3.disable_warnings()
 
 
 class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
@@ -102,17 +107,17 @@ class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
     def fetch(self, url, data=None, headers={}, cookies=""):
         if data is None:
             data = {}
-        rsp = requests.get(url, params=data, headers=headers, cookies=cookies)
+        rsp = requests.get(url, params=data, headers=headers, cookies=cookies, verify=False)
         rsp.encoding = 'utf-8'
         return rsp
 
     def post(self, url, data, headers={}, cookies={}):
-        rsp = requests.post(url, data=data, headers=headers, cookies=cookies)
+        rsp = requests.post(url, data=data, headers=headers, cookies=cookies, verify=False)
         rsp.encoding = 'utf-8'
         return rsp
 
     def postJson(self, url, json, headers={}, cookies={}):
-        rsp = requests.post(url, json=json, headers=headers, cookies=cookies)
+        rsp = requests.post(url, json=json, headers=headers, cookies=cookies, verify=False)
         rsp.encoding = 'utf-8'
         return rsp
 
@@ -126,7 +131,7 @@ class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
             fields.append((key, (None, value, None)))
         m = encode_multipart_formdata(fields, boundary=boundary)
         data = m[0]
-        rsp = requests.post(url, data=data, headers=headers, cookies=cookies)
+        rsp = requests.post(url, data=data, headers=headers, cookies=cookies, verify=False)
         rsp.encoding = 'utf-8'
         return rsp
 
