@@ -16,6 +16,7 @@ class JobLog(Base):
     func_name = fields.Char(string='调用目标字符串')
     func_args = fields.Char(string='传入位置参数')
     func_kwargs = fields.Char(string='传入字典参数')
-    run_info = fields.Text(string='日志信息')
+    run_info = fields.Text(string='正常日志信息')
+    run_except_info = fields.Text(string='异常日志信息')
     run_status = fields.Integer(string='执行状态')
     run_time = fields.Datetime(string='执行时间')

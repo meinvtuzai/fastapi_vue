@@ -17,8 +17,9 @@ class CURDJobLog(CRUDBase):
 
     def search(self, db: Session, *,
                run_status: int = None,
-               run_time: str = None,
                job_id: str = None,
+               begin_time: str = None,
+               end_time: str = None,
                job_name: str = None,
                job_group: str = None,
                order_bys: Optional[list] = None,
@@ -27,13 +28,13 @@ class CURDJobLog(CRUDBase):
         if run_status is not None:
             filters.append(self.model.run_status == run_status)
         if job_id is not None:
-            filters.append(self.model.job_id == job_id)
+            filters.append(self.model.job_id.like(f"%{job_id}%"))
         if job_name is not None:
             filters.append(self.model.job_name.like(f"%{job_name}%"))
         if job_group is not None:
             filters.append(self.model.job_group == job_group)
-        if run_time is not None:
-            filters.append(self.model.run_time.like(f"%{run_time}%"))
+        if all([begin_time, end_time]):
+            filters.append(self.model.run_time.between(begin_time, end_time))
 
         records, total, _, _ = self.get_multi(db, page=page, page_size=page_size, filters=filters, order_bys=order_bys)
 

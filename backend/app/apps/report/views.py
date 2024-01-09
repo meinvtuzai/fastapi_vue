@@ -9,10 +9,12 @@ from fastapi import APIRouter, Request, Depends, Query, File, UploadFile
 from typing import Any
 from sqlalchemy.orm import Session
 from fastapi.responses import StreamingResponse
+
+from common.resp import respErrorJson
 from .gen_report import Report
 from apps.permission.models.user import Users
 
-from common import deps
+from common import deps, error_code
 
 router = APIRouter()
 
@@ -29,7 +31,10 @@ def excel_generate(*, _excel_name: str = "", request: Request,
     template参数默认为1，下载导入模板
     template参数传0可以导出筛选后的表格数据
     """
-    report = Report(code=_excel_name, query_params=request.query_params).module
+    try:
+        report = Report(code=_excel_name, query_params=request.query_params).module
+    except Exception as e:
+        return respErrorJson(error_code.ERROR_INTERNAL.set_msg(f"内部服务器错误:{e}"))
     # t
     if request.query_params.get("template", "1") == "1":
         bio = report.get_template()  # 模板

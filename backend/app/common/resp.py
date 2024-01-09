@@ -78,6 +78,16 @@ def respSuccessJson(data: Union[list, dict, str] = None, msg: str = "Success"):
     )
 
 
+def respVodJson(data: Union[list, dict, str] = None):
+    """ 接口成功返回 """
+    if not data and not isinstance(data, list) and not isinstance(data, dict):
+        data = {}
+    return MyJSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=data
+    )
+
+
 def respErrorJson(error: ErrorBase, *, msg: Optional[str] = None, msg_append: str = "",
                   data: Union[list, dict, str] = None, status_code: int = status.HTTP_200_OK):
     """ 错误接口返回 """

@@ -1,0 +1,4 @@
+id,created_time,creator_id,modified_time,modifier_id,is_deleted,job_id,job_name,job_group,func_name,func_args,func_kwargs,run_info,run_status,run_time,run_except_info
+34,2024-01-06 13:43:41,0,2024-01-06 13:43:41,0,0,demo2,测试2,setInterval,tasks.demo_task.demo,['哈哈哈哈哈'],{'key':'你好吗'},"----------------task_id:demo2,args:('哈哈哈哈哈',),kwargs:{'key': '你好吗'}----------------",1,2024-01-06 13:43:41,
+35,2024-01-06 13:43:45,0,2024-01-06 13:43:45,0,0,demo,测试,setInterval,tasks.demo_task.demo,['hello world'],"{'a':'1','b':'2'}","----------------task_id:demo,args:('hello world',),kwargs:{'a': '1', 'b': '2'}----------------",1,2024-01-06 13:43:45,
+36,2024-01-06 13:43:48,0,2024-01-06 13:43:48,0,0,kzz,可转债打新查询,setInterval,tasks.kzz_spider.get_now_kzz,,{'dayeExtra':8},[],1,2024-01-06 13:43:48,

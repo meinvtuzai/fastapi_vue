@@ -8,6 +8,7 @@ from .monitor import monitor_server_api, monitor_logininfor_api, monitor_job_api
     monitor_cache_api
 from .web import web_api
 from .report import report_api
+from .vod import vod_api
 
 api_router = APIRouter()
 web_router = APIRouter()
@@ -16,6 +17,7 @@ api_router.include_router(user_api, prefix="/user", tags=["用户管理"])
 api_router.include_router(system_api, prefix="/system", tags=["系统设置"])
 api_router.include_router(permission_api, prefix="/permission", tags=["权限管理"])
 api_router.include_router(report_api, prefix="/report", tags=["报表导出"])
+api_router.include_router(vod_api, prefix="/vod", tags=["爬虫源生成"])
 
 hiker_apis = [hiker_developer_api, hiker_rule_type_api, hiker_rule_api]
 for hiker_api in hiker_apis:

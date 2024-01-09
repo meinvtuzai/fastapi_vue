@@ -54,3 +54,6 @@ id,created_time,creator_id,modified_time,modifier_id,is_deleted,label,remark,sta
 53,2023-12-17 16:00:22,0,2023-12-17 16:00:22,0,0,monitor:cache:get,,0
 54,2023-12-17 16:47:58,0,2023-12-17 16:47:58,0,0,monitor:cache:delete,,0
 55,2024-01-02 20:24:36,0,2024-01-02 20:24:36,0,0,system:user:export,,0
+56,2024-01-06 12:37:09,0,2024-01-06 12:37:09,0,0,monitor:job-log:delete,,0
+57,2024-01-06 13:24:14,0,2024-01-06 13:24:14,0,0,/monitor/jobLog/export:export,,0
+58,2024-01-06 13:36:05,0,2024-01-06 13:36:05,0,0,monitor:job:log:export,,0

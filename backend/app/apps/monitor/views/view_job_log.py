@@ -27,14 +27,15 @@ async def searchRecords(*,
                         run_status: int = Query(None),
                         job_id: str = Query(None),
                         job_name: str = Query(None),
-                        run_time: str = Query(None),
+                        begin_time: str = Query(None),
+                        end_time: str = Query(None),
                         job_group: str = Query(None),
                         page: int = Query(1, gt=0),
                         page_size: int = Query(20, gt=0),
                         ):
     order_bys = [desc(JobLog.run_time)]
     res = curd.search(db, run_status=run_status, job_id=job_id, job_name=job_name, job_group=job_group,
-                      run_time=run_time, page=page,
+                      begin_time=begin_time, end_time=end_time, page=page,
                       page_size=page_size, order_bys=order_bys)
     return respSuccessJson(res)
 

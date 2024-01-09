@@ -23,51 +23,48 @@ from numpy import safe_eval
 def job_listener(Event):
     job = scheduler.get_job(Event.job_id)
     db = next(get_db())  # type: SessionLocal
-    db_job_val = {}
     if job:
         db_job = db.query(Job).filter(Job.job_name == job.name).first()
-        db_job_val = {
-            'job_id': db_job.job_id,
-            'job_name': db_job.job_name,
-            'job_group': db_job.job_group,
-            'func_name': db_job.func_name,
-            'func_args': db_job.func_args,
-            'func_kwargs': db_job.func_kwargs,
-        }
+    else:
+        db_job = db.query(Job).filter(Job.job_id == Event.job_id.replace('temp_', '', 1)).first()
+
+    db_job_val = {
+        'job_id': db_job.job_id,
+        'job_name': db_job.job_name,
+        'job_group': db_job.job_group,
+        'func_name': db_job.func_name,
+        'func_args': db_job.func_args,
+        'func_kwargs': db_job.func_kwargs,
+    } if db_job else {}
+
+    if job:
         if not Event.exception:
             logger.info("jobname=%s|jobtrigger=%s|jobtime=%s|retval=%s", job.name, job.trigger,
                         Event.scheduled_run_time, Event.retval)
             obj_in = {'job_name': job.name, 'run_time': Event.scheduled_run_time, 'run_status': 1,
                       'run_info': f'{Event.retval}'}
-            obj_in.update(db_job_val)
-            curd_job_log.create(db, obj_in=obj_in)
         else:
             logger.error("jobname=%s|jobtrigger=%s|errcode=%s|exception=[%s]|traceback=[%s]|scheduled_time=%s",
                          job.name,
                          job.trigger, Event.code,
                          Event.exception, Event.traceback, Event.scheduled_run_time)
             obj_in = {'job_name': job.name, 'run_time': Event.scheduled_run_time, 'run_status': 0,
-                      'run_info': f'{Event.traceback}'}
-            obj_in.update(db_job_val)
-            curd_job_log.create(db, obj_in=obj_in)
+                      'run_info': f'{Event.traceback}', 'run_except_info': f'{Event.exception}'}
     else:
-        # print(Event.job_id)
-        db_job = db.query(Job).filter(Job.job_id == Event.job_id.replace('temp_', '', 1)).first()
-        if db_job:
-            db_job_val = {
-                'job_id': db_job.job_id,
-                'job_name': db_job.job_name,
-                'job_group': db_job.job_group,
-                'func_name': db_job.func_name,
-                'func_args': db_job.func_args,
-                'func_kwargs': db_job.func_kwargs,
-            }
         logger.info("任务执行一次后已自动清除:job_id=%s|jobtime=%s|retval=%s", Event.job_id, Event.scheduled_run_time,
                     Event.retval)
-        obj_in = {'job_id': Event.job_id, 'run_time': Event.scheduled_run_time, 'run_status': 1,
-                  'run_info': f'{Event.retval}'}
-        obj_in.update(db_job_val)
-        print(obj_in)
+        if not Event.exception:
+            obj_in = {'job_id': Event.job_id, 'run_time': Event.scheduled_run_time, 'run_status': 1,
+                      'run_info': f'{Event.retval}'}
+        else:
+            logger.error("job_id=%s|errcode=%s|exception=[%s]|traceback=[%s]|scheduled_time=%s",
+                         Event.job_id, Event.code,
+                         Event.exception, Event.traceback, Event.scheduled_run_time)
+            obj_in = {'job_id': Event.job_id, 'run_time': Event.scheduled_run_time, 'run_status': 0,
+                      'run_info': f'{Event.traceback}', 'run_except_info': f'{Event.exception}'}
+
+    obj_in.update(db_job_val)
+    if obj_in.get('run_info') and obj_in['run_info'] != str(None):
         curd_job_log.create(db, obj_in=obj_in)
 
 
@@ -297,7 +294,7 @@ class JobInit:
     # 重启服务检测数据库有哪些服务需要自启动
     def _automatic_task(self):
         # 查询数据库开了自动重启的任务
-        active_jobs = self.db.query(Job).filter(Job.active == True).all()
+        active_jobs = self.db.query(Job).filter(Job.active == True, Job.is_deleted == 0).all()
         add_list = []
         for active_job in active_jobs:
             if query_job_id(active_job.job_id):

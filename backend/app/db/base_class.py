@@ -33,9 +33,10 @@ class Base:
         :param label:   type: string    转后时间戳的的字段名(相当于 sql 中的 AS )
         """
         if 'sqlite' in settings.SQLALCHEMY_ENGINE:
-            ts = func.strftime('%%s', column)  # sqlite
+            ts = func.strftime('%s', column)  # sqlite
         elif 'postgresql' in settings.SQLALCHEMY_ENGINE:
             ts = cast(func.date_part('EPOCH', column), Integer)  # pgsql
+            # ts = func.date_part('EPOCH', column)
         elif 'mysql' in settings.SQLALCHEMY_ENGINE:
             ts = func.unix_timestamp(column)  # mysql
         else:
