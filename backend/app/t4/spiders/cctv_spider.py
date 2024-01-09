@@ -5,7 +5,8 @@ import sys
 
 sys.path.append('..')
 try:
-    from base.spider import Spider as BaseSpider
+    # from base.spider import Spider as BaseSpider
+    from base.spider import BaseSpider
 except ImportError:
     from t4.base.spider import BaseSpider
 import json
@@ -212,21 +213,25 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
                     except Exception as e:
                         print(f'更新扩展筛选条件发生错误:{e}')
 
-        print("============{0}============".format(extend))
-        if isinstance(extend, str):
-            if extend.startswith('./'):
-                ext_file = os.path.join(os.path.dirname(__file__), extend)
+        print("============依赖列表:{0}============".format(extend))
+        ext = self.extend
+        print("============ext:{0}============".format(ext))
+        if isinstance(ext, str) and ext:
+            if ext.startswith('./'):
+                ext_file = os.path.join(os.path.dirname(__file__), ext)
                 init_file(ext_file)
-            elif extend.startswith('http'):
+            elif ext.startswith('http'):
                 try:
-                    r = self.fetch(extend)
+                    r = self.fetch(ext)
                     self.config['filter'].update(r.json())
                 except Exception as e:
                     print(f'更新扩展筛选条件发生错误:{e}')
-            elif extend and not extend.startswith('./') and not extend.startswith('http'):
-                ext_file = os.path.join(os.path.dirname(__file__), './' + extend + '.json')
+            elif not ext.startswith('./') and not ext.startswith('http'):
+                ext_file = os.path.join(os.path.dirname(__file__), './' + ext + '.json')
                 init_file(ext_file)
-        elif isinstance(extend, list):
+
+        # 装载模块，这里只要一个就够了
+        if isinstance(extend, list):
             for lib in extend:
                 if '.Spider' in str(type(lib)):
                     self.module = lib
@@ -507,7 +512,8 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
                  "value": [{"n": "全部", "v": ""}, {"n": "中国大陆", "v": "中国大陆"}, {"n": "中国香港", "v": "香港"},
                            {"n": "美国", "v": "美国"}, {"n": "欧洲", "v": "欧洲"}, {"n": "泰国", "v": "泰国"}]},
                 {"key": "datanf-year", "name": "年份",
-                 "value": [{"n": "全部", "v": ""}, {"n": "2024", "v": "2024"},{"n": "2023", "v": "2023"}, {"n": "2022", "v": "2022"},
+                 "value": [{"n": "全部", "v": ""}, {"n": "2024", "v": "2024"}, {"n": "2023", "v": "2023"},
+                           {"n": "2022", "v": "2022"},
                            {"n": "2021", "v": "2021"}, {"n": "2020", "v": "2020"}, {"n": "2019", "v": "2019"},
                            {"n": "2018", "v": "2018"}, {"n": "2017", "v": "2017"}, {"n": "2016", "v": "2016"},
                            {"n": "2015", "v": "2015"}, {"n": "2014", "v": "2014"}, {"n": "2013", "v": "2013"},
@@ -566,7 +572,8 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
                            {"n": "军事", "v": "军事"}, {"n": "探索", "v": "探索"}, {"n": "社会", "v": "社会"},
                            {"n": "时政", "v": "时政"}, {"n": "经济", "v": "经济"}, {"n": "科技", "v": "科技"}]},
                 {"key": "datanf-year", "name": "年份",
-                 "value": [{"n": "全部", "v": ""}, {"n": "2024", "v": "2024"},{"n": "2023", "v": "2023"}, {"n": "2022", "v": "2022"},
+                 "value": [{"n": "全部", "v": ""}, {"n": "2024", "v": "2024"}, {"n": "2023", "v": "2023"},
+                           {"n": "2022", "v": "2022"},
                            {"n": "2021", "v": "2021"}, {"n": "2020", "v": "2020"}, {"n": "2019", "v": "2019"},
                            {"n": "2018", "v": "2018"}, {"n": "2017", "v": "2017"}, {"n": "2016", "v": "2016"},
                            {"n": "2015", "v": "2015"}, {"n": "2014", "v": "2014"}, {"n": "2013", "v": "2013"},

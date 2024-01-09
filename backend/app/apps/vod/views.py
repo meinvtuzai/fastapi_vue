@@ -65,20 +65,25 @@ def vod_generate(*, api: str = "", request: Request,
     q = getParams('q')
 
     extend = extend or api_ext
-    if extend:
-        vod.init(extend)
+    vod.setExtendInfo(extend)
 
     # 获取依赖项
     depends = vod.getDependence()
+    modules = []
+    module_names = []
     for lib in depends:
         try:
             module = Vod(api=lib, query_params=request.query_params).module
-            # 依赖类加载成功就调用init方法进行装载模块列表
-            vod.init([module])
-            break
+            modules.append(module)
+            module_names.append(lib)
         except Exception as e:
             logger.info(f'装载依赖{lib}发生错误:{e}')
-            return respErrorJson(error_code.ERROR_INTERNAL.set_msg(f"内部服务器错误:{e}"))
+            # return respErrorJson(error_code.ERROR_INTERNAL.set_msg(f"内部服务器错误:{e}"))
+
+    if len(module_names) > 0:
+        logger.info(f'当前依赖列表:{module_names}')
+
+    vod.init(modules)
 
     if ext and not ext.startswith('http'):
         try:
@@ -93,13 +98,18 @@ def vod_generate(*, api: str = "", request: Request,
         logger.info(f'加载爬虫源:{rule_title}')
 
     if play:  # t4播放
-        play_url = vod.playerContent(flag, play, vipFlags=None)
-        if isinstance(play_url, str):
-            return respVodJson({'parse': 0, 'playUrl': '', 'jx': 0, 'url': play_url})
-        elif isinstance(play_url, dict):
-            return respVodJson(play_url)
-        else:
-            return play_url
+        try:
+            play_url = vod.playerContent(flag, play, vipFlags=None)
+            if isinstance(play_url, str):
+                return respVodJson({'parse': 0, 'playUrl': '', 'jx': 0, 'url': play_url})
+            elif isinstance(play_url, dict):
+                return respVodJson(play_url)
+            else:
+                return play_url
+        except Exception as e:
+            error_msg = f"playerContent执行发生内部服务器错误:{e}"
+            logger.error(error_msg)
+            return respErrorJson(error_code.ERROR_INTERNAL.set_msg(error_msg))
 
     if play_url:  # t1播放
         play_url = vod.playerContent(flag, play_url, vipFlags=None)
@@ -111,21 +121,37 @@ def vod_generate(*, api: str = "", request: Request,
             return play_url
 
     if ac and t:  # 一级
-        fl = {}
-        if filters and filters.find('{') > -1 and filters.find('}') > -1:
-            fl = json.loads(filters)
-        # print(filters,type(filters))
-        # print(fl,type(fl))
-        logger.info(fl)
-        data = vod.categoryContent(t, pg, filterable, fl)
-        return respVodJson(data)
+        try:
+            fl = {}
+            if filters and filters.find('{') > -1 and filters.find('}') > -1:
+                fl = json.loads(filters)
+            # print(filters,type(filters))
+            # print(fl,type(fl))
+            logger.info(fl)
+            data = vod.categoryContent(t, pg, filterable, fl)
+            return respVodJson(data)
+        except Exception as e:
+            error_msg = f"categoryContent执行发生内部服务器错误:{e}"
+            logger.error(error_msg)
+            return respErrorJson(error_code.ERROR_INTERNAL.set_msg(error_msg))
+
     if ac and ids:  # 二级
-        id_list = ids.split(',')
-        data = vod.detailContent(id_list)
-        return respVodJson(data)
+        try:
+            id_list = ids.split(',')
+            data = vod.detailContent(id_list)
+            return respVodJson(data)
+        except Exception as e:
+            error_msg = f"detailContent执行发生内部服务器错误:{e}"
+            logger.error(error_msg)
+            return respErrorJson(error_code.ERROR_INTERNAL.set_msg(error_msg))
     if wd:  # 搜索
-        data = vod.searchContent(wd, quick, pg)
-        return respVodJson(data)
+        try:
+            data = vod.searchContent(wd, quick, pg)
+            return respVodJson(data)
+        except Exception as e:
+            error_msg = f"searchContent执行发生内部服务器错误:{e}"
+            logger.error(error_msg)
+            return respErrorJson(error_code.ERROR_INTERNAL.set_msg(error_msg))
 
     home_data = vod.homeContent(filterable)
     home_video_data = vod.homeVideoContent()
