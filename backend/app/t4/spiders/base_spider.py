@@ -381,4 +381,5 @@ if __name__ == '__main__':
     spider.init()
     # spider.init_api_ext_file()  # 生成筛选对应的json文件
     spider.log({'key': 'value'})
+    spider.log('====文本内容====')
     # spider.searchContent('斗罗大陆')

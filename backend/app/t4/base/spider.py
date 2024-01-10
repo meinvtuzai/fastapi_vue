@@ -26,6 +26,13 @@ from Crypto.Cipher import AES, PKCS1_v1_5 as PKCS1_cipher
 from Crypto.Util.Padding import unpad
 from Crypto.PublicKey import RSA
 
+try:
+    from com.github.tvbox.osc.util import LOG
+
+    _log = LOG.e
+except ImportError:
+    _log = print
+
 # 关闭警告
 warnings.filterwarnings("ignore")
 requests.packages.urllib3.disable_warnings()
@@ -168,18 +175,12 @@ class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
         @param msg:
         @return:
         """
-        try:
-            from com.github.tvbox.osc.util import LOG
-            log = LOG.e
-        except:
-            log = print
-
         if isinstance(msg, dict) or isinstance(msg, list):
             msg = self.json2str(msg)
         else:
             msg = f'{msg}'
 
-        log(msg)
+        _log(msg)
 
     @staticmethod
     def str2json(str):
