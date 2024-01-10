@@ -44,8 +44,7 @@ api里会自动含有ext参数是base64编码后的选中的筛选条件
     "quickSearch":0,
     "filterable":1,
     "ext":"cntv央视"
- }
- 
+ },
  {
     "key": "hipy_t3_cntv央视",
     "name": "cntv央视(hipy_t3)",
@@ -55,7 +54,7 @@ api里会自动含有ext参数是base64编码后的选中的筛选条件
     "quickSearch": 0,
     "filterable": 1,
     "ext": "{{host}}/txt/hipy/cntv央视.json"
-}
+},
 """
 
 
@@ -246,6 +245,7 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
     def homeContent(self, filter):
         result = {}
         cateManual = {
+            "4K专区": "4K专区",
             "栏目大全": "栏目大全",
             "特别节目": "特别节目",
             "纪录片": "纪录片",
@@ -335,6 +335,11 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
             url = 'https://api.cntv.cn/lanmu/columnSearch?&fl={0}&fc={1}&cid={2}&p={3}&n=20&serviceId=tvcctv&t=json&cb=ko'.format(
                 fl, fc, cid, pg)
             pagecount = 20
+        elif tid == '4K专区':
+            cid = 'CHAL1558416868484111'
+            url = 'https://api.cntv.cn/NewVideo/getLastVideoList4K?serviceId=cctv4k&cid={0}&p={1}&n={2}&t=json&cb=ko'.format(
+                cid,pg,pagecount
+            )
         else:
             url = 'https://tv.cctv.com/epg/index.shtml'
 
@@ -345,6 +350,12 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
             if index > -1:
                 htmlText = htmlText[3:index]
                 videos = self.get_list1(html=htmlText, tid=tid)
+        elif tid == '4K专区':
+            index = htmlText.rfind(');')
+            if index > -1:
+                htmlText = htmlText[3:index]
+                videos = self.get_list_4k(html=htmlText, tid=tid)
+
         else:
             videos = self.get_list(html=htmlText, tid=tid)
         # print(videos)
@@ -378,6 +389,9 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
                 topicId)
             # htmlTxt = self.webReadFile(urlStr=Url, header=self.header)
             htmlTxt = self.fetch(Url).text
+        elif tid == "4K专区":
+            Url = 'https://api.cntv.cn/NewVideo/getVideoListByAlbumIdNew?id={0}&serviceId=cctv4k&p=1&n=100&mode=0&pub=1'.format(id)
+            print(Url)
         else:
             Url = 'https://api.cntv.cn/NewVideo/getVideoListByAlbumIdNew?id={0}&serviceId=tvcctv&p=1&n=100&mode=0&pub=1'.format(
                 id)
@@ -397,7 +411,7 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
                 if len(videoList) < 1:
                     # htmlTxt = self.webReadFile(urlStr=lastVideo, header=self.header)
                     htmlTxt = self.fetch(lastVideo).text
-                    if tid == "电视剧" or tid == "纪录片":
+                    if tid == "电视剧" or tid == "纪录片" or tid == "4K专区":
                         patternTxt = r"'title':\s*'(?P<title>.+?)',\n{0,1}\s*'brief':\s*'(.+?)',\n{0,1}\s*'img':\s*'(.+?)',\n{0,1}\s*'url':\s*'(?P<url>.+?)'"
                     elif tid == "特别节目":
                         patternTxt = r'class="tp1"><a\s*href="(?P<url>https://.+?)"\s*target="_blank"\s*title="(?P<title>.+?)"></a></div>'
@@ -747,28 +761,26 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         htmlTxt = self.fetch(url).text
         jo = json.loads(htmlTxt)
         link = jo['hls_url'].strip()
-        # 替换链接，然后可以获取到更高质量的视频列表
-        link = link.replace('https://hls.cntv.lxdns.com/asp/hls/', 'https://dh5.cntv.qcloudcdn.com/asp/h5e/hls/')
-        html = self.webReadFile(urlStr=link, header=self.header)
+        # 获取域名前缀
+        urlPrefix = self.get_RegexGetText(Text=link, RegexText='(http[s]?://[a-zA-z0-9.]+)/', Index=1)
+        # 域名前缀指定替换,然后可以获取到更高质量的视频列表
+        new_link = link.replace(f'{urlPrefix}/asp/hls/', 'https://dh5.cntv.qcloudcdn.com/asp/h5e/hls/').split('?')[0]
+        html = self.webReadFile(urlStr=new_link, header=self.header)
         content = html.strip()
         arr = content.split('\n')
-        urlPrefix = self.get_RegexGetText(Text=link, RegexText='(http[s]?://[a-zA-z0-9.]+)/', Index=1)
         subUrl = arr[-1].split('/')
+        # hdUrl = urlPrefix + arr[-1]
 
-        # # subUrl[3] = '1200'
         # subUrl[3] = '2000'
-        # # subUrl[-1] = '1200.m3u8'
         # subUrl[-1] = '2000.m3u8'
         # hdUrl = urlPrefix + '/'.join(subUrl)
-
         maxVideo = subUrl[-1].replace('.m3u8', '')
         hdUrl = link.replace('main', maxVideo)
-
-        url = urlPrefix + arr[-1]
-
+        hdUrl = hdUrl.replace(urlPrefix, 'https://newcntv.qcloudcdn.com')
         hdRsp = self.TestWebPage(urlStr=hdUrl, header=self.header)
         if hdRsp == 200:
-            url = hdUrl
+            url = hdUrl.split('?')[0]
+            self.log(f'视频链接: {url}')
         else:
             url = ''
         return url
@@ -862,6 +874,37 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
                 "vod_name": title,
                 "vod_pic": img,
                 "vod_remarks": ''
+            })
+        return videos
+
+    # 4k分类取结果
+    def get_list_4k(self, html, tid):
+        jRoot = json.loads(html)
+        videos = []
+        data = jRoot['data']
+        if data is None:
+            return []
+        jsonList = data['list']
+        for vod in jsonList:
+            vod_remarks = vod['title']
+            id = vod['id']
+            vod = vod['last_video']
+            img = vod['image']
+            url = vod['url']
+            title = vod['title']
+            brief = vod.get('brief') or ''
+            year = vod.get('year') or ''
+            actors = vod.get('actors') or ''
+            if len(url) == 0:
+                continue
+            guids = [tid, title, url, img, id, year, actors, brief]
+            guid = "||".join(guids)
+            # print(vod_id)
+            videos.append({
+                "vod_id": guid,
+                "vod_name": title,
+                "vod_pic": img,
+                "vod_remarks": vod_remarks
             })
         return videos
 
