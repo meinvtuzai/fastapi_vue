@@ -162,18 +162,24 @@ class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
         return SourceFileLoader(name, fileName).load_module()
 
     # ==================== 静态函数 ======================
-    @staticmethod
-    def log(msg):
+    def log(self, msg):
         """
         打印日志文本
         @param msg:
         @return:
         """
         try:
-            LOG = jclass("com.github.tvbox.osc.util")
-            LOG.e(msg)
+            from com.github.tvbox.osc.util import LOG
+            log = LOG.e
         except:
-            print(msg)
+            log = print
+
+        if isinstance(msg, dict) or isinstance(msg, list):
+            msg = self.json2str(msg)
+        else:
+            msg = f'{msg}'
+
+        log(msg)
 
     @staticmethod
     def str2json(str):
