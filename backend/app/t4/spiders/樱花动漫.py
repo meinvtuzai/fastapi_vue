@@ -360,15 +360,15 @@ if __name__ == '__main__':
     # 在线aes测试 https://config.net.cn/tools/AES.html
     # 分类页:http://60.204.185.245:7090/appto/v1/home/cateData?id=1
     # 推荐页:http://60.204.185.245:7090/appto/v1/config/get?p=android
+    from t4.core.loader import t4_spider_init
     spider = Spider()
-    # spider.init('https://jihulab.com/qiaoji/open/-/raw/main/yinghua')
-    spider.init()
+    t4_spider_init(spider,'https://jihulab.com/qiaoji/open/-/raw/main/yinghua')
     # spider.init_api_ext_file()  # 生成筛选对应的json文件
 
     # print(spider.homeContent(True))
     # print(spider.homeVideoContent())
     # print(spider.categoryContent('1', 1, True, {'year': '2024'}))
     # print(spider.detailContent([110078]))
-    # print(spider.searchContent('斗罗大陆'))
+    print(spider.searchContent('斗罗大陆'))
     # print(spider.playerContent(None, 'f1d7d074f624e993e425f|11d1d091b0b28|31613145e4a7c|518737c8650978', None))
     # spider.searchContent('斗罗大陆')

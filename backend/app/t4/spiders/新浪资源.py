@@ -354,6 +354,13 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
                 print("'{0}':'{1}',".format(value.text, value.attrib['id']))
         return temporaryClass
 
+if __name__ == '__main__':
+    from t4.core.loader import t4_spider_init
+    spider = Spider()
+    t4_spider_init(spider)
+    print(spider.homeContent(True))
+    print(spider.homeVideoContent())
+
 # T=Spider()
 # T. homeContent(filter=False)
 # T.custom_classification()

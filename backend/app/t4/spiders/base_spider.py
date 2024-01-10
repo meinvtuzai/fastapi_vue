@@ -379,6 +379,6 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
 if __name__ == '__main__':
     spider = Spider()
     spider.init()
-    spider.init_api_ext_file()  # 生成筛选对应的json文件
+    # spider.init_api_ext_file()  # 生成筛选对应的json文件
 
     spider.searchContent('斗罗大陆')

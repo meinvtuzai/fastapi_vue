@@ -25,25 +25,25 @@ api里会自动含有ext参数是base64编码后的选中的筛选条件
 
 错误示例,ext含有json:
 {
-    "key":"hipy_cctv",
-    "name":"hipy_cctv",
+    "key":"hipy_cntv央视",
+    "name":"hipy_cntv央视",
     "type":4,
-    "api":"http://192.168.31.49:5707/api/v1/vod/cctv_spider?api_ext={{host}}/txt/hipy/cctv_spider.json",
+    "api":"http://192.168.31.49:5707/api/v1/vod/cntv央视?api_ext={{host}}/txt/hipy/cntv央视.json",
     "searchable":1,
     "quickSearch":1,
     "filterable":1,
-    "ext":"cctv_spider.json"
+    "ext":"cntv央视.json"
  }
  正确示例。同时存在ext和api_ext会优先取ext作为extend加载init
  {
-    "key":"hipy_t4_cctv",
-    "name":"cctv(hipy_t4)",
+    "key":"hipy_t4_cntv央视",
+    "name":"cntv央视(hipy_t4)",
     "type":4,
-    "api":"http://192.168.31.49:5707/api/v1/vod/cctv_spider?api_ext={{host}}/txt/hipy/cctv_spider.json",
+    "api":"http://192.168.31.49:5707/api/v1/vod/cntv央视?api_ext={{host}}/txt/hipy/cntv央视.json",
     "searchable":1,
     "quickSearch":1,
     "filterable":1,
-    "ext":"cctv_spider"
+    "ext":"cntv央视"
  }
  
  {
@@ -861,9 +861,11 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
 
 
 if __name__ == '__main__':
+    from t4.core.loader import t4_spider_init
     spider = Spider()
-    spider.init()
-    spider.init_api_ext_file()
+    t4_spider_init(spider)
+    print(spider.homeVideoContent())
+    # spider.init_api_ext_file()
     # url = 'https://api.cntv.cn/lanmu/columnSearch?&fl=&fc=%E6%96%B0%E9%97%BB&cid=&p=1&n=20&serviceId=tvcctv&t=jsonp&cb=Callback'
     # url = 'https://api.cntv.cn/lanmu/columnSearch?&fl=&fc=&cid=&p=1&n=20&serviceId=tvcctv&t=json&cb=ko'
     # r = spider.fetch(url)

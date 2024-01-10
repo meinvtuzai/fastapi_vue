@@ -36,6 +36,7 @@ class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
 
     def __init__(self, query_params=None):
         self.query_params = query_params or {}
+        self.extend = ''
 
     def __new__(cls, *args, **kwargs):
         if cls._instance:
