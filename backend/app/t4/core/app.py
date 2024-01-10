@@ -1,34 +1,46 @@
-# coding=utf-8
-# !/usr/bin/python
 import os
 import requests
-from importlib.machinery import SourceFileLoader  ### 导入这个模块
-from urllib import parse
+from importlib.machinery import SourceFileLoader
 import json
+
+
+def spider(cache, key, api):
+    name = os.path.basename(api)
+    path = cache + '/' + name
+    downloadFile(path, api)
+    return SourceFileLoader(name, path).load_module().Spider()
+
+
+def downloadFile(name, api):
+    if api.startswith('http'):
+        r = redirect(api)
+        if r.status_code == 200:
+            # writeFile(name, redirect(api).content)
+            writeFile(name, r.content)
+            return True
+        else:
+            return False
+    else:
+        writeFile(name, str.encode(api))
+        return True
+
+
+def writeFile(name, content):
+    with open(name, 'wb') as f:
+        f.write(content)
+
+
+def redirect(url):
+    rsp = requests.get(url, allow_redirects=False, verify=False)
+    if 'Location' in rsp.headers:
+        return redirect(rsp.headers['Location'])
+    else:
+        return rsp
 
 
 def createFile(file_path):
     if os.path.exists(file_path) is False:
         os.makedirs(file_path)
-
-
-def redirectResponse(tUrl):
-    rsp = requests.get(tUrl, allow_redirects=False, verify=False)
-    if 'Location' in rsp.headers:
-        return redirectResponse(rsp.headers['Location'])
-    else:
-        return rsp
-
-
-def downloadFile(name, url):
-    try:
-        rsp = redirectResponse(url)
-        with open(name, 'wb') as f:
-            f.write(rsp.content)
-        print(url)
-    except:
-        print(name + ' =======================================> error')
-        print(url)
 
 
 def downloadPlugin(basePath, url):
@@ -42,11 +54,11 @@ def downloadPlugin(basePath, url):
         downloadFile(pyName, url)
     sPath = gParam['SpiderPath']
     sPath[name] = pyName
-    sParam = gParam['SpiderParam']
-    paramList = parse.parse_qs(parse.urlparse(url).query).get('extend')
-    if paramList == None:
-        paramList = ['']
-    sParam[name] = paramList[0]
+    # sParam = gParam['SpiderParam']
+    # paramList = parse.parse_qs(parse.urlparse(url).query).get('extend')
+    # if paramList == None:
+    #     paramList = ['']
+    # sParam[name] = paramList[0]
     return pyName
 
 
@@ -66,7 +78,7 @@ def str2json(content):
 gParam = {
     "SpiderList": {},
     "SpiderPath": {},
-    "SpiderParam": {}
+    # "SpiderParam": {}
 }
 
 
@@ -75,16 +87,11 @@ def getDependence(ru):
     return result
 
 
-def getName(ru):
-    result = ru.getName()
-    return result
-
-
 def init(ru, extend):
     spoList = []
     spList = gParam['SpiderList']
     sPath = gParam['SpiderPath']
-    sParam = gParam['SpiderParam']
+    # sParam = gParam['SpiderParam']
     for key in ru.getDependence():
         sp = None
         if key in spList.keys():
@@ -92,7 +99,7 @@ def init(ru, extend):
         elif key in sPath.keys():
             sp = loadFromDisk(sPath[key])
         if sp != None:
-            sp.setExtendInfo(sParam[key])
+            # sp.setExtendInfo(sParam[key])
             spoList.append(sp)
     ru.setExtendInfo(extend)
     ru.init(spoList)
@@ -130,6 +137,12 @@ def playerContent(ru, flag, id, vipFlags):
 
 def searchContent(ru, key, quick):
     result = ru.searchContent(key, quick)
+    formatJo = json.dumps(result, ensure_ascii=False)
+    return formatJo
+
+
+def searchContentPage(ru, key, quick, pg):
+    result = ru.searchContentPage(key, quick, pg)
     formatJo = json.dumps(result, ensure_ascii=False)
     return formatJo
 
