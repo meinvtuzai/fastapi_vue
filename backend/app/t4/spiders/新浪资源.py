@@ -4,7 +4,8 @@ import sys
 
 sys.path.append('..')
 try:
-    from base.spider import Spider as BaseSpider
+    # from base.spider import Spider as BaseSpider
+    from base.spider import BaseSpider
 except ImportError:
     from t4.base.spider import BaseSpider
 import time
@@ -13,6 +14,32 @@ from urllib import request, parse
 import urllib
 import urllib.request
 from xml.etree.ElementTree import fromstring, ElementTree as et
+
+"""
+配置示例:
+t4的配置里ext节点会自动变成api对应query参数extend,但t4的ext字符串不支持路径格式，比如./开头或者.json结尾
+api里会自动含有ext参数是base64编码后的选中的筛选条件
+ {
+    "key":"hipy_t4_新浪资源",
+    "name":"新浪资源(hipy_t4)",
+    "type":4,
+    "api":"http://192.168.31.49:5707/api/v1/vod/新浪资源",
+    "searchable":1,
+    "quickSearch":0,
+    "filterable":1,
+    "ext":""
+},
+{
+    "key": "hipy_t3_新浪资源",
+    "name": "新浪资源(hipy_t3)",
+    "type": 3,
+    "api": "{{host}}/txt/hipy/新浪资源.py",
+    "searchable": 1,
+    "quickSearch": 0,
+    "filterable": 1,
+    "ext": ""
+},
+"""
 
 
 class Spider(BaseSpider):  # 元类 默认的元类 type

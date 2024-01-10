@@ -26,7 +26,7 @@ api里会自动含有ext参数是base64编码后的选中的筛选条件
     "type":4,
     "api":"http://192.168.31.49:5707/api/v1/vod/樱花动漫",
     "searchable":1,
-    "quickSearch":1,
+    "quickSearch":0,
     "filterable":1,
     "ext":"https://jihulab.com/qiaoji/open/-/raw/main/yinghua"
 },

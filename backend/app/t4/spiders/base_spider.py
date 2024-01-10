@@ -28,22 +28,22 @@ from urllib.parse import quote
 t4的配置里ext节点会自动变成api对应query参数extend,但t4的ext字符串不支持路径格式，比如./开头或者.json结尾
 api里会自动含有ext参数是base64编码后的选中的筛选条件
  {
-    "key":"hipy_t4_base",
-    "name":"base(hipy_t4)",
+    "key":"hipy_t4_base_spider",
+    "name":"base_spider(hipy_t4)",
     "type":4,
     "api":"http://192.168.31.49:5707/api/v1/vod/base_spider",
     "searchable":1,
-    "quickSearch":1,
+    "quickSearch":0,
     "filterable":1,
     "ext":"base_spider"
 },
 {
-    "key": "hipy_t3_base",
-    "name": "base(hipy_t3)",
+    "key": "hipy_t3_base_spider",
+    "name": "base_spider(hipy_t3)",
     "type": 3,
     "api": "{{host}}/txt/hipy/base_spider.py",
     "searchable": 1,
-    "quickSearch": 1,
+    "quickSearch": 0,
     "filterable": 1,
     "ext": "{{host}}/txt/hipy/base_spider.json"
 },

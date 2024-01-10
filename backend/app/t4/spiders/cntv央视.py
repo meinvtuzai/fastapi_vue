@@ -26,12 +26,12 @@ api里会自动含有ext参数是base64编码后的选中的筛选条件
 错误示例,ext含有json:
 {
     "key":"hipy_cntv央视",
-    "name":"hipy_cntv央视",
+    "name":"cntv央视(hipy_t4)",
     "type":4,
     "api":"http://192.168.31.49:5707/api/v1/vod/cntv央视?api_ext={{host}}/txt/hipy/cntv央视.json",
     "searchable":1,
     "quickSearch":1,
-    "filterable":1,
+    "filterable":0,
     "ext":"cntv央视.json"
  }
  正确示例。同时存在ext和api_ext会优先取ext作为extend加载init
@@ -41,20 +41,20 @@ api里会自动含有ext参数是base64编码后的选中的筛选条件
     "type":4,
     "api":"http://192.168.31.49:5707/api/v1/vod/cntv央视?api_ext={{host}}/txt/hipy/cntv央视.json",
     "searchable":1,
-    "quickSearch":1,
+    "quickSearch":0,
     "filterable":1,
     "ext":"cntv央视"
  }
  
  {
-    "key": "hipy_t3_cctv",
-    "name": "cctv(hipy_t3)",
+    "key": "hipy_t3_cntv央视",
+    "name": "cntv央视(hipy_t3)",
     "type": 3,
-    "api": "{{host}}/txt/hipy/cctv_spider.py",
+    "api": "{{host}}/txt/hipy/cntv央视.py",
     "searchable": 1,
-    "quickSearch": 1,
+    "quickSearch": 0,
     "filterable": 1,
-    "ext": "{{host}}/txt/hipy/cctv_spider.json"
+    "ext": "{{host}}/txt/hipy/cntv央视.json"
 }
 """
 
