@@ -7,7 +7,7 @@
 import base64
 import json
 
-from fastapi import APIRouter, Request, Depends, Query, File, UploadFile
+from fastapi import APIRouter, Request, Depends, Response, Query, File, UploadFile
 from fastapi.responses import RedirectResponse
 from typing import Any
 from sqlalchemy.orm import Session
@@ -111,10 +111,13 @@ def vod_generate(*, api: str = "", request: Request,
 
     if proxy and do == 'py':
         try:
-            back_resp_list = vod.localProxy(param=params_dict)
-            print(back_resp_list)
-            # [404, 'text/plain', 'Not Found']
-            return {'msg': 'ok'}
+            back_resp_list = vod.localProxy(params_dict)
+            status_code = back_resp_list[0]
+            media_type = back_resp_list[1]
+            content = back_resp_list[2]
+            if isinstance(content, str):
+                content = content.encode('utf-8')
+            return Response(status_code=status_code, media_type=media_type, content=content)
         except Exception as e:
             error_msg = f"localProxy执行发生内部服务器错误:{e}"
             logger.error(error_msg)

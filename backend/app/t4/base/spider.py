@@ -9,6 +9,7 @@ import hashlib
 import re
 import json
 import zlib
+import gzip
 
 import requests
 import warnings
@@ -92,7 +93,7 @@ class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
         pass
 
     @abstractmethod
-    def localProxy(self, param):
+    def localProxy(self, params):
         pass
 
     @abstractmethod
@@ -202,6 +203,17 @@ class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
         _log(msg)
 
     @staticmethod
+    def replaceAll(text, mtext, rtext):
+        """
+        字符串替换全部
+        @param text: 原始字符串: 如 xxx.ts
+        @param mtext: 匹配想要替换的字符串 如 r'(.*?ts)'
+        @param rtext: 用于替换的字符串 如 r'https://www.bdys03.com/\1' 其中\1代表匹配的第1项类似于js的 $1
+        @return: 替换后的字符串结果
+        """
+        return re.sub(mtext, rtext, text)
+
+    @staticmethod
     def str2json(str):
         return json.loads(str)
 
@@ -301,6 +313,45 @@ class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
         @return:
         """
         return zlib.decompress(compressed, -zlib.MAX_WBITS)
+
+    @staticmethod
+    def gzipCompress(compressed: bytes) -> bytes:
+        """
+        gzip解压
+        @param compressed: 压缩后的字节
+        @return:
+        """
+        return gzip.decompress(compressed)
+
+    @staticmethod
+    def bytes2stream(some_bytes: bytes):
+        """
+        字节转文件流
+        @param some_bytes:
+        @return:
+        """
+        return io.BytesIO(some_bytes)
+
+    @staticmethod
+    def stream2bytes(some_stream):
+        """
+        文件流转字节
+        @param some_stream:
+        @return:
+        """
+        return some_stream.read()
+
+    def skip_bytes(self, some_bytes: bytes, pos=0) -> bytes:
+        """
+        跳过位置之前的字节并返回
+        @param some_bytes:
+        @param pos: 待跳过的位置，默认0不跳过
+        @return:
+        """
+
+        some_stream = self.bytes2stream(some_bytes)
+        some_stream.seek(pos)
+        return self.stream2bytes(some_stream)
 
     @staticmethod
     def base64Encode(text):

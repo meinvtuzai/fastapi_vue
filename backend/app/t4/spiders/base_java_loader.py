@@ -15,16 +15,26 @@ try:
 except ImportError:
     from t4.base.spider import BaseSpider
 
+# 全局变量
+gParam = {
+    # JVM已经启用过某个jar文件
+    "JVM": {'xx.jar': False},
+}
+
 
 class Spider(BaseSpider):  # 元类 默认的元类 type
     jar_path: str = ''
     jClass = None
 
     def _prepare_env(self, jpype):
+        global gParam
+        if gParam['JVM'].get(self.jar_path):
+            return
         try:
             jpype.startJVM(classpath=[self.jar_path], convertStrings=False)
+            gParam['JVM'][self.jar_path] = True
         except Exception as e:
-            self.log(f'jpype.startJVM发送了错误:{e}')
+            self.log(f'jpype.startJVM发生了错误:{e}')
 
     def init_jar(self, jar_path="./bdys.jar"):
         self.log(f'base_java_loader 初始化jar文件:{jar_path}')
