@@ -361,8 +361,9 @@ if __name__ == '__main__':
     # 分类页:http://60.204.185.245:7090/appto/v1/home/cateData?id=1
     # 推荐页:http://60.204.185.245:7090/appto/v1/config/get?p=android
     from t4.core.loader import t4_spider_init
+
     spider = Spider()
-    t4_spider_init(spider,'https://jihulab.com/qiaoji/open/-/raw/main/yinghua')
+    t4_spider_init(spider, 'https://jihulab.com/qiaoji/open/-/raw/main/yinghua')
     # spider.init_api_ext_file()  # 生成筛选对应的json文件
 
     # print(spider.homeContent(True))

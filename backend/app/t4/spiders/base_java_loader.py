@@ -23,8 +23,8 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
     def _prepare_env(self):
         try:
             jpype.startJVM(classpath=[self.jar_path], convertStrings=False)
-        except:
-            pass
+        except Exception as e:
+            self.log(f'jpype.startJVM发送了错误:{e}')
 
     def init_jar(self, jar_path="./bdys.jar"):
         self.log(f'base_java_loader 初始化jar文件:{jar_path}')
