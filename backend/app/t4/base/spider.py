@@ -29,8 +29,10 @@ from Crypto.PublicKey import RSA
 try:
     from com.github.tvbox.osc.util import LOG
 
+    _ENV = 'T3'
     _log = LOG.e
 except ImportError:
+    _ENV = 'T4'
     _log = print
 
 # 关闭警告
@@ -44,6 +46,7 @@ class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
     def __init__(self, query_params=None):
         self.query_params = query_params or {}
         self.extend = ''
+        self.ENV = _ENV
 
     def __new__(cls, *args, **kwargs):
         if cls._instance:

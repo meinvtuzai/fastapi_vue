@@ -368,12 +368,13 @@ if __name__ == '__main__':
 
     spider = Spider()
     t4_spider_init(spider)
+    print(spider.ENV)
     # spider.init_api_ext_file()  # 生成筛选对应的json文件
     # spider.log({'key': 'value'})
     # spider.log('====文本内容====')
     # print(spider.homeContent(True))
     # print(spider.homeVideoContent())
     # print(spider.categoryContent('0', 1, False, None))
-    print(spider.detailContent([24420]))
+    # print(spider.detailContent([24420]))
     # spider.searchContent('斗罗大陆')
     print(spider.playerContent('至尊线路', 'vip://https://www.bdys03.com/api/v1/playurl/174296?type=1', None))

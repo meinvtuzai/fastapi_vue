@@ -6,9 +6,6 @@
 # Date  : 2024/1/11
 
 import os
-import jpype
-from jpype.types import *
-
 import sys
 
 sys.path.append('..')
@@ -20,7 +17,10 @@ except ImportError:
 
 
 class Spider(BaseSpider):  # 元类 默认的元类 type
-    def _prepare_env(self):
+    jar_path: str = ''
+    jClass = None
+
+    def _prepare_env(self, jpype):
         try:
             jpype.startJVM(classpath=[self.jar_path], convertStrings=False)
         except Exception as e:
@@ -31,8 +31,12 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         if not os.path.exists(jar_path):
             raise FileNotFoundError
         self.jar_path = jar_path
-        self._prepare_env()
-        self.jClass = jpype.JClass
+        if self.ENV.lower() == 't4':
+            import jpype
+            self._prepare_env(jpype)
+            self.jClass = jpype.JClass
+        elif self.ENV.lower() == 't3':
+            self.jClass = None
 
     def init(self, extend=""):
         pass
