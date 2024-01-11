@@ -230,16 +230,10 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
             titles.append(title)
             if not plays.get(title):
                 plays[title] = []
-            # print(p)
-            if p.get('tosId') and len(playlist) < 2:
+
+            if p.get('tosId'):
                 purl = self.api + '/playurl/' + str(p['id']) + '?type=' + str(p.get('tosId') or '0')
-                print(purl)
-                r = self.fetch(purl, headers=self.headers)
-                ret = r.json()
-                data = self.decode(ret['data'])
-                print(data)
-                url = data['url']
-                plays[title].append({'name': '至尊线路', 'url': url})
+                plays[title].append({'name': '至尊线路', 'url': f'vip://{purl}'})
 
             if p.get('url'):
                 for p0 in p['url'].split(','):
@@ -324,7 +318,17 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         @param vipFlags: vip标识
         @return:
         """
-        url = id
+        url = str(id)
+        # 至尊线路
+        if url.startswith('vip://'):
+            purl = url.split('vip://')[1]
+            # print(purl)
+            r = self.fetch(purl, headers=self.headers)
+            ret = r.json()
+            data = self.decode(ret['data'])
+            # print(data)
+            url = data['url']
+
         headers = {
             'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
         }
@@ -370,5 +374,6 @@ if __name__ == '__main__':
     # print(spider.homeContent(True))
     # print(spider.homeVideoContent())
     # print(spider.categoryContent('0', 1, False, None))
-    # print(spider.detailContent([24420]))
-    spider.searchContent('斗罗大陆')
+    print(spider.detailContent([24420]))
+    # spider.searchContent('斗罗大陆')
+    print(spider.playerContent('至尊线路', 'vip://https://www.bdys03.com/api/v1/playurl/174296?type=1', None))
