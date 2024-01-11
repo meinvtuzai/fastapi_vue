@@ -44,10 +44,12 @@ class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
     _instance = None
     ENV: str
 
-    def __init__(self, query_params=None):
+    def __init__(self, query_params=None, t4_api=None):
         self.query_params = query_params or {}
+        self.t4_api = t4_api or ''
         self.extend = ''
         self.ENV = _ENV
+        # self.log(f't4_api:{t4_api}')
 
     def __new__(cls, *args, **kwargs):
         if cls._instance:
@@ -117,7 +119,7 @@ class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
             # return getProxy(True)
             return 'http://127.0.0.1:9978/proxy?do=py'
         elif self.ENV.lower() == 't4':
-            return 'http://127.0.0.1:9978/proxy?do=py'
+            return self.t4_api
         else:
             return ''
 

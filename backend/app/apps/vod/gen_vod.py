@@ -9,10 +9,10 @@ import importlib
 
 
 class Vod:
-    def __init__(self, api, query_params):
+    def __init__(self, api, query_params, t4_api=None):
         self.api = api
         self.module_url = "t4.spiders." + api
-        self.module = self.import_module(self.module_url).Spider(query_params=query_params)
+        self.module = self.import_module(self.module_url).Spider(query_params=query_params, t4_api=t4_api)
 
     def import_module(self, module_url):
         return importlib.import_module(module_url)

@@ -40,8 +40,16 @@ def vod_generate(*, api: str = "", request: Request,
     def getParams(key=None, value=''):
         return request.query_params.get(key) or value
 
+    # 拿到query参数的字典
+    params_dict = request.query_params.__dict__['_dict']
+    # 拿到网页host地址
+    host = request.base_url
+    # 拼接字符串得到t4_api本地代理接口地址
+    api_url = str(request.url).split('?')[0]
+    t4_api = f'{api_url}?proxy=true&do=py'
+
     try:
-        vod = Vod(api=api, query_params=request.query_params).module
+        vod = Vod(api=api, query_params=request.query_params, t4_api=t4_api).module
     except Exception as e:
         return respErrorJson(error_code.ERROR_INTERNAL.set_msg(f"内部服务器错误:{e}"))
 
@@ -64,6 +72,10 @@ def vod_generate(*, api: str = "", request: Request,
     pg = int(pg)
     q = getParams('q')
 
+    # 本地代理所需参数
+    proxy = getParams('proxy')
+    do = getParams('do')
+
     extend = extend or api_ext
     vod.setExtendInfo(extend)
 
@@ -73,7 +85,7 @@ def vod_generate(*, api: str = "", request: Request,
     module_names = []
     for lib in depends:
         try:
-            module = Vod(api=lib, query_params=request.query_params).module
+            module = Vod(api=lib, query_params=request.query_params, t4_api=t4_api).module
             modules.append(module)
             module_names.append(lib)
         except Exception as e:
@@ -96,6 +108,17 @@ def vod_generate(*, api: str = "", request: Request,
     rule_title = vod.getName()
     if rule_title:
         logger.info(f'加载爬虫源:{rule_title}')
+
+    if proxy and do == 'py':
+        try:
+            back_resp_list = vod.localProxy(param=params_dict)
+            print(back_resp_list)
+            # [404, 'text/plain', 'Not Found']
+            return {'msg': 'ok'}
+        except Exception as e:
+            error_msg = f"localProxy执行发生内部服务器错误:{e}"
+            logger.error(error_msg)
+            return respErrorJson(error_code.ERROR_INTERNAL.set_msg(error_msg))
 
     if play:  # t4播放
         try:
