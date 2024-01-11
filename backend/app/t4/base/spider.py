@@ -42,6 +42,7 @@ requests.packages.urllib3.disable_warnings()
 
 class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
     _instance = None
+    ENV: str
 
     def __init__(self, query_params=None):
         self.query_params = query_params or {}
@@ -106,6 +107,19 @@ class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
 
     def init_api_ext_file(self):
         pass
+
+    def getProxyUrl(self):
+        """
+        获取本地代理地址
+        @return:
+        """
+        if self.ENV.lower() == 't3':
+            # return getProxy(True)
+            return 'http://127.0.0.1:9978/proxy?do=py'
+        elif self.ENV.lower() == 't4':
+            return 'http://127.0.0.1:9978/proxy?do=py'
+        else:
+            return ''
 
     def getDependence(self):
         return []
