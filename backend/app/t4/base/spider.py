@@ -29,6 +29,7 @@ from Crypto.PublicKey import RSA
 
 try:
     from com.github.tvbox.osc.util import LOG
+    from com.github.tvbox.osc.util import PyUtil
 
     _ENV = 'T3'
     _log = LOG.e
@@ -118,7 +119,8 @@ class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
         """
         if self.ENV.lower() == 't3':
             # return getProxy(True)
-            return 'http://127.0.0.1:9978/proxy?do=py'
+            return PyUtil.getProxy(False)
+            # return 'http://127.0.0.1:9978/proxy?do=py'
         elif self.ENV.lower() == 't4':
             return self.t4_api
         else:
@@ -498,7 +500,31 @@ class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
         ciphertext = rsa_text.decode("utf8")
         return ciphertext
 
+    @staticmethod
+    def remove_comments(text):
+        """
+        字符串删除注释
+        @param text:带注释的字符串
+        @return:
+        """
+
+        pattern = re.compile(r'\s*[\'\"]{3}[\S\s]*?[\'\"]{3}')
+        text = pattern.sub('', text)
+        pattern = re.compile(r'\s*/\*[\S\s]*?\*/')
+        text = pattern.sub('', text)
+        text = text.splitlines()
+        text = [txt for txt in text if not (txt.strip().startswith('//') or txt.strip().startswith('#'))]
+        text = '\n'.join(text)
+        return text.strip()
+
     # ==================== 个性化函数 ======================
+    def superStr2dict(self, text: str):
+        text = self.remove_comments(text)
+        localdict = {'true': True, 'false': False, 'null': None}
+        self.safe_eval(f'result={text}', localdict)
+        result = localdict.get('result') or {}
+        return result
+
     def eval_computer(self, text):
         """
         自定义的字符串安全计算器
