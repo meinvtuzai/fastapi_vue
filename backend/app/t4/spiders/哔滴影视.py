@@ -151,6 +151,13 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
 
         gParam['inited'] = True
 
+    def isVideo(self):
+        """
+        返回是否为视频的匹配字符串
+        @return: None空 reg:正则表达式  js:input js代码
+        """
+        return 'js:input.includes(".m3u8)?true:false'
+
     def isVideoFormat(self, url):
         pass
 

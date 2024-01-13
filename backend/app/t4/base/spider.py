@@ -97,6 +97,13 @@ class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
     def localProxy(self, params):
         pass
 
+    def isVideo(self):
+        """
+        返回是否为视频的匹配字符串
+        @return: None空 reg:正则表达式  js:input js代码
+        """
+        pass
+
     @abstractmethod
     def isVideoFormat(self, url):
         pass

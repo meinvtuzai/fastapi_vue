@@ -128,9 +128,13 @@ def vod_generate(*, api: str = "", request: Request,
         try:
             play_url = vod.playerContent(flag, play, vipFlags=None)
             if isinstance(play_url, str):
-                return respVodJson({'parse': 0, 'playUrl': '', 'jx': 0, 'url': play_url})
+                player_dict = {'parse': 0, 'playUrl': '', 'jx': 0, 'url': play_url}
+                return respVodJson(player_dict)
             elif isinstance(play_url, dict):
-                return respVodJson(play_url)
+                player_dict = play_url.copy()
+                if str(player_dict.get('parse')) == '1' and not player_dict.get('isVideo'):
+                    player_dict['isVideo'] = vod.isVideo()
+                return respVodJson(player_dict)
             else:
                 return play_url
         except Exception as e:
