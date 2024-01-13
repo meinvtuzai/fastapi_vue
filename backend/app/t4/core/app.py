@@ -131,6 +131,8 @@ def detailContent(ru, array):
 
 def playerContent(ru, flag, id, vipFlags):
     result = ru.playerContent(flag, id, str2json(vipFlags))
+    if str(result.get('parse')) == '1' and not result.get('isVideo'):
+        result['isVideo'] = ru.isVideo()
     formatJo = json.dumps(result, ensure_ascii=False)
     return formatJo
 
