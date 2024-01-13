@@ -115,9 +115,10 @@ def vod_generate(*, api: str = "", request: Request,
             status_code = back_resp_list[0]
             media_type = back_resp_list[1]
             content = back_resp_list[2]
-            if isinstance(content, str):
-                content = content.encode('utf-8')
-            return Response(status_code=status_code, media_type=media_type, content=content)
+            headers = back_resp_list[3] if len(back_resp_list) > 3 else None
+            # if isinstance(content, str):
+            #     content = content.encode('utf-8')
+            return Response(status_code=status_code, media_type=media_type, content=content, headers=headers)
         except Exception as e:
             error_msg = f"localProxy执行发生内部服务器错误:{e}"
             logger.error(error_msg)

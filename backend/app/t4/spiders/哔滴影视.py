@@ -386,6 +386,11 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
     def localProxy(self, params):
         # print(params)
         url = params.get('url')
+        if not url:
+            # return [302, 'text/html', None, {'location': 'https://www.baidu.com'}]
+            # return [404, 'text/plain', 'Not Found']
+            return [403, 'text/plain', '403 forbidden. url is required']
+
         name = params.get('name') or 'm3u8'
         burl = 'https://www.bdys03.com'
         new_url = url.replace("www.bde4.cc", "www.bdys03.com")
@@ -407,7 +412,6 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
             'header': headers,
             'param': '',
             'type': media_type,
-            'after': ''
         }
         if '3' in self.ENV:
             return [200, media_type, action, content]
