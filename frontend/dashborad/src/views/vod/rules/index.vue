@@ -90,19 +90,19 @@
     <el-table ref="tables" v-loading="loading" :data="list" @selection-change="handleSelectionChange"
               :default-sort="defaultSort" @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="ID" align="center" prop="id"/>
-      <el-table-column label="源名称" align="center" prop="name" :show-overflow-tooltip="true" sortable="custom"
-                       :sort-orders="['descending', 'ascending']"/>
+      <el-table-column label="ID" align="center" prop="id" sortable="custom" :sort-orders="['descending', 'ascending']"/>
+      <el-table-column label="源名称" align="center" prop="name" :show-overflow-tooltip="true" sortable="custom" :sort-orders="['descending', 'ascending']"/>
       <el-table-column label="源分组" align="center" prop="group" width="130" :show-overflow-tooltip="true"/>
-      <el-table-column label="文件路径" align="center" prop="path" :show-overflow-tooltip="true"/>
+      <el-table-column label="文件路径" align="center" prop="path" :show-overflow-tooltip="true" width="200"/>
       <el-table-column label="是否存在" align="center" prop="is_exist" width="100">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.is_exist"></el-switch>
+          <el-switch v-model="scope.row.is_exist" disabled></el-switch>
         </template>
       </el-table-column>
 
       <el-table-column label="显示排序" align="center" prop="order_num"/>
       <el-table-column label="文件类型" align="center" prop="file_type"/>
+      <el-table-column label="排序" align="center" prop="order_num" sortable="custom" :sort-orders="['descending', 'ascending']"/>
       <el-table-column label="源状态" align="center" prop="status">
         <template slot-scope="scope">
           <dict-tag :options="statusOptions" :value="scope.row.status"/>
@@ -115,9 +115,18 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="更新日期" align="center" prop="modified_ts" sortable="custom"
-                       :sort-orders="['descending', 'ascending']" width="180">
+      <el-table-column label="创建时间" align="center" prop="created_ts" sortable="custom" :sort-orders="['descending', 'ascending']" width="150">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.created_ts) }}</span>
+        </template>
       </el-table-column>
+
+      <el-table-column label="更新时间" align="center" prop="modified_ts" sortable="custom" :sort-orders="['descending', 'ascending']" width="150">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.modified_ts) }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -143,10 +152,9 @@
 </template>
 
 <script>
-import {list, clearRecord, delRecord, refreshRules} from "@/api/vod/rules";
+import {list, clearRecord, delRecord, refreshRules, changeActive} from "@/api/vod/rules";
 import {getDicts} from "@/api/system/dict/data";
 import {parseTime} from "@/utils";
-import {changeActive} from "@/api/monitor/job";
 
 export default {
   name: "VodRules",
@@ -191,7 +199,7 @@ export default {
     /** 查询登录日志列表 */
     getList() {
       this.loading = true;
-      list().then(response => {
+      list(this.queryParams).then(response => {
           this.list = response.data.results
           this.total = response.data.total
           this.loading = false;
@@ -238,7 +246,7 @@ export default {
       });
     },
     /** 刷新源列表按钮操作 */
-    handleRefresh(row){
+    handleRefresh(row) {
       this.$modal.confirm('是否确认刷新本地所有源？').then(function () {
         return refreshRules();
       }).then(() => {

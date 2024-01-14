@@ -9,12 +9,22 @@ from sqlalchemy.orm import Session
 from common.curd_base import CRUDBase
 from ..models.vod_rules import VodRules
 from typing import Optional
+from sqlalchemy import asc, desc, func
 
 
 class CURDVodRules(CRUDBase):
 
     def create(self, db: Session, *, obj_in, creator_id: int = 0):
         return super().create(db, obj_in=obj_in, creator_id=creator_id)
+
+    def getByName(self, db: Session, name: str, file_type: str):
+        record = db.query(self.model).filter(self.model.name == name, self.model.file_type == file_type).first()
+        return record
+
+    def get_max_order_num(self, db: Session) -> int:
+        filter = (self.model.is_deleted == 0,)
+        data = db.query(func.max(self.model.order_num).label('max_order_num')).filter(*filter).first()
+        return data['max_order_num'] or 0
 
     def search(self, db: Session, *,
                status: int = None,
