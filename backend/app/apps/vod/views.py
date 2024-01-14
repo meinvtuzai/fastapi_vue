@@ -14,7 +14,9 @@ from sqlalchemy.orm import Session
 
 from .gen_vod import Vod
 from common import error_code
-from common.resp import respVodJson, respErrorJson
+from common.resp import respVodJson, respErrorJson, abort
+from urllib.parse import quote
+import requests
 from apps.permission.models.user import Users
 
 from common import deps
@@ -28,7 +30,7 @@ api_url = ''
 
 # u: Users = Depends(deps.user_perm([f"{access_name}:get"]))
 # @router.get(api_url + "/{api:path}", summary="生成Vod")
-@router.api_route(methods=['GET', 'POST'], path=api_url + "/{api:path}", summary="生成Vod")
+@router.api_route(methods=['GET', 'POST', 'HEAD'], path=api_url + "/{api:path}", summary="生成Vod")
 def vod_generate(*, api: str = "", request: Request,
                  db: Session = Depends(deps.get_db),
                  ) -> Any:
@@ -43,10 +45,25 @@ def vod_generate(*, api: str = "", request: Request,
     # 拿到query参数的字典
     params_dict = request.query_params.__dict__['_dict']
     # 拿到网页host地址
-    host = request.base_url
+    host = str(request.base_url)
+    # 拿到完整的链接
+    whole_url = str(request.url)
     # 拼接字符串得到t4_api本地代理接口地址
     api_url = str(request.url).split('?')[0]
     t4_api = f'{api_url}?proxy=true&do=py'
+    # 获取请求类型
+    req_method = request.method.lower()
+
+    # 本地代理所需参数
+    proxy = getParams('proxy')
+    do = getParams('do')
+    # 是否为本地代理请求
+    is_proxy = proxy and do == 'py'
+
+    # 判断head请求但不是本地代理直接干掉
+    # if req_method == 'head' and (t4_api + '&') not in whole_url:
+    if req_method == 'head' and not is_proxy:
+        return abort(403)
 
     try:
         vod = Vod(api=api, query_params=request.query_params, t4_api=t4_api).module
@@ -60,7 +77,7 @@ def vod_generate(*, api: str = "", request: Request,
     api_ext = getParams('api_ext')  # t4初始化api的扩展参数
     extend = getParams('extend')  # t4初始化配置里的ext参数
     filterable = getParams('filter')  # t4能否筛选
-    if request.method.lower() == 'POST'.lower():  # t4 ext网络数据太长会自动post,此时强制可筛选
+    if req_method == 'post':  # t4 ext网络数据太长会自动post,此时强制可筛选
         filterable = True
     wd = getParams('wd')
     quick = getParams('quick')
@@ -71,10 +88,8 @@ def vod_generate(*, api: str = "", request: Request,
     pg = getParams('pg', '1')
     pg = int(pg)
     q = getParams('q')
-
-    # 本地代理所需参数
-    proxy = getParams('proxy')
-    do = getParams('do')
+    ad_remove = getParams('adRemove')
+    ad_url = getParams('url')
 
     extend = extend or api_ext
     vod.setExtendInfo(extend)
@@ -109,7 +124,18 @@ def vod_generate(*, api: str = "", request: Request,
     if rule_title:
         logger.info(f'加载爬虫源:{rule_title}')
 
-    if proxy and do == 'py':
+    if is_proxy:
+        if ad_remove.startswith('reg:') and ad_url.endswith('.m3u8'):
+            try:
+                r = requests.get(ad_url)
+                text = r.text
+                text = vod.replaceAll(text, ad_remove[:4], '')
+                return Response(status_code=200, media_type='video/MP2T', content=text)
+            except Exception as e:
+                error_msg = f"localProxy执行ad_remove发生内部服务器错误:{e}"
+                logger.error(error_msg)
+                return respErrorJson(error_code.ERROR_INTERNAL.set_msg(error_msg))
+
         try:
             back_resp_list = vod.localProxy(params_dict)
             status_code = back_resp_list[0]
@@ -129,14 +155,29 @@ def vod_generate(*, api: str = "", request: Request,
             play_url = vod.playerContent(flag, play, vipFlags=None)
             if isinstance(play_url, str):
                 player_dict = {'parse': 0, 'playUrl': '', 'jx': 0, 'url': play_url}
-                return respVodJson(player_dict)
             elif isinstance(play_url, dict):
                 player_dict = play_url.copy()
-                if str(player_dict.get('parse')) == '1' and not player_dict.get('isVideo'):
-                    player_dict['isVideo'] = vod.isVideo()
-                return respVodJson(player_dict)
             else:
-                return play_url
+                return abort(404, f'不支持的返回类型:{type(play_url)}\nplay_url:{play_url}')
+
+            if str(player_dict.get('parse')) == '1' and not player_dict.get('isVideo'):
+                player_dict['isVideo'] = vod.isVideo()
+            if not player_dict.get('adRemove'):
+                player_dict['adRemove'] = vod.adRemove()
+
+            # 有 adRemove参数并且不需要嗅探,并且地址以http开头.m3u8结尾 并且不是本地代理地址
+            proxy_url = vod.getProxyUrl()
+            if player_dict.get('adRemove') and str(player_dict.get('parse')) == '0' \
+                    and str(player_dict.get('url')).startswith('http') and str(player_dict.get('url')).endswith('.m3u8') \
+                    and not str(player_dict.get('url')).startswith(proxy_url):
+                # 删除字段并给url字段加代理
+                adRemove = player_dict['adRemove']
+                del player_dict['adRemove']
+                player_dict['url'] = proxy_url + '&url=' + player_dict[
+                    'url'] + f'&adRemove={quote(adRemove)}&name=1.m3u8'
+
+            return respVodJson(player_dict)
+
         except Exception as e:
             error_msg = f"playerContent执行发生内部服务器错误:{e}"
             logger.error(error_msg)

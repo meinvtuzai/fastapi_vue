@@ -1,5 +1,6 @@
 import os
 import requests
+from urllib.parse import quote
 from importlib.machinery import SourceFileLoader
 import json
 
@@ -129,11 +130,23 @@ def detailContent(ru, array):
     return formatJo
 
 
-def playerContent(ru, flag, id, vipFlags):
-    result = ru.playerContent(flag, id, str2json(vipFlags))
-    if str(result.get('parse')) == '1' and not result.get('isVideo'):
-        result['isVideo'] = ru.isVideo()
-    formatJo = json.dumps(result, ensure_ascii=False)
+def playerContent(vod, flag, id, vipFlags):
+    player_dict = vod.playerContent(flag, id, str2json(vipFlags))
+    if str(player_dict.get('parse')) == '1' and not player_dict.get('isVideo'):
+        player_dict['isVideo'] = vod.isVideo()
+    if not player_dict.get('adRemove'):
+        player_dict['adRemove'] = vod.adRemove()
+
+    # 有 adRemove参数并且不需要嗅探,并且地址以http开头.m3u8结尾 并且不是本地代理地址
+    proxy_url = vod.getProxyUrl()
+    if player_dict.get('adRemove') and str(player_dict.get('parse')) == '0' \
+            and str(player_dict.get('url')).startswith('http') and str(player_dict.get('url')).endswith('.m3u8') \
+            and not str(player_dict.get('url')).startswith(proxy_url):
+        # 删除字段并给url字段加代理
+        adRemove = player_dict['adRemove']
+        del player_dict['adRemove']
+        player_dict['url'] = proxy_url + '&url=' + player_dict['url'] + f'&adRemove={quote(adRemove)}&name=1.m3u8'
+    formatJo = json.dumps(player_dict, ensure_ascii=False)
     return formatJo
 
 

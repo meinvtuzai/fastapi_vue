@@ -213,6 +213,14 @@ class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
         pass
 
     @staticmethod
+    def adRemove():
+        """
+        m3u8广告移除函数。将自动执行返回的字符串的本地代理功能
+        @return: None空 reg:正则表达式  js:input js代码
+        """
+        pass
+
+    @staticmethod
     def replaceAll(text, mtext, rtext):
         """
         字符串替换全部

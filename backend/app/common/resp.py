@@ -1,5 +1,5 @@
 from fastapi import status
-from fastapi.responses import JSONResponse  # , ORJSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse  # , ORJSONResponse
 from pydantic import BaseModel
 from typing import Union, Optional
 import datetime
@@ -99,3 +99,17 @@ def respErrorJson(error: ErrorBase, *, msg: Optional[str] = None, msg_append: st
             'data': data or {}
         }
     )
+
+
+def abort(status_code=None, content=None):
+    if status_code is None:
+        status_code = 403
+    if content is None:
+        content = """
+ <!doctype html>
+<html lang=en>
+<title>403 Forbidden</title>
+<h1>Forbidden</h1>
+<p>You don&#39;t have the permission to access the requested resource. It is either read-protected or not readable by the server.</p>       
+        """.strip()
+    return HTMLResponse(status_code=status_code, content=content)
