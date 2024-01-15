@@ -11,11 +11,38 @@ export function list(query) {
   })
 }
 
+// 查询源详细
+export function getRule(id) {
+  return request({
+    url: api_url + '/' + id,
+    method: 'get'
+  })
+}
+
+// 修改
+export function setRecord(id, data) {
+  return request({
+    url: api_url + '/' + id,
+    method: 'put',
+    data: data
+  })
+}
+
 // 刷新源
 export function refreshRules() {
   return request({
     url: api_url + '/refresh',
     method: 'post'
+  })
+}
+
+//上传源
+export async function uploadRules(formData, query) {
+  return request({
+    url: api_url + '/file/uploadData',
+    method: 'post',
+    data: formData,
+    params: query
   })
 }
 

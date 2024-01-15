@@ -7,6 +7,7 @@
 
 import os
 from fastapi import APIRouter, Depends, Query, File, UploadFile
+from typing import List
 from sqlalchemy.orm import Session
 from sqlalchemy import asc, desc, func
 
@@ -15,7 +16,9 @@ from core.logger import logger
 from ...permission.models import Users
 
 from common import deps, error_code
+from ..schemas import rules_schemas
 from ..curd.curd_rules import curd_vod_rules as curd
+from apps.system.curd.curd_dict_data import curd_dict_data
 from ..models.vod_rules import VodRules
 
 from common.resp import respSuccessJson, respErrorJson
@@ -35,6 +38,7 @@ async def searchRecords(*,
                         status: int = Query(None),
                         name: str = Query(None),
                         group: str = Query(None),
+                        file_type: str = Query(None),
                         order_by: str = Query(None),
                         is_desc: bool = Query(None),
                         page: int = Query(1, gt=0),
@@ -53,10 +57,69 @@ async def searchRecords(*,
         elif order_by == 'order_num':
             order_bys = order_bys
 
-    # print(order_bys)
-    res = curd.search(db, status=status, name=name, group=group, page=page,
+    res = curd.search(db, status=status, name=name, group=group, file_type=file_type, page=page,
                       page_size=page_size, order_bys=order_bys)
     return respSuccessJson(res)
+
+
+@router.get(api_url + '/{_id}', summary="查询源详细")
+async def getRecord(*,
+                    db: Session = Depends(deps.get_db),
+                    _id: int = Query(..., title="源id"),
+                    ):
+    return respSuccessJson(curd.get(db, _id=_id))
+
+
+@router.put(api_url + "/{_id}", summary="修改源")
+async def setRecord(*,
+                    db: Session = Depends(deps.get_db),
+                    u: Users = Depends(deps.user_perm([f"{access_name}:put"])),
+                    _id: int,
+                    obj: rules_schemas.RulesSchema,
+                    ):
+    curd.update(db, _id=_id, obj_in=obj, modifier_id=u['id'])
+    return respSuccessJson()
+
+
+@router.post(api_url + "/file/uploadData", summary="上传源")
+async def uploadData(*,
+                     u: Users = Depends(deps.user_perm([f"{access_name}:post"])),
+                     db: Session = Depends(deps.get_db),
+                     updateSupport: bool = Query(...),
+                     group: str = Query(...),
+                     files: List[UploadFile] = File(...)):
+    logger.info(f'updateSupport:{updateSupport},group:{group}')
+    # 获取项目根目录
+    project_dir = os.getcwd()
+    groups = {}
+    group_dict = curd_dict_data.getByType(db, _type='vod_rule_group')
+    group_details = group_dict.get('details')
+    for li in group_details:
+        groups[li['label']] = li['value']
+    logger.info(groups)
+    skip_files = []
+    # 判断分组在系统字典里才进行上传操作
+    if group in groups.values():
+        spiders_dir = os.path.join(project_dir, group)
+        os.makedirs(spiders_dir, exist_ok=True)
+        count = 0
+        for i in files:
+            fpath = os.path.join(spiders_dir, i.filename)
+            fpath = Path(fpath).as_posix()
+            # 如果已存在并不支持覆盖，就跳过文件
+            if os.path.exists(fpath) and not updateSupport:
+                skip_files.append(i.filename)
+                continue
+            file_content = await i.read()
+            with open(fpath, 'wb') as f:
+                f.write(file_content)
+            count += 1
+
+        return respSuccessJson(data={'path': spiders_dir, 'skip_files': skip_files},
+                               msg=f'成功上传{count}个文件,跳过{len(skip_files)}个文件')
+
+    else:
+        return respErrorJson(error_code.ERROR_PARAMETER_ERROR.set_msg(f'上传失败:未知的group:{group}'))
 
 
 @router.post(api_url + "/refresh", summary="刷新源")
@@ -65,25 +128,37 @@ async def refreshRules(*,
                        u: Users = Depends(deps.user_perm([f"{access_name}:post"])), ):
     # 获取项目根目录
     project_dir = os.getcwd()
-    spiders_dir = os.path.join(project_dir, 't4/spiders')
-    files = os.listdir(spiders_dir)
+    groups = {}
+    group_dict = curd_dict_data.getByType(db, _type='vod_rule_group')
+    group_details = group_dict.get('details')
+    for li in group_details:
+        groups[li['label']] = li['value']
+    logger.info(groups)
     files_data = []
-    for file in files:
-        fpath = os.path.join(spiders_dir, file)
-        fpath = Path(fpath).as_posix()
-        # print(fpath)
-        name = os.path.basename(fpath)
-        base_name, extension = os.path.splitext(name)
-        if os.path.isfile(fpath):
-            files_data.append({
-                'name': base_name,
-                'group': extension,
-                'path': fpath,
-                'is_exist': True,
-                'file_type': extension,
-            })
+    spiders_dirs = []
+    for key, value in groups.items():
+        group_label = key
+        group_value = value
+        spiders_dir = os.path.join(project_dir, value)
+        os.makedirs(spiders_dir, exist_ok=True)
+        spiders_dirs.append(spiders_dir)
+        files = os.listdir(spiders_dir)
+        for file in files:
+            fpath = os.path.join(spiders_dir, file)
+            fpath = Path(fpath).as_posix()
+            # print(fpath)
+            name = os.path.basename(fpath)
+            base_name, extension = os.path.splitext(name)
+            if os.path.isfile(fpath):
+                files_data.append({
+                    'name': base_name,
+                    'group': group_value,
+                    'path': fpath,
+                    'is_exist': True,
+                    'file_type': extension,
+                })
     for file_info in files_data:
-        record = curd.getByName(db, file_info['name'], file_info['file_type'])
+        record = curd.getByName(db, file_info['name'], file_info['file_type'], file_info['group'])
         if record:
             curd.update(db, _id=record.id, obj_in=file_info, modifier_id=u['id'])
         else:
@@ -99,7 +174,7 @@ async def refreshRules(*,
         logger.info(f'record: id:{record.id} name:{record.name}{record.file_type}')
 
     logger.info(files_data)
-    return respSuccessJson(data={'spiders_dir': spiders_dir}, msg='刷新成功')
+    return respSuccessJson(data={'spiders_dirs': spiders_dirs}, msg='刷新成功')
 
 
 @router.put(api_url + "/{_id}/active", summary="修改源是否显示")
