@@ -46,6 +46,7 @@ def update_db():
     if os.path.exists(old_dbfile):
         logger.info(f'开始删除历史数据库迁移文件:{old_dbfile}')
         # shutil.rmtree(old_dbfile)
+        # os.makedirs(old_dbfile,exist_ok=True)
         # db.execute('drop table if exists alembic_version')
     else:
         logger.info(f'未找到历史数据库迁移文件:{old_dbfile}')
