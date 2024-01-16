@@ -260,6 +260,29 @@ class BaseSpider(metaclass=ABCMeta):  # 元类 默认的元类 type
         return unquote(input, encoding)
 
     @staticmethod
+    def hexStringTobytes(_str):
+        """
+        将hex字符串转成byte字节
+        @param _str: hex字符串
+        @return: byte字节
+        """
+        _str = _str.replace(" ", "")
+        return bytes.fromhex(_str)
+
+    @staticmethod
+    def bytesToHexString(_bytes, no_space=True):
+        """
+        将byte字节转成hex字符串
+        @param _bytes: byte字节
+        @param no_space: 是否不带空格返回，默认是
+        @return: hex字符串
+        """
+        _str = ''.join(['%02X ' % b for b in _bytes])
+        if no_space:
+            _str = _str.replace(" ", "")
+        return _str
+
+    @staticmethod
     def urljoin(base_url, path):
         """
         链接拼接
