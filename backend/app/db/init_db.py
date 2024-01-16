@@ -161,7 +161,8 @@ def init_table_data_form_csv(db: Session) -> None:
             # except:
             #     print('sqlite执行列自增序号修改失败')
         elif 'postgresql' in settings.SQLALCHEMY_ENGINE:
-            sql = f"select setval('{table_name}_id_seq', {max(df['id']) + 1 if not df.empty else 1}) from {table_name};"
+            # sql = f"select setval('{table_name}_id_seq', {max(df['id']) + 1 if not df.empty else 1}) from {table_name};"
+            sql = f"ALTER SEQUENCE {table_name}_id_seq RESTART WITH {max(df['id']) + 1 if not df.empty else 1};"
             logger.info(sql)
             db.execute(sql)
     db.commit()
