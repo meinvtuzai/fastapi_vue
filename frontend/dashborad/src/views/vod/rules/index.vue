@@ -81,13 +81,25 @@
 
       <el-col :span="1.5">
         <el-button
-          type="danger"
+          type="warning"
           icon="el-icon-delete"
           size="mini"
           v-hasRole="['admin','opts']"
           :disabled="multiple"
           @click="handleDelete"
-        >删除
+        >删除数据
+        </el-button>
+      </el-col>
+
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          v-hasRole="['admin','opts']"
+          :disabled="multiple"
+          @click="handleDeleteFiles"
+        >删除文件
         </el-button>
       </el-col>
 
@@ -99,7 +111,7 @@
           size="mini"
           v-hasRole="['admin','opts']"
           @click="handleClean"
-        >清空
+        >清空数据
         </el-button>
       </el-col>
       <el-col :span="1.5">
@@ -448,14 +460,25 @@ export default {
       this.queryParams.is_desc = column.order === 'descending';
       this.getList();
     },
-    /** 删除按钮操作 */
+    /** 删除数据按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids
-      this.$modal.confirm('是否确认删除ID为"' + ids + '"的数据项？').then(function () {
+      this.$modal.confirm('是否确认删除ID为"' + ids + '"的数据项|不会删除文件？').then(function () {
         return delRecord(ids);
-      }).then(() => {
+      }).then((response) => {
         this.getList();
-        this.$modal.msgSuccess("删除成功");
+        this.$modal.msgSuccess(response.msg);
+      }).catch(() => {
+      });
+    },
+    /** 删除文件按钮操作 */
+    handleDeleteFiles(row) {
+      const ids = row.id || this.ids
+      this.$modal.confirm('是否确认删除ID为"' + ids + '"的数据项|文件会一起删除？').then(function () {
+        return delRecord(ids, {with_file: true});
+      }).then((response) => {
+        this.getList();
+        this.$modal.msgSuccess(response.msg);
       }).catch(() => {
       });
     },

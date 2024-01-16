@@ -100,6 +100,7 @@ async def uploadData(*,
     skip_files = []
     # 判断分组在系统字典里才进行上传操作
     if group in groups.values():
+        files_data = []
         spiders_dir = os.path.join(project_dir, group)
         os.makedirs(spiders_dir, exist_ok=True)
         count = 0
@@ -110,10 +111,38 @@ async def uploadData(*,
             if os.path.exists(fpath) and not updateSupport:
                 skip_files.append(i.filename)
                 continue
+            # 不存在或者支持覆盖，构造数据
+            name = os.path.basename(fpath)
+            base_name, extension = os.path.splitext(name)
+            files_data.append({
+                'name': base_name,
+                'group': group,
+                'path': fpath,
+                'is_exist': True,
+                'file_type': extension,
+            })
+
+            # 写入本地文件
             file_content = await i.read()
             with open(fpath, 'wb') as f:
                 f.write(file_content)
             count += 1
+
+        for file_info in files_data:
+            record = curd.getByName(db, file_info['name'], file_info['file_type'], file_info['group'])
+            if record:
+                curd.update(db, _id=record.id, obj_in=file_info, modifier_id=u['id'])
+            else:
+                file_info.update({
+                    'order_num': 0,
+                    'ext': '',
+                    'status': 1,
+                    'active': True,
+                })
+                max_order_num = curd.get_max_order_num(db)
+                file_info.update({'order_num': max_order_num + 1})
+                record = curd.create(db, obj_in=file_info, creator_id=u['id'])
+            logger.info(f'record: id:{record.id} name:{record.name}{record.file_type}')
 
         return respSuccessJson(data={'path': spiders_dir, 'skip_files': skip_files},
                                msg=f'成功上传{count}个文件,跳过{len(skip_files)}个文件')
@@ -214,7 +243,33 @@ async def delRecord(*,
                     db: Session = Depends(deps.get_db),
                     u: Users = Depends(deps.user_perm([f"{access_name}:delete"])),
                     _ids: str,
+                    with_file: bool = Query(False),
                     ):
+    logger.info(f'with_file:{with_file}')
     _ids = list(map(lambda x: int(x), _ids.split(',')))
+    paths = curd.get_path_by_ids(db=db, _ids=_ids)
+    # print(paths)
+
+    resp_data = {}
+    resp_msg = f'删除完成,共计{len(paths)}条数据'
+    if with_file:
+        skip_lists = []
+        del_lists = []
+        white_paths = ['两个BT', '哔滴影视', '新浪资源', '樱花动漫',
+                       'base_java_loader', 'base_spider', 'cntv央视',
+                       'test_1']
+        for fpath in paths:
+            name = os.path.basename(fpath)
+            base_name, extension = os.path.splitext(name)
+            if '/t4/spiders/' in fpath and base_name in white_paths:
+                logger.info(f'跳过删除白名单源:{fpath}')
+                skip_lists.append(fpath)
+                continue
+            if os.path.exists(fpath):
+                os.remove(fpath)
+                del_lists.append(fpath)
+        resp_data = {'skip_lists': skip_lists, 'del_lists': del_lists}
+        resp_msg = f'本次成功删除本地源文件{len(del_lists)}个，保留白名单文件{len(skip_lists)}个'
+
     curd.removes(db, _ids=_ids)
-    return respSuccessJson()
+    return respSuccessJson(data=resp_data, msg=resp_msg)

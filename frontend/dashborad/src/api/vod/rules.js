@@ -47,10 +47,12 @@ export async function uploadRules(formData, query) {
 }
 
 // 删除源
-export function delRecord(id) {
+export function delRecord(id, query) {
+  query = query || {};
   return request({
     url: api_url + '/' + id,
-    method: 'delete'
+    method: 'delete',
+    params: query,
   })
 }
 

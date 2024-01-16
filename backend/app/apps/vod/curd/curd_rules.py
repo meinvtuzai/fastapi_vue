@@ -8,7 +8,7 @@
 from sqlalchemy.orm import Session
 from common.curd_base import CRUDBase
 from ..models.vod_rules import VodRules
-from typing import Optional
+from typing import Optional, List
 from sqlalchemy import asc, desc, func
 
 
@@ -26,6 +26,11 @@ class CURDVodRules(CRUDBase):
         filter = (self.model.is_deleted == 0,)
         data = db.query(func.max(self.model.order_num).label('max_order_num')).filter(*filter).first()
         return data['max_order_num'] or 0
+
+    def get_path_by_ids(self, db: Session, *, _ids: List[int]):
+        records = db.query(self.model).filter(self.model.id.in_(_ids)).all()
+        paths = [record.path for record in records]
+        return paths
 
     def search(self, db: Session, *,
                status: int = None,
