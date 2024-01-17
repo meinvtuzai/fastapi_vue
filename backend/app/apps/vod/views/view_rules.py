@@ -186,6 +186,7 @@ async def refreshRules(*,
                     'is_exist': True,
                     'file_type': extension,
                 })
+    exist_records = []
     for file_info in files_data:
         record = curd.getByName(db, file_info['name'], file_info['file_type'], file_info['group'])
         if record:
@@ -200,9 +201,12 @@ async def refreshRules(*,
             max_order_num = curd.get_max_order_num(db)
             file_info.update({'order_num': max_order_num + 1})
             record = curd.create(db, obj_in=file_info, creator_id=u['id'])
+        exist_records.append(record.id)
         logger.info(f'record: id:{record.id} name:{record.name}{record.file_type}')
 
+    records = curd.set_exist_by_ids(db, _ids=exist_records)
     logger.info(files_data)
+    logger.info(f'将{len(records)}条记录设置为不存在')
     return respSuccessJson(data={'spiders_dirs': spiders_dirs}, msg='刷新成功')
 
 

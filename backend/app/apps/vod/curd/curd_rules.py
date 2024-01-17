@@ -32,6 +32,12 @@ class CURDVodRules(CRUDBase):
         paths = [record.path for record in records]
         return paths
 
+    def set_exist_by_ids(self, db: Session, *, _ids: List[int]):
+        records = db.query(self.model).filter(self.model.id.notin_(_ids))
+        records.update({'is_exist': False})
+        db.commit()
+        return records.all()
+
     def search(self, db: Session, *,
                status: int = None,
                name: str = None,
